@@ -1,10 +1,41 @@
-import { useCallback } from 'react';
+import { useCallback, useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
 import { useAuth } from '@/lib/hooks/useAuth.jsx';
 import { toast } from '@/components/ui/use-toast';
 
 export const useQueries = () => {
     const { user } = useAuth();
+    const [subscriptionData, setSubscriptionData] = useState(null);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchSubscriptionData = async () => {
+            if (!user) {
+                setLoading(false);
+                return;
+            }
+
+            try {
+                const { data, error } = await supabase
+                    .from('user_subscriptions')
+                    .select('*')
+                    .eq('user_id', user.id)
+                    .single();
+
+                if (error && error.code !== 'PGRST116') {
+                    console.error('Error fetching subscription:', error);
+                } else {
+                    setSubscriptionData(data);
+                }
+            } catch (error) {
+                console.error('Error in subscription fetch:', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchSubscriptionData();
+    }, [user]);
 
     const handleQuery = useCallback(async (queryType, queryText, responseText, shouldSave = false, conversationIdToUpdate = null) => {
         if (!user) {
@@ -84,5 +115,12 @@ export const useQueries = () => {
         }
     }, [user]);
 
-    return { handleQuery };
+    return { 
+        handleQuery,
+        isSubscribed: subscriptionData?.is_subscribed || false,
+        isAdmin: subscriptionData?.is_admin || false,
+        isTrialExpired: subscriptionData ? (subscriptionData.queries_remaining <= 0 && !subscriptionData.is_subscribed && !subscriptionData.is_admin) : false,
+        subscriptionEndDate: subscriptionData?.subscription_end_date,
+        queriesRemaining: subscriptionData?.queries_remaining || 0
+    };
 };

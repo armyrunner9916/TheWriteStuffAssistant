@@ -58,11 +58,7 @@ import React from "react";
 
 
       React.useEffect(() => {
-        if (!isAdmin && isTrialExpired && !isSubscribed) {
-          setShowSubscriptionDialog(true);
-        } else {
-          fetchHistory();
-        }
+        fetchHistory();
       }, [section, isTrialExpired, isSubscribed, isAdmin]);
 
       React.useEffect(() => {
@@ -85,6 +81,7 @@ import React from "react";
           if (error) throw error;
           setHistory(data || []);
         } catch (error) {
+          console.error('History fetch error:', error);
           toast({
             title: "Error",
             description: "Failed to fetch history: " + error.message,
