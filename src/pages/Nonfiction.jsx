@@ -269,7 +269,6 @@ function Nonfiction({ onLogout }) {
                <Button onClick={() => navigate("/dashboard")} variant="outline" size="sm" className="bg-black text-yellow-400 hover:bg-zinc-800 border-yellow-400">
                   <ArrowLeft className="h-4 w-4 mr-1" /> Back to Categories
                </Button>
-               <Button onClick={() => navigate(`/history/nonfiction`)} variant="outline" size="sm" className="bg-black text-yellow-400 hover:bg-zinc-800 border-yellow-400">
                <Button onClick={() => navigate(`/history/nonfiction_unified`)} variant="outline" size="sm" className="bg-black text-yellow-400 hover:bg-zinc-800 border-yellow-400">
                   <History className="h-4 w-4 mr-1" /> View History
                 </Button>
