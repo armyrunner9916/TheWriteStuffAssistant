@@ -4,7 +4,6 @@ import React from 'react';
     import SignUp from "@/pages/SignUp";
     import Dashboard from "@/pages/Dashboard";
     
-    import FictionalProseHistory from "@/pages/FictionalProseHistory";
     import PoetryHistory from "@/pages/PoetryHistory";
     import NonfictionHistory from "@/pages/NonfictionHistory";
     import ContentCreationHistory from "@/pages/ContentCreationHistory";
@@ -29,7 +28,7 @@ import React from 'react';
       { path: "/", element: SignIn, isPublic: true, exact: true },
       { path: "/signup", element: SignUp, isPublic: true },
       { path: "/dashboard", element: Dashboard, isProtected: true },
-      { path: "/history/fictional-prose", element: FictionalProseHistory, isProtected: true },
+      { path: "/history/fictional-prose", element: History, isProtected: true },
       { path: "/history/poetry", element: PoetryHistory, isProtected: true },
       { path: "/history/nonfiction", element: NonfictionHistory, isProtected: true },
       { path: "/history/content-creation", element: ContentCreationHistory, isProtected: true },
