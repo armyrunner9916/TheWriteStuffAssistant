@@ -1,0 +1,72 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+ 
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 60 100% 50%;  /* Yellow text */
+
+    --card: 0 0% 0%;  /* Black background */
+    --card-foreground: 60 100% 50%;  /* Yellow text */
+ 
+    --popover: 0 0% 0%;
+    --popover-foreground: 60 100% 50%;
+ 
+    --primary: 60 100% 50%;  /* Yellow */
+    --primary-foreground: 0 0% 0%;  /* Black */
+ 
+    --secondary: 60 100% 50%;
+    --secondary-foreground: 0 0% 0%;
+ 
+    --muted: 0 0% 0%;
+    --muted-foreground: 60 100% 50%;
+ 
+    --accent: 60 100% 50%;
+    --accent-foreground: 0 0% 0%;
+ 
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 60 100% 50%;  /* Yellow border */
+    --input: 60 100% 50%;
+    --ring: 60 100% 50%;
+ 
+    --radius: 0.5rem;
+  }
+}
+ 
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+@layer components {
+  .card {
+    @apply bg-black bg-opacity-80 backdrop-blur-sm border-2 border-yellow-400;
+  }
+  
+  .text-content {
+    @apply text-yellow-400;
+  }
+  
+  .input-field {
+    @apply bg-black border-2 border-yellow-400 text-yellow-400 placeholder:text-yellow-400/50 focus:ring-yellow-400 focus:border-yellow-400;
+  }
+  
+  .button-primary {
+    @apply bg-yellow-400 text-black hover:bg-yellow-500;
+  }
+  
+  .button-outline {
+    @apply bg-yellow-400 text-black hover:bg-yellow-500 border-2 border-yellow-400;
+  }
+
+  .textarea-field {
+    @apply bg-black border-2 border-yellow-400 text-yellow-400 placeholder:text-yellow-400/50;
+  }
+}
