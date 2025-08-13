@@ -275,7 +275,6 @@ function Poetry({ onLogout }) {
                <Button onClick={() => navigate("/dashboard")} variant="outline" size="sm" className="bg-black text-yellow-400 hover:bg-zinc-800 border-yellow-400">
                   <ArrowLeft className="h-4 w-4 mr-1" /> Back to Categories
                </Button>
-               <Button onClick={() => navigate(`/history/poetry`)} variant="outline" size="sm" className="bg-black text-yellow-400 hover:bg-zinc-800 border-yellow-400">
                <Button onClick={() => navigate(`/history/poetry_unified`)} variant="outline" size="sm" className="bg-black text-yellow-400 hover:bg-zinc-800 border-yellow-400">
                   <History className="h-4 w-4 mr-1" /> View History
                 </Button>
@@ -344,7 +343,7 @@ function Poetry({ onLogout }) {
                             <div key={index} className="p-3 rounded-lg bg-transparent">
                               <MarkdownRenderer markdownText={turn.content} />
                             </div>
-                          )
+                          );
                         })
                      ) : isLoading ? (
                        <div className="flex items-center justify-center h-full">
