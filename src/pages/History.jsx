@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { supabase } from "@/lib/supabase";
-import { useAuth } from "@/lib/hooks/useAuth";
+import { useAuth } from "@/lib/hooks/useAuth.jsx";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { ArrowLeft, Loader2, Download, Trash2, Eye, Home } from "lucide-react";
@@ -71,14 +71,20 @@ function HistoryPage() {
 
   useEffect(() => {
     const fetchHistory = async () => {
+      console.log('Starting history fetch...');
+      console.log('User:', user);
+      console.log('Section:', section);
+      
       if (!user) {
+        console.log('No user found, stopping fetch');
         setLoading(false);
         return;
       }
 
       setLoading(true);
       try {
-        console.log('Fetching history for section:', section, 'user:', user.id);
+        console.log('Fetching from query_history table...');
+        console.log('Query params:', { user_id: user.id, query_type: section });
         
         const { data, error } = await supabase
           .from('query_history')
@@ -87,13 +93,21 @@ function HistoryPage() {
           .eq('query_type', section)
           .order('created_at', { ascending: false });
 
+        console.log('Supabase response:', { data, error });
+
         if (error) {
           console.error('Supabase error:', error);
           throw error;
         }
 
-        console.log('Fetched history data:', data);
+        console.log('Setting history data:', data);
         setHistory(data || []);
+        
+        if (data && data.length > 0) {
+          console.log('Found', data.length, 'history entries');
+        } else {
+          console.log('No history entries found for this section');
+        }
       } catch (error) {
         console.error('History fetch error:', error);
         toast({
@@ -112,11 +126,12 @@ function HistoryPage() {
 
   const handleDelete = async (id) => {
     try {
+      console.log('Deleting entry:', id);
       const { error } = await supabase
         .from("query_history")
         .delete()
         .eq("id", id)
-        .eq("user_id", user.id); // Extra security check
+        .eq("user_id", user.id);
 
       if (error) throw error;
       
@@ -136,7 +151,6 @@ function HistoryPage() {
     const { prompt, response } = cleanHistoryEntry(entry.query_text, entry.response_text);
     const content = `**Prompt:**\n${prompt}\n\n**Response:**\n${response}`;
     
-    // Create a Blob and download
     const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
@@ -153,12 +167,6 @@ function HistoryPage() {
   const handleBack = () => navigate(-1);
   const handleHome = () => navigate('/dashboard');
 
-  const handleCopyToClipboard = (textToCopy, type = "Full Interaction") => {
-    navigator.clipboard.writeText(textToCopy)
-      .then(() => toast({ title: "Copied!", description: `${type} copied to clipboard.` }))
-      .catch(err => toast({ title: "Error", description: "Failed to copy text.", variant: "destructive" }));
-  };
-
   if (!user) {
     return (
       <div className="min-h-screen bg-black text-yellow-400 flex items-center justify-center">
@@ -166,6 +174,9 @@ function HistoryPage() {
       </div>
     );
   }
+
+  console.log('Rendering with history:', history);
+  console.log('Loading state:', loading);
 
   return (
     <>
@@ -188,6 +199,15 @@ function HistoryPage() {
             <div className="hidden sm:block w-24"></div>
           </header>
 
+          <div className="mb-4 p-4 bg-zinc-900 rounded-lg border border-yellow-400/20">
+            <p className="text-yellow-400/80 text-sm">
+              Debug Info: Section = "{section}", User ID = "{user?.id}", Loading = {loading.toString()}
+            </p>
+            <p className="text-yellow-400/80 text-sm">
+              History entries found: {history.length}
+            </p>
+          </div>
+
           {loading ? (
             <div className="flex justify-center items-center h-64">
               <Loader2 className="h-12 w-12 animate-spin text-yellow-400" />
@@ -198,6 +218,9 @@ function HistoryPage() {
               <CardContent className="p-8 text-center">
                 <p className="text-yellow-400/70 text-lg">No history found for this section yet.</p>
                 <p className="text-yellow-400/50 text-sm mt-2">Start using the tools to build your history!</p>
+                <p className="text-yellow-400/40 text-xs mt-4">
+                  Looking for query_type: "{section}" in the database
+                </p>
               </CardContent>
             </Card>
           ) : (

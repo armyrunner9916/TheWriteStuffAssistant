@@ -39,6 +39,7 @@ export const useQueries = () => {
 
     const handleQuery = useCallback(async (queryType, queryText, responseText, shouldSave = false, conversationIdToUpdate = null) => {
         if (!user) {
+            console.log('handleQuery: No user found');
             toast({
                 title: 'Authentication Error',
                 description: 'You must be logged in to perform this action.',
@@ -48,7 +49,14 @@ export const useQueries = () => {
         }
 
         try {
-            console.log('handleQuery called with:', { queryType, shouldSave, conversationIdToUpdate });
+            console.log('handleQuery called with:', { 
+                queryType, 
+                queryText: queryText.substring(0, 100) + '...', 
+                responseText: responseText.substring(0, 100) + '...', 
+                shouldSave, 
+                conversationIdToUpdate,
+                userId: user.id 
+            });
             
             const { data: subscription, error: subscriptionError } = await supabase
                 .from('user_subscriptions')
@@ -70,7 +78,7 @@ export const useQueries = () => {
             if (shouldSave) {
                 console.log('Saving to database...');
                  if (conversationIdToUpdate) {
-                     console.log('Updating existing conversation:', conversationIdToUpdate);
+                     console.log('Updating existing conversation ID:', conversationIdToUpdate);
                     const { data, error } = await supabase
                         .from('query_history')
                         .update({ 
@@ -84,12 +92,28 @@ export const useQueries = () => {
 
                     if (error) {
                         console.error('Update error:', error);
+                        console.error('Update error details:', JSON.stringify(error, null, 2));
                         throw error;
                     }
                     console.log('Updated conversation:', data);
+                    
+                    // Refresh subscription data
+                    setSubscriptionData(prev => ({
+                        ...prev,
+                        queries_used: (prev?.queries_used || 0) + 1,
+                        queries_remaining: Math.max(0, (prev?.queries_remaining || 0) - 1)
+                    }));
+                    
                     return { success: true, data };
                 } else {
                     console.log('Creating new history entry...');
+                    console.log('Insert data:', {
+                        user_id: user.id,
+                        query_type: queryType,
+                        query_text: queryText.substring(0, 100) + '...',
+                        response_text: responseText.substring(0, 100) + '...'
+                    });
+                    
                     const { data, error } = await supabase
                         .from('query_history')
                         .insert({
@@ -103,19 +127,32 @@ export const useQueries = () => {
                     
                     if (error) {
                         console.error('Insert error:', error);
+                        console.error('Insert error details:', JSON.stringify(error, null, 2));
                         throw error;
                     }
                     console.log('Created new history entry:', data);
                     
                      if (subscription && !subscription.is_admin && !subscription.is_subscribed) {
                          console.log('Updating query count...');
-                        await supabase
+                        const { error: updateError } = await supabase
                             .from('user_subscriptions')
                             .update({ 
                                 queries_used: (subscription.queries_used || 0) + 1,
                                 queries_remaining: Math.max(0, (subscription.queries_remaining || 0) - 1)
                             })
                             .eq('user_id', user.id);
+                        
+                        if (updateError) {
+                            console.error('Error updating subscription:', updateError);
+                        } else {
+                            console.log('Successfully updated query count');
+                            // Update local state
+                            setSubscriptionData(prev => ({
+                                ...prev,
+                                queries_used: (prev?.queries_used || 0) + 1,
+                                queries_remaining: Math.max(0, (prev?.queries_remaining || 0) - 1)
+                            }));
+                        }
                     }
 
                     return { success: true, data };
@@ -127,6 +164,7 @@ export const useQueries = () => {
 
         } catch (error) {
             console.error('Error handling query:', error);
+            console.error('Full error details:', JSON.stringify(error, null, 2));
             return { success: false, reason: error.message };
         }
     }, [user]);
