@@ -55,14 +55,14 @@ export const toast = ({ ...props }) => {
   toastStore.setState((state) => ({
     ...state,
     toasts: [
-      { ...props, id, dismiss: dismiss },
+      { ...props, id, dismiss },
       ...state.toasts,
     ].slice(0, TOAST_LIMIT),
   }))
 
   return {
     id,
-    dismiss: dismiss,
+    dismiss,
     update,
   }
 }
