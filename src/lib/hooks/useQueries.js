@@ -48,6 +48,8 @@ export const useQueries = () => {
         }
 
         try {
+            console.log('handleQuery called with:', { queryType, shouldSave, conversationIdToUpdate });
+            
             const { data: subscription, error: subscriptionError } = await supabase
                 .from('user_subscriptions')
                 .select('*')
@@ -55,6 +57,7 @@ export const useQueries = () => {
                 .single();
 
             if (subscriptionError && subscriptionError.code !== 'PGRST116') { // Ignore 'exact one row' error
+                console.error('Subscription error:', subscriptionError);
                 throw new Error('Could not verify subscription status.');
             }
 
@@ -65,7 +68,9 @@ export const useQueries = () => {
             }
 
             if (shouldSave) {
+                console.log('Saving to database...');
                  if (conversationIdToUpdate) {
+                     console.log('Updating existing conversation:', conversationIdToUpdate);
                     const { data, error } = await supabase
                         .from('query_history')
                         .update({ 
@@ -77,9 +82,14 @@ export const useQueries = () => {
                         .select()
                         .single();
 
-                    if (error) throw error;
+                    if (error) {
+                        console.error('Update error:', error);
+                        throw error;
+                    }
+                    console.log('Updated conversation:', data);
                     return { success: true, data };
                 } else {
+                    console.log('Creating new history entry...');
                     const { data, error } = await supabase
                         .from('query_history')
                         .insert({
@@ -90,9 +100,15 @@ export const useQueries = () => {
                         })
                         .select()
                         .single();
-                    if (error) throw error;
+                    
+                    if (error) {
+                        console.error('Insert error:', error);
+                        throw error;
+                    }
+                    console.log('Created new history entry:', data);
                     
                      if (subscription && !subscription.is_admin && !subscription.is_subscribed) {
+                         console.log('Updating query count...');
                         await supabase
                             .from('user_subscriptions')
                             .update({ 
