@@ -67,7 +67,6 @@ import React from 'react';
           'group-[&:not(.destructive)]:text-green-300 group-[&:not(.destructive)]:hover:text-green-500 group-[&:not(.destructive)]:focus:ring-green-400 group-[&:not(.destructive)]:focus:ring-offset-green-600', // Default (success) variant colors
           className
         )}
-        toast-close=""
         {...props}
       >
         <X className="h-4 w-4" />

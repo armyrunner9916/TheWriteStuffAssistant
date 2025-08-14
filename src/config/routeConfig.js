@@ -12,7 +12,6 @@ import React from 'react';
     import History from "@/pages/History";
 
     import Prose from "@/pages/Prose";
-    import Brainstorming from "@/pages/Brainstorming";
 
     import Poetry from "@/pages/Poetry";
 
@@ -28,22 +27,15 @@ import React from 'react';
       { path: "/", element: SignIn, isPublic: true, exact: true },
       { path: "/signup", element: SignUp, isPublic: true },
       { path: "/dashboard", element: Dashboard, isProtected: true },
-      { path: "/history/fictional-prose", element: History, isProtected: true },
       { path: "/history/fictional_prose_unified", element: History, isProtected: true },
-      { path: "/history/poetry", element: PoetryHistory, isProtected: true },
       { path: "/history/poetry_unified", element: PoetryHistory, isProtected: true },
-      { path: "/history/nonfiction", element: NonfictionHistory, isProtected: true },
       { path: "/history/nonfiction_unified", element: NonfictionHistory, isProtected: true },
-      { path: "/history/content-creation", element: ContentCreationHistory, isProtected: true },
       { path: "/history/content_creation_unified", element: ContentCreationHistory, isProtected: true },
-      { path: "/history/songwriting", element: SongwritingHistory, isProtected: true },
       { path: "/history/songwriting_unified", element: SongwritingHistory, isProtected: true },
-      { path: "/history/stage-screen", element: StageScreenHistory, isProtected: true },
       { path: "/history/stage_screen_unified", element: StageScreenHistory, isProtected: true },
       { path: "/history/:section", element: History, isProtected: true },
 
       { path: "/prose", element: Prose, isProtected: true },
-      { path: "/brainstorming", element: Brainstorming, isProtected: true },
 
       { path: "/poetry", element: Poetry, isProtected: true },
 

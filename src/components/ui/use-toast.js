@@ -45,22 +45,24 @@ export const toast = ({ ...props }) => {
       ),
     }))
 
-  const dismiss = () => toastStore.setState((state) => ({
+  const dismiss = () => {
+    toastStore.setState((state) => ({
     ...state,
     toasts: state.toasts.filter((t) => t.id !== id),
-  }))
+    }))
+  }
 
   toastStore.setState((state) => ({
     ...state,
     toasts: [
-      { ...props, id, dismiss },
+      { ...props, id, dismiss: dismiss },
       ...state.toasts,
     ].slice(0, TOAST_LIMIT),
   }))
 
   return {
     id,
-    dismiss,
+    dismiss: dismiss,
     update,
   }
 }
