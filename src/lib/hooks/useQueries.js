@@ -1,6 +1,6 @@
 import { useCallback, useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
-import { useAuth } from '@/lib/hooks/useAuth.jsx';
+import { useAuth } from '@/lib/hooks/useAuth';
 import { toast } from '@/components/ui/use-toast';
 
 export const useQueries = () => {
