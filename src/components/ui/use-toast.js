@@ -47,15 +47,15 @@ export const toast = ({ ...props }) => {
 
   const dismiss = () => {
     toastStore.setState((state) => ({
-    ...state,
-    toasts: state.toasts.filter((t) => t.id !== id),
+      ...state,
+      toasts: state.toasts.filter((t) => t.id !== id),
     }))
   }
 
   toastStore.setState((state) => ({
     ...state,
     toasts: [
-      { ...props, id, dismiss },
+      { ...props, id, onDismiss: dismiss },
       ...state.toasts,
     ].slice(0, TOAST_LIMIT),
   }))
@@ -87,7 +87,9 @@ export function useToast() {
       }
 
       const timeout = setTimeout(() => {
-        toast.dismiss()
+        if (toast.onDismiss) {
+          toast.onDismiss()
+        }
       }, toast.duration || 5000)
 
       timeouts.push(timeout)

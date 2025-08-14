@@ -71,21 +71,13 @@ function HistoryPage() {
 
   useEffect(() => {
     const fetchHistory = async () => {
-      console.log('Starting history fetch...');
-      console.log('User:', user);
-      console.log('Section:', section);
-      
       if (!user) {
-        console.log('No user found, stopping fetch');
         setLoading(false);
         return;
       }
 
       setLoading(true);
       try {
-        console.log('Fetching from query_history table...');
-        console.log('Query params:', { user_id: user.id, query_type: section });
-        
         const { data, error } = await supabase
           .from('query_history')
           .select('*')
@@ -93,21 +85,12 @@ function HistoryPage() {
           .eq('query_type', section)
           .order('created_at', { ascending: false });
 
-        console.log('Supabase response:', { data, error });
-
         if (error) {
           console.error('Supabase error:', error);
           throw error;
         }
 
-        console.log('Setting history data:', data);
         setHistory(data || []);
-        
-        if (data && data.length > 0) {
-          console.log('Found', data.length, 'history entries');
-        } else {
-          console.log('No history entries found for this section');
-        }
       } catch (error) {
         console.error('History fetch error:', error);
         toast({
@@ -126,7 +109,6 @@ function HistoryPage() {
 
   const handleDelete = async (id) => {
     try {
-      console.log('Deleting entry:', id);
       const { error } = await supabase
         .from("query_history")
         .delete()
@@ -175,9 +157,6 @@ function HistoryPage() {
     );
   }
 
-  console.log('Rendering with history:', history);
-  console.log('Loading state:', loading);
-
   return (
     <>
       <Helmet>
@@ -199,15 +178,6 @@ function HistoryPage() {
             <div className="hidden sm:block w-24"></div>
           </header>
 
-          <div className="mb-4 p-4 bg-zinc-900 rounded-lg border border-yellow-400/20">
-            <p className="text-yellow-400/80 text-sm">
-              Debug Info: Section = "{section}", User ID = "{user?.id}", Loading = {loading.toString()}
-            </p>
-            <p className="text-yellow-400/80 text-sm">
-              History entries found: {history.length}
-            </p>
-          </div>
-
           {loading ? (
             <div className="flex justify-center items-center h-64">
               <Loader2 className="h-12 w-12 animate-spin text-yellow-400" />
@@ -218,9 +188,6 @@ function HistoryPage() {
               <CardContent className="p-8 text-center">
                 <p className="text-yellow-400/70 text-lg">No history found for this section yet.</p>
                 <p className="text-yellow-400/50 text-sm mt-2">Start using the tools to build your history!</p>
-                <p className="text-yellow-400/40 text-xs mt-4">
-                  Looking for query_type: "{section}" in the database
-                </p>
               </CardContent>
             </Card>
           ) : (
