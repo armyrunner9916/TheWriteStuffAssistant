@@ -191,6 +191,9 @@ logger.error = (msg, options) => {
 
 export default defineConfig({
 	customLogger: logger,
+	optimizeDeps: {
+		exclude: ['ws']
+	},
 	plugins: [
 		...(isDev ? [inlineEditPlugin(), editModeDevPlugin()] : []),
 		react(),
