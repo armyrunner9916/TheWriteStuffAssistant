@@ -37,7 +37,7 @@ function SignIn() {
               Welcome to The Write Stuff
             </h1>
             <p className="mt-4 max-w-2xl text-md sm:text-lg text-yellow-400/90">
-              The Write Stuff helps all types of creatives brainstorm, build, and polish with tailor-made guidance.
+              Pick a task, fill a few details, and get focused results—worlds, characters, poems, outlines, and more—that you can refine with follow-ups. No prompt-crafting required.
             </p>
             <p className="mt-2 max-w-2xl text-md sm:text-lg text-yellow-400/90">
               Start fresh or drop in existing work, and get clear, thoughtful feedback — without losing your voice.
