@@ -210,6 +210,7 @@ export default defineConfig({
 		extensions: ['.jsx', '.js', '.tsx', '.ts', '.json', ],
 		alias: {
 			'@': path.resolve(__dirname, './src'),
+			'ws': path.resolve(__dirname, './src/stubs/ws-stub.js'),
 		},
 	},
 	build: {
