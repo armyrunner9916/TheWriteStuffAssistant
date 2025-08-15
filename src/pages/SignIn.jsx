@@ -40,9 +40,6 @@ function SignIn() {
               Pick a task, fill a few details, and get focused results—worlds, characters, poems, outlines, and more—that you can refine with follow-ups. No prompt-crafting required.
             </p>
             <p className="mt-2 max-w-2xl text-md sm:text-lg text-yellow-400/90">
-              Start fresh or drop in existing work, and get clear, thoughtful feedback — without losing your voice.
-            </p>
-            <p className="mt-2 max-w-2xl text-md sm:text-lg text-yellow-400/90">
               Try it free for 3 days. Then just $5/month. Click below to get started today!
             </p>
           </motion.div>
