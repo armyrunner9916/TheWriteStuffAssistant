@@ -134,49 +134,52 @@ function cleanHistoryText(text) {
   if (!text) return '';
   
   return text
-    // Remove metadata sections
-    .replace(/^\*\*Output Type Requested:\*\*.*$/gm, '')
-    .replace(/^Output Type Requested:.*$/gm, '')
-    .replace(/^\*\*Creative Parameters:\*\*.*$/gm, '')
-    .replace(/^Creative Parameters:.*$/gm, '')
-    .replace(/^- \*\*[^:]+:\*\* .+$/gm, '')
-    // Remove form labels and structured data
-    .replace(/^Genre: .+$/gm, '')
-    .replace(/^Tone: .+$/gm, '')
-    .replace(/^Setting: .+$/gm, '')
-    .replace(/^Theme: .+$/gm, '')
-    .replace(/^Length: .+$/gm, '')
-    .replace(/^Format: .+$/gm, '')
-    .replace(/^Audience: .+$/gm, '')
-    .replace(/^Platform: .+$/gm, '')
-    .replace(/^Budget: .+$/gm, '')
-    .replace(/^Premise: .+$/gm, '')
-    .replace(/^Character: .+$/gm, '')
-    .replace(/^Story idea: .+$/gm, '')
-    .replace(/^Story Idea \/ Premise: .+$/gm, '')
-    .replace(/^Research question: .+$/gm, '')
-    .replace(/^Target audience: .+$/gm, '')
-    .replace(/^Content theme: .+$/gm, '')
-    .replace(/^Rhyme scheme: .+$/gm, '')
-    .replace(/^Poetry style: .+$/gm, '')
-    .replace(/^Meter: .+$/gm, '')
-    .replace(/^Medium: .+$/gm, '')
-    .replace(/^Dialogue style: .+$/gm, '')
-    .replace(/^Visual preferences: .+$/gm, '')
-    .replace(/^Main character: .+$/gm, '')
-    .replace(/^Main Character Traits: .+$/gm, '')
-    .replace(/^Setting details: .+$/gm, '')
-    .replace(/^Desired tone: .+$/gm, '')
-    .replace(/^Target length: .+$/gm, '')
-    .replace(/^Story premise: .+$/gm, '')
-    // Remove bullet points with labels
-    .replace(/^• [A-Za-z\s]+: .+$/gm, '')
-    // Remove JSON blocks
-    .replace(/```json[\s\S]*?```/g, '')
-    // Remove follow-up sections
+    // Convert metadata sections to proper Markdown
+    .replace(/^\*\*Output Type Requested:\*\*(.*?)$/gm, '**Request:** $1')
+    .replace(/^Output Type Requested:(.*?)$/gm, '**Request:**$1')
+    .replace(/^\*\*Creative Parameters:\*\*$/gm, '**Parameters:**')
+    .replace(/^Creative Parameters:$/gm, '**Parameters:**')
+    
+    // Convert bullet points with labels to proper Markdown
+    .replace(/^- \*\*([^:]+):\*\* (.+)$/gm, '- **$1:** $2')
+    
+    // Convert form labels to proper Markdown format
+    .replace(/^Genre: (.+)$/gm, '**Genre:** $1')
+    .replace(/^Tone: (.+)$/gm, '**Tone:** $1')
+    .replace(/^Setting: (.+)$/gm, '**Setting:** $1')
+    .replace(/^Theme: (.+)$/gm, '**Theme:** $1')
+    .replace(/^Length: (.+)$/gm, '**Length:** $1')
+    .replace(/^Format: (.+)$/gm, '**Format:** $1')
+    .replace(/^Audience: (.+)$/gm, '**Audience:** $1')
+    .replace(/^Platform: (.+)$/gm, '**Platform:** $1')
+    .replace(/^Budget: (.+)$/gm, '**Budget:** $1')
+    .replace(/^Premise: (.+)$/gm, '**Premise:** $1')
+    .replace(/^Character: (.+)$/gm, '**Character:** $1')
+    .replace(/^Story idea: (.+)$/gm, '**Story Idea:** $1')
+    .replace(/^Story Idea \/ Premise: (.+)$/gm, '**Story Premise:** $1')
+    .replace(/^Research question: (.+)$/gm, '**Research Question:** $1')
+    .replace(/^Target audience: (.+)$/gm, '**Target Audience:** $1')
+    .replace(/^Content theme: (.+)$/gm, '**Content Theme:** $1')
+    .replace(/^Rhyme scheme: (.+)$/gm, '**Rhyme Scheme:** $1')
+    .replace(/^Poetry style: (.+)$/gm, '**Poetry Style:** $1')
+    .replace(/^Meter: (.+)$/gm, '**Meter:** $1')
+    .replace(/^Medium: (.+)$/gm, '**Medium:** $1')
+    .replace(/^Dialogue style: (.+)$/gm, '**Dialogue Style:** $1')
+    .replace(/^Visual preferences: (.+)$/gm, '**Visual Preferences:** $1')
+    .replace(/^Main character: (.+)$/gm, '**Main Character:** $1')
+    .replace(/^Main Character Traits: (.+)$/gm, '**Main Character Traits:** $1')
+    .replace(/^Setting details: (.+)$/gm, '**Setting Details:** $1')
+    .replace(/^Desired tone: (.+)$/gm, '**Desired Tone:** $1')
+    .replace(/^Target length: (.+)$/gm, '**Target Length:** $1')
+    .replace(/^Story premise: (.+)$/gm, '**Story Premise:** $1')
+    
+    // Convert other bullet points with labels to proper Markdown
+    .replace(/^• ([A-Za-z\s]+): (.+)$/gm, '- **$1:** $2')
+    
+    // Clean up follow-up sections
     .replace(/--- Follow-ups ---[\s\S]*$/g, '')
-    // Remove excessive whitespace and empty lines
-    .replace(/^\s*$/gm, '')
+    
+    // Normalize spacing - reduce excessive whitespace but keep proper paragraph breaks
     .replace(/\n{3,}/g, '\n\n')
     .trim();
 }
