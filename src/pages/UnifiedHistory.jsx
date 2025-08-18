@@ -129,6 +129,58 @@ const QUERYTYPE_TO_LABEL = {
 
 const labelFor = qt => QUERYTYPE_TO_LABEL[qt] || qt;
 
+// Clean text function to remove metadata and form labels
+function cleanHistoryText(text) {
+  if (!text) return '';
+  
+  return text
+    // Remove metadata sections
+    .replace(/^\*\*Output Type Requested:\*\*.*$/gm, '')
+    .replace(/^Output Type Requested:.*$/gm, '')
+    .replace(/^\*\*Creative Parameters:\*\*.*$/gm, '')
+    .replace(/^Creative Parameters:.*$/gm, '')
+    .replace(/^- \*\*[^:]+:\*\* .+$/gm, '')
+    // Remove form labels and structured data
+    .replace(/^Genre: .+$/gm, '')
+    .replace(/^Tone: .+$/gm, '')
+    .replace(/^Setting: .+$/gm, '')
+    .replace(/^Theme: .+$/gm, '')
+    .replace(/^Length: .+$/gm, '')
+    .replace(/^Format: .+$/gm, '')
+    .replace(/^Audience: .+$/gm, '')
+    .replace(/^Platform: .+$/gm, '')
+    .replace(/^Budget: .+$/gm, '')
+    .replace(/^Premise: .+$/gm, '')
+    .replace(/^Character: .+$/gm, '')
+    .replace(/^Story idea: .+$/gm, '')
+    .replace(/^Story Idea \/ Premise: .+$/gm, '')
+    .replace(/^Research question: .+$/gm, '')
+    .replace(/^Target audience: .+$/gm, '')
+    .replace(/^Content theme: .+$/gm, '')
+    .replace(/^Rhyme scheme: .+$/gm, '')
+    .replace(/^Poetry style: .+$/gm, '')
+    .replace(/^Meter: .+$/gm, '')
+    .replace(/^Medium: .+$/gm, '')
+    .replace(/^Dialogue style: .+$/gm, '')
+    .replace(/^Visual preferences: .+$/gm, '')
+    .replace(/^Main character: .+$/gm, '')
+    .replace(/^Main Character Traits: .+$/gm, '')
+    .replace(/^Setting details: .+$/gm, '')
+    .replace(/^Desired tone: .+$/gm, '')
+    .replace(/^Target length: .+$/gm, '')
+    .replace(/^Story premise: .+$/gm, '')
+    // Remove bullet points with labels
+    .replace(/^• [A-Za-z\s]+: .+$/gm, '')
+    // Remove JSON blocks
+    .replace(/```json[\s\S]*?```/g, '')
+    // Remove follow-up sections
+    .replace(/--- Follow-ups ---[\s\S]*$/g, '')
+    // Remove excessive whitespace and empty lines
+    .replace(/^\s*$/gm, '')
+    .replace(/\n{3,}/g, '\n\n')
+    .trim();
+}
+
 const sectionTitles = {
   'prose': 'Fictional Prose History',
   'poetry': 'Poetry History',
@@ -184,8 +236,8 @@ function UnifiedHistory() {
           ...r,
           subcategory: labelFor(r.query_type), // for grouping/labels
           // If your renderer expects prompt_md/response_md, map here:
-          prompt_md: r.query_text,
-          response_md: r.response_text,
+          prompt_md: cleanHistoryText(r.query_text),
+          response_md: cleanHistoryText(r.response_text),
         }));
 
         setHistory(rows);
@@ -229,7 +281,7 @@ function UnifiedHistory() {
   };
 
   const handleDownload = (entry) => {
-    const content = `**Prompt:**\n${entry.query_text}\n\n**Response:**\n${entry.response_text}`;
+    const content = `**Prompt:**\n${entry.prompt_md}\n\n**Response:**\n${entry.response_md}`;
     
     const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
     const url = URL.createObjectURL(blob);
@@ -291,8 +343,6 @@ function UnifiedHistory() {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {history.map((item) => {
-                const description = item.query_text.substring(0, 150) + '...';
-
                 return (
                   <Card key={item.id} className="bg-zinc-900/50 border border-yellow-400/20 hover:border-yellow-400/50 transition-colors">
                     <CardHeader>
@@ -300,7 +350,7 @@ function UnifiedHistory() {
                         {new Date(item.created_at).toLocaleString()}
                       </CardTitle>
                       <CardDescription className="text-yellow-400/60 line-clamp-3 text-xs">
-                        {description}
+                        {cleanHistoryText(item.query_text).substring(0, 150) + '...'}
                       </CardDescription>
                     </CardHeader>
                     <CardContent className="flex justify-end gap-2 pt-0">
@@ -351,11 +401,11 @@ function UnifiedHistory() {
               <div className="max-h-[60vh] overflow-y-auto pr-4">
                 <h4 className="font-bold mt-4 mb-2 text-yellow-300">Prompt:</h4>
                 <div className="text-sm p-3 bg-zinc-900 rounded-md border border-yellow-400/20">
-                  <MarkdownRenderer markdownText={selectedEntry.query_text} />
+                  <MarkdownRenderer markdownText={selectedEntry.prompt_md} />
                 </div>
                 <h4 className="font-bold mt-4 mb-2 text-yellow-300">Response:</h4>
                 <div className="prose prose-sm prose-invert prose-p:text-yellow-400/90 prose-headings:text-yellow-400 prose-strong:text-yellow-300 prose-ul:text-yellow-400/90 prose-ol:text-yellow-400/90 max-w-none p-3 bg-zinc-900 rounded-md border border-yellow-400/20">
-                  <MarkdownRenderer markdownText={selectedEntry.response_text} />
+                  <MarkdownRenderer markdownText={selectedEntry.response_md} />
                 </div>
               </div>
               <AlertDialogFooter>
