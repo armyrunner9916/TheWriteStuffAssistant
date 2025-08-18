@@ -20,6 +20,115 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 
+// Which query_type values belong to each section (legacy + unified)
+const SECTION_TO_QUERY_TYPES = {
+  prose: [
+    'fictional_prose_unified',
+    'world_building',
+    'character_development',
+    'style_enhancement',
+    'story_outline',
+  ],
+  poetry: [
+    'poetry_unified',
+    'poetry_form_structure',
+    'poetry_language_imagery',
+    'poetry_rhyme_rhythm',
+    'poetry_style_voice',
+  ],
+  nonfiction: [
+    'nonfiction_unified',
+    'research_fact_checking',
+    'organization_structure',
+    'voice_tone_development',
+    'clarity_conciseness',
+    'engaging_openings_conclusions',
+  ],
+  content: [
+    'content_creation_unified',
+    'audience_platform_strategy',
+    'content_idea_generation',
+    'scripting_storyboarding',
+    'filming_production_tips',
+    'posting_optimization_growth',
+  ],
+  songwriting: [
+    'songwriting_unified',
+    'theme_concept_development',
+    'lyrics_wordcraft',
+    'melody_hook_creation',
+    'song_structure_arrangement',
+    'style_genre_performance_tips',
+  ],
+  stage: [
+    'stage_screen_unified',
+    'scene_structure_pacing',
+    'dialogue_crafting',
+    'character_arcs_dynamics',
+    'visual_staging_suggestions',
+  ],
+  // just in case your route uses "stage_screen" instead of "stage"
+  stage_screen: [
+    'stage_screen_unified',
+    'scene_structure_pacing',
+    'dialogue_crafting',
+    'character_arcs_dynamics',
+    'visual_staging_suggestions',
+  ],
+};
+
+// (Optional) nice labels for grouping in the UI
+const QUERYTYPE_TO_LABEL = {
+  // Prose
+  world_building: 'World Building',
+  character_development: 'Character Development',
+  style_enhancement: 'Style Enhancement',
+  story_outline: 'Story Outline',
+
+  // Poetry
+  poetry_form_structure: 'Form & Structure',
+  poetry_language_imagery: 'Language & Imagery',
+  poetry_rhyme_rhythm: 'Rhyme & Rhythm',
+  poetry_style_voice: 'Style & Voice',
+
+  // Nonfiction
+  research_fact_checking: 'Research & Fact-Checking',
+  organization_structure: 'Organization & Structure',
+  voice_tone_development: 'Voice & Tone',
+  clarity_conciseness: 'Clarity & Conciseness',
+  engaging_openings_conclusions: 'Engaging Openings & Conclusions',
+
+  // Content
+  audience_platform_strategy: 'Audience & Platform Strategy',
+  content_idea_generation: 'Content Idea Generation',
+  scripting_storyboarding: 'Scripting & Storyboarding',
+  filming_production_tips: 'Filming & Production Tips',
+  posting_optimization_growth: 'Posting, Optimization & Growth',
+
+  // Songwriting
+  theme_concept_development: 'Theme & Concept Development',
+  lyrics_wordcraft: 'Lyrics & Wordcraft',
+  melody_hook_creation: 'Melody & Hook Creation',
+  song_structure_arrangement: 'Song Structure & Arrangement',
+  style_genre_performance_tips: 'Style, Genre & Performance Tips',
+
+  // Stage & Screen
+  scene_structure_pacing: 'Scene Structure & Pacing',
+  dialogue_crafting: 'Dialogue Crafting',
+  character_arcs_dynamics: 'Character Arcs & Dynamics',
+  visual_staging_suggestions: 'Visual & Staging Suggestions',
+
+  // Unified label (shown if you want)
+  fictional_prose_unified: 'Unified Prompt',
+  poetry_unified: 'Unified Prompt',
+  nonfiction_unified: 'Unified Prompt',
+  content_creation_unified: 'Unified Prompt',
+  songwriting_unified: 'Unified Prompt',
+  stage_screen_unified: 'Unified Prompt',
+};
+
+const labelFor = qt => QUERYTYPE_TO_LABEL[qt] || qt;
+
 const sectionTitles = {
   'prose': 'Fictional Prose History',
   'poetry': 'Poetry History',
@@ -56,25 +165,36 @@ function UnifiedHistory() {
 
       setLoading(true);
       try {
+        // Pick all query_type values that belong to the current section
+        const allowedTypes =
+          SECTION_TO_QUERY_TYPES[section] ||
+          [section, `${section}_unified`]; // safe fallback
+
         const { data, error } = await supabase
           .from('query_history')
-          .select('*')
+          .select('id, user_id, query_type, query_text, response_text, created_at, conversation_id')
           .eq('user_id', user.id)
-          .eq('query_type', section)
+          .in('query_type', allowedTypes)
           .order('created_at', { ascending: false });
 
-        if (error) {
-          console.error('Supabase error:', error);
-          throw error;
-        }
+        if (error) throw error;
 
-        setHistory(data || []);
+        // Normalize into the shape your UI expects
+        const rows = (data || []).map((r) => ({
+          ...r,
+          subcategory: labelFor(r.query_type), // for grouping/labels
+          // If your renderer expects prompt_md/response_md, map here:
+          prompt_md: r.query_text,
+          response_md: r.response_text,
+        }));
+
+        setHistory(rows);
       } catch (error) {
         console.error('History fetch error:', error);
         toast({
-          title: "Error",
-          description: "Failed to fetch history: " + error.message,
-          variant: "destructive",
+          title: 'Error',
+          description: 'Failed to fetch history: ' + error.message,
+          variant: 'destructive',
         });
         setHistory([]);
       } finally {
@@ -83,7 +203,8 @@ function UnifiedHistory() {
     };
 
     fetchHistory();
-  }, [user, section, toast]);
+    // include user.id so it refetches when auth changes
+  }, [user?.id, section, toast]);
 
   const handleDelete = async (id) => {
     try {
