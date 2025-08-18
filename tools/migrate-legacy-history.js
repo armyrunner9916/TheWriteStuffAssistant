@@ -13,20 +13,25 @@ if (!supabaseServiceKey) {
 
 const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
-// Legacy query type mappings to new sections and subcategories
+// Legacy query type mappings to new sections
 const LEGACY_MAPPINGS = {
-  // Prose mappings
-  'world_building': { section: 'prose', subcategory: 'World Building' },
-  'character_development': { section: 'prose', subcategory: 'Character Development' },
-  'style_enhancement': { section: 'prose', subcategory: 'Style Enhancement' },
+  // Fictional Prose mappings
+  'character-development': { section: 'prose', subcategory: 'Character Development' },
+  'world-building': { section: 'prose', subcategory: 'World Building' },
+  'story-outline': { section: 'prose', subcategory: 'Story Outline' },
+  'brainstorming': { section: 'prose', subcategory: 'Story Outline' },
   'story_outline': { section: 'prose', subcategory: 'Story Outline' },
+  'character_development': { section: 'prose', subcategory: 'Character Development' },
+  'world_building': { section: 'prose', subcategory: 'World Building' },
+  'fictional_prose_unified': { section: 'prose', subcategory: 'Unified Generation' },
   
-  // Poetry mappings
+  // Poetry mappings (anything with poetry_ prefix)
   'poetry_form_structure': { section: 'poetry', subcategory: 'Form & Structure' },
   'poetry_language_imagery': { section: 'poetry', subcategory: 'Language & Imagery' },
   'poetry_rhyme_rhythm': { section: 'poetry', subcategory: 'Rhyme & Rhythm' },
   'poetry_style_voice': { section: 'poetry', subcategory: 'Style & Voice' },
   'poetry_revision_clarity': { section: 'poetry', subcategory: 'Revision & Clarity' },
+  'poetry_unified': { section: 'poetry', subcategory: 'Unified Generation' },
   
   // Nonfiction mappings
   'research_fact_checking': { section: 'nonfiction', subcategory: 'Research & Fact-Checking' },
@@ -34,6 +39,7 @@ const LEGACY_MAPPINGS = {
   'voice_tone_development': { section: 'nonfiction', subcategory: 'Voice & Tone' },
   'clarity_conciseness': { section: 'nonfiction', subcategory: 'Clarity & Conciseness' },
   'engaging_openings_conclusions': { section: 'nonfiction', subcategory: 'Engaging Openings & Conclusions' },
+  'nonfiction_unified': { section: 'nonfiction', subcategory: 'Unified Generation' },
   
   // Content mappings
   'audience_platform_strategy': { section: 'content', subcategory: 'Audience & Platform Strategy' },
@@ -41,6 +47,7 @@ const LEGACY_MAPPINGS = {
   'scripting_storyboarding': { section: 'content', subcategory: 'Scripting & Storyboarding' },
   'filming_production_tips': { section: 'content', subcategory: 'Filming & Production Tips' },
   'posting_optimization_growth': { section: 'content', subcategory: 'Posting, Optimization & Growth' },
+  'content_creation_unified': { section: 'content', subcategory: 'Unified Generation' },
   
   // Songwriting mappings
   'theme_concept_development': { section: 'songwriting', subcategory: 'Theme & Concept Development' },
@@ -48,12 +55,14 @@ const LEGACY_MAPPINGS = {
   'melody_hook_creation': { section: 'songwriting', subcategory: 'Melody & Hook Creation' },
   'song_structure_arrangement': { section: 'songwriting', subcategory: 'Song Structure & Arrangement' },
   'style_genre_performance_tips': { section: 'songwriting', subcategory: 'Style, Genre & Performance Tips' },
+  'songwriting_unified': { section: 'songwriting', subcategory: 'Unified Generation' },
   
   // Stage & Screen mappings
   'scene_structure_pacing': { section: 'stage', subcategory: 'Scene Structure & Pacing' },
   'dialogue_crafting': { section: 'stage', subcategory: 'Dialogue Crafting' },
   'character_arcs_dynamics': { section: 'stage', subcategory: 'Character Arcs & Dynamics' },
   'visual_staging_suggestions': { section: 'stage', subcategory: 'Visual & Staging Suggestions' },
+  'stage_screen_unified': { section: 'stage', subcategory: 'Unified Generation' },
 };
 
 function cleanText(text) {
@@ -64,7 +73,7 @@ function cleanText(text) {
     .replace(/^Output Type Requested:.*$/gm, '')
     .replace(/^Creative Parameters:.*$/gm, '')
     .replace(/^- \*\*[^:]+:\*\* .+$/gm, '')
-    // Remove form labels
+    // Remove form labels and structured data
     .replace(/^Genre: .+$/gm, '')
     .replace(/^Tone: .+$/gm, '')
     .replace(/^Setting: .+$/gm, '')
@@ -74,7 +83,23 @@ function cleanText(text) {
     .replace(/^Audience: .+$/gm, '')
     .replace(/^Platform: .+$/gm, '')
     .replace(/^Budget: .+$/gm, '')
-    // Remove empty lines and trim
+    .replace(/^Premise: .+$/gm, '')
+    .replace(/^Character: .+$/gm, '')
+    .replace(/^Story idea: .+$/gm, '')
+    .replace(/^Research question: .+$/gm, '')
+    .replace(/^Target audience: .+$/gm, '')
+    .replace(/^Content theme: .+$/gm, '')
+    .replace(/^Rhyme scheme: .+$/gm, '')
+    .replace(/^Poetry style: .+$/gm, '')
+    .replace(/^Meter: .+$/gm, '')
+    .replace(/^Medium: .+$/gm, '')
+    .replace(/^Dialogue style: .+$/gm, '')
+    .replace(/^Visual preferences: .+$/gm, '')
+    // Remove JSON blocks
+    .replace(/```json[\s\S]*?```/g, '')
+    // Remove follow-up sections
+    .replace(/--- Follow-ups ---[\s\S]*$/g, '')
+    // Remove excessive whitespace
     .replace(/^\s*$/gm, '')
     .replace(/\n{3,}/g, '\n\n')
     .trim();
@@ -83,7 +108,8 @@ function cleanText(text) {
 function reconstructPrompt(queryText, queryType) {
   const cleaned = cleanText(queryText);
   
-  if (cleaned && cleaned.length > 10) {
+  // If we have meaningful content after cleaning, use it
+  if (cleaned && cleaned.length > 20) {
     return cleaned;
   }
   
@@ -100,16 +126,31 @@ async function migrateLegacyHistory() {
   console.log('Starting legacy history migration...');
   
   try {
-    // Fetch all legacy history entries
-    const { data: legacyEntries, error: fetchError } = await supabase
+    // Get all legacy query types (including poetry_ prefix patterns)
+    const legacyQueryTypes = Object.keys(LEGACY_MAPPINGS);
+    
+    // Also fetch any entries that start with 'poetry_' but aren't explicitly mapped
+    const { data: allEntries, error: fetchError } = await supabase
       .from('query_history')
       .select('*')
-      .in('query_type', Object.keys(LEGACY_MAPPINGS))
       .order('created_at', { ascending: true });
 
     if (fetchError) {
       throw fetchError;
     }
+
+    // Filter entries that match our criteria
+    const legacyEntries = allEntries.filter(entry => {
+      // Direct match
+      if (legacyQueryTypes.includes(entry.query_type)) {
+        return true;
+      }
+      // Poetry prefix match
+      if (entry.query_type.startsWith('poetry_')) {
+        return true;
+      }
+      return false;
+    });
 
     console.log(`Found ${legacyEntries.length} legacy entries to migrate`);
 
@@ -117,7 +158,13 @@ async function migrateLegacyHistory() {
     const processedHashes = new Set();
 
     for (const entry of legacyEntries) {
-      const mapping = LEGACY_MAPPINGS[entry.query_type];
+      let mapping = LEGACY_MAPPINGS[entry.query_type];
+      
+      // Handle poetry_ prefixed entries not explicitly mapped
+      if (!mapping && entry.query_type.startsWith('poetry_')) {
+        mapping = { section: 'poetry', subcategory: 'Poetry Generation' };
+      }
+      
       if (!mapping) continue;
 
       // Create a hash to avoid duplicates
@@ -136,6 +183,12 @@ async function migrateLegacyHistory() {
       const cleanPrompt = reconstructPrompt(entry.query_text, entry.query_type);
       const cleanResponse = cleanText(entry.response_text);
 
+      // Skip if both prompt and response are too short after cleaning
+      if (cleanPrompt.length < 10 && cleanResponse.length < 10) {
+        console.log(`Skipping entry ${entry.id} - insufficient content after cleaning`);
+        continue;
+      }
+
       const migratedEntry = {
         user_id: entry.user_id,
         query_type: mapping.section,
@@ -143,6 +196,7 @@ async function migrateLegacyHistory() {
         response_text: cleanResponse,
         conversation_id: entry.conversation_id || crypto.randomUUID(),
         created_at: entry.created_at,
+        parent_query_id: entry.parent_query_id,
       };
 
       migratedEntries.push(migratedEntry);
@@ -153,8 +207,10 @@ async function migrateLegacyHistory() {
       return;
     }
 
+    console.log(`Preparing to migrate ${migratedEntries.length} cleaned entries`);
+
     // Insert migrated entries in batches
-    const batchSize = 100;
+    const batchSize = 50;
     let totalInserted = 0;
 
     for (let i = 0; i < migratedEntries.length; i += batchSize) {
@@ -176,18 +232,22 @@ async function migrateLegacyHistory() {
 
     console.log(`Migration complete! Migrated ${totalInserted} entries total.`);
     
-    // Optionally delete legacy entries (uncomment if desired)
-    // console.log('Cleaning up legacy entries...');
-    // const { error: deleteError } = await supabase
-    //   .from('query_history')
-    //   .delete()
-    //   .in('query_type', Object.keys(LEGACY_MAPPINGS));
+    // Clean up legacy entries
+    console.log('Cleaning up legacy entries...');
+    const legacyTypesToDelete = legacyEntries.map(e => e.id);
     
-    // if (deleteError) {
-    //   console.error('Error deleting legacy entries:', deleteError);
-    // } else {
-    //   console.log('Legacy entries cleaned up successfully');
-    // }
+    if (legacyTypesToDelete.length > 0) {
+      const { error: deleteError } = await supabase
+        .from('query_history')
+        .delete()
+        .in('id', legacyTypesToDelete);
+      
+      if (deleteError) {
+        console.error('Error deleting legacy entries:', deleteError);
+      } else {
+        console.log(`Cleaned up ${legacyTypesToDelete.length} legacy entries`);
+      }
+    }
 
   } catch (error) {
     console.error('Migration failed:', error);
