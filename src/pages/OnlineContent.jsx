@@ -22,8 +22,18 @@ import {
 } from "@/components/ui/select";
 import { AnimatePresence, motion } from "framer-motion";
 
-const UNIFIED_PROMPT_QUERY_TYPE = "content_creation_unified";
-const QUERY_TYPE_LABEL = "Content Creation Assistant";
+const SECTION = "content";
+const QUERY_TYPE = "content_creation_unified";
+const SECTION_TITLE = "Content Creation Assistant";
+
+const STEP1_OPTIONS = [
+  { value: "strategy", label: "Audience/Platform Strategy" },
+  { value: "ideas", label: "Content Ideas" },
+  { value: "script", label: "Script/Storyboard" },
+  { value: "production", label: "Filming & Production Tips" },
+  { value: "growth", label: "Posting/Optimization & Growth" },
+  { value: "all", label: "All of the above" }
+];
 
 const fieldConfig = {
   strategy: ["audience", "platform", "theme", "growthObjectives"],
@@ -55,8 +65,7 @@ function OnlineContent({ onLogout }) {
     growthObjectives: "",
   });
   const [followUp, setFollowUp] = useState("");
-  const [conversationId, setConversationId] = useState(null);
-  const [initialPrompt, setInitialPrompt] = useState("");
+  const [sessionId, setSessionId] = useState(null);
   const conversationEndRef = useRef(null);
 
   useEffect(() => {
@@ -70,7 +79,7 @@ function OnlineContent({ onLogout }) {
         const { data, error } = await supabase
           .from("system_prompts")
           .select("prompt_text")
-          .eq("query_type", UNIFIED_PROMPT_QUERY_TYPE)
+          .eq("query_type", QUERY_TYPE)
           .single();
         if (error) throw error;
         setSystemPrompt(data.prompt_text);
@@ -93,38 +102,60 @@ function OnlineContent({ onLogout }) {
     setFormData((prev) => ({ ...prev, [id]: value }));
   };
 
-  const getFullPromptText = () => {
+  const buildUserPrompt = () => {
+    const selectedOption = STEP1_OPTIONS.find(opt => opt.value === outputType);
     const visibleFields = fieldConfig[outputType] || [];
-    const promptDetails = visibleFields
-      .map(field => {
-        const value = formData[field]?.trim();
-        if (value) {
-          let fieldLabel = '';
-          switch(field) {
-            case 'audience': fieldLabel = 'Target Audience'; break;
-            case 'platform': fieldLabel = 'Platform(s)'; break;
-            case 'theme': fieldLabel = 'Content Theme/Topic'; break;
-            case 'format': fieldLabel = 'Content Format'; break;
-            case 'tone': fieldLabel = 'Tone/Style'; break;
-            case 'length': fieldLabel = 'Desired Length/Duration'; break;
-            case 'budget': fieldLabel = 'Budget/Resources'; break;
-            case 'schedule': fieldLabel = 'Posting Schedule/Frequency'; break;
-            case 'growthObjectives': fieldLabel = 'Growth Objectives'; break;
-            default: fieldLabel = field;
-          }
-          return `- **${fieldLabel}:** ${value}`;
+    
+    let prompt = `Generate ${selectedOption?.label || outputType}.`;
+    
+    const details = [];
+    visibleFields.forEach(field => {
+      const value = formData[field]?.trim();
+      if (value) {
+        switch(field) {
+          case 'audience': details.push(`Target audience: ${value}`); break;
+          case 'platform': details.push(`Platform: ${value}`); break;
+          case 'theme': details.push(`Theme: ${value}`); break;
+          case 'format': details.push(`Format: ${value}`); break;
+          case 'tone': details.push(`Tone: ${value}`); break;
+          case 'length': details.push(`Length: ${value}`); break;
+          case 'budget': details.push(`Budget: ${value}`); break;
+          case 'schedule': details.push(`Schedule: ${value}`); break;
+          case 'growthObjectives': details.push(`Growth objectives: ${value}`); break;
         }
-        return null;
-      })
-      .filter(Boolean)
-      .join("\n");
+      }
+    });
+    
+    if (details.length > 0) {
+      prompt += `\n\n${details.join('\n')}`;
+    }
+    
+    return prompt;
+  };
 
-    return `
-      **Output Type Requested:** ${outputType}
+  const saveToHistory = async (promptMd, responseMd, subcategory, sessionId = null) => {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return null;
 
-      **Creative Parameters:**
-      ${promptDetails || "No specific parameters provided. Please use your expertise to generate compelling content."}
-    `;
+      const { data, error } = await supabase
+        .from('query_history')
+        .insert({
+          user_id: user.id,
+          query_type: SECTION,
+          query_text: promptMd,
+          response_text: responseMd,
+          conversation_id: sessionId || crypto.randomUUID(),
+        })
+        .select()
+        .single();
+
+      if (error) throw error;
+      return data;
+    } catch (error) {
+      console.error('Error saving to history:', error);
+      return null;
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -140,12 +171,12 @@ function OnlineContent({ onLogout }) {
 
     setIsLoading(true);
     setConversation([]);
-    setConversationId(null);
+    setSessionId(null);
 
-    const userPrompt = getFullPromptText();
-    setInitialPrompt(userPrompt);
+    const userPrompt = buildUserPrompt();
+    const selectedOption = STEP1_OPTIONS.find(opt => opt.value === outputType);
 
-    const queryCheckResult = await handleQuery(UNIFIED_PROMPT_QUERY_TYPE, userPrompt, "");
+    const queryCheckResult = await handleQuery(QUERY_TYPE, userPrompt, "");
     if (!queryCheckResult.success) {
       toast({
         title: "Action Denied",
@@ -168,14 +199,14 @@ function OnlineContent({ onLogout }) {
       ];
       setConversation(newConversation);
 
-      const { data: historyEntry, error } = await handleQuery(UNIFIED_PROMPT_QUERY_TYPE, userPrompt, responseText, true);
-      if(error) throw error;
-      if (historyEntry) {
-        setConversationId(historyEntry.id);
-      }
+      const newSessionId = crypto.randomUUID();
+      setSessionId(newSessionId);
+      
+      await saveToHistory(userPrompt, responseText, selectedOption?.label || outputType, newSessionId);
+      
       toast({
         title: "Success!",
-        description: "Your content creation elements have been generated.",
+        description: "Your content has been generated.",
       });
     } catch (error) {
       console.error("Error generating content:", error);
@@ -198,7 +229,7 @@ function OnlineContent({ onLogout }) {
 
     setIsLoading(true);
     
-    const queryCheckResult = await handleQuery(UNIFIED_PROMPT_QUERY_TYPE, followUp, "");
+    const queryCheckResult = await handleQuery(QUERY_TYPE, followUp, "");
     if (!queryCheckResult.success) {
       toast({
         title: "Action Denied",
@@ -216,17 +247,14 @@ function OnlineContent({ onLogout }) {
     try {
       const messagesForApi = [
         { role: "system", content: systemPrompt },
-         ...currentConversation.map(turn => ({ role: turn.role, content: turn.content })),
+        ...currentConversation.map(turn => ({ role: turn.role, content: turn.content })),
       ];
 
       const responseText = await makeOpenAIRequest(messagesForApi);
       const newConversation = [...currentConversation, { role: "assistant", content: responseText }];
       setConversation(newConversation);
       
-      const fullQueryText = initialPrompt + "\n\n--- Follow-ups ---\n" + newConversation.slice(1).map(c => `${c.role}: ${c.content}`).join('\n');
-      const fullResponseText = newConversation.filter(c => c.role === 'assistant').map(c => c.content).join('\n\n---\n\n');
-
-      await handleQuery(UNIFIED_PROMPT_QUERY_TYPE, fullQueryText, fullResponseText, true, conversationId);
+      await saveToHistory(followUp, responseText, "Follow-up", sessionId);
       
       toast({ title: "Success!", description: "Follow-up response generated." });
     } catch (error) {
@@ -236,7 +264,6 @@ function OnlineContent({ onLogout }) {
       setIsLoading(false);
     }
   };
-
 
   const renderField = (id, label, placeholder, isTextarea = false) => {
     const isVisible = outputType && (fieldConfig[outputType]?.includes(id) ?? false);
@@ -262,7 +289,7 @@ function OnlineContent({ onLogout }) {
   return (
     <>
       <Helmet>
-        <title>Content Creation Assistant | The Write Stuff</title>
+        <title>{SECTION_TITLE} | The Write Stuff</title>
         <meta name="description" content="A unified tool for content strategy, idea generation, scripting, and growth." />
         <link rel="canonical" href="https://writestuffassistant.com/online-content" />
       </Helmet>
@@ -273,14 +300,14 @@ function OnlineContent({ onLogout }) {
                <Button onClick={() => navigate("/dashboard")} variant="outline" size="sm" className="bg-black text-yellow-400 hover:bg-zinc-800 border-yellow-400">
                   <ArrowLeft className="h-4 w-4 mr-1" /> Back to Categories
                </Button>
-               <Button onClick={() => navigate(`/history/content_creation_unified`)} variant="outline" size="sm" className="bg-black text-yellow-400 hover:bg-zinc-800 border-yellow-400">
+               <Button onClick={() => navigate(`/content/history`)} variant="outline" size="sm" className="bg-black text-yellow-400 hover:bg-zinc-800 border-yellow-400">
                   <History className="h-4 w-4 mr-1" /> View History
                 </Button>
             </div>
             <AuthActionButtons onLogout={onLogout} />
           </header>
           
-          <h1 className="text-center text-3xl sm:text-4xl font-bold mb-2 text-yellow-400">{QUERY_TYPE_LABEL}</h1>
+          <h1 className="text-center text-3xl sm:text-4xl font-bold mb-2 text-yellow-400">{SECTION_TITLE}</h1>
           <p className="text-center text-yellow-400/80 mb-8">Your modular tool for building a successful content strategy.</p>
           
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -297,12 +324,9 @@ function OnlineContent({ onLogout }) {
                         <SelectValue placeholder="Select an element..." />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="strategy">Audience/Platform Strategy</SelectItem>
-                        <SelectItem value="ideas">Content Ideas</SelectItem>
-                        <SelectItem value="script">Script or Storyboard</SelectItem>
-                        <SelectItem value="production">Filming & Production Tips</SelectItem>
-                        <SelectItem value="growth">Posting/Optimization & Growth Strategy</SelectItem>
-                        <SelectItem value="all">All of the Above</SelectItem>
+                        {STEP1_OPTIONS.map(option => (
+                          <SelectItem key={option.value} value={option.value}>{option.label}</SelectItem>
+                        ))}
                       </SelectContent>
                     </Select>
                   </div>
@@ -310,15 +334,15 @@ function OnlineContent({ onLogout }) {
                   {outputType && (
                     <motion.div initial={{opacity: 0}} animate={{opacity: 1}} transition={{delay: 0.2}} className="space-y-4">
                       <Label className="text-yellow-400 font-bold text-base">Step 2: Add optional details</Label>
-                      {renderField("audience", "Target Audience", "e.g., 18-25, interested in gaming", true)}
+                      {renderField("audience", "Target audience", "e.g., 18-25, interested in gaming", true)}
                       {renderField("platform", "Platform(s)", "e.g., TikTok, YouTube, Blog")}
-                      {renderField("theme", "Content Theme or Topic", "e.g., Sustainable fashion, travel tips")}
-                      {renderField("format", "Content Format", "e.g., Short video, blog post, carousel")}
+                      {renderField("theme", "Content theme/topic", "e.g., Sustainable fashion, travel tips")}
+                      {renderField("format", "Content format", "e.g., Short video, blog post, carousel")}
                       {renderField("tone", "Tone/Style", "e.g., Educational, humorous, motivational")}
-                      {renderField("length", "Desired Length/Duration", "e.g., 60 seconds, 1000 words")}
-                      {renderField("budget", "Budget or Resources", "e.g., Small budget, smartphone only")}
-                      {renderField("schedule", "Posting Schedule/Frequency", "e.g., Daily, weekly, monthly")}
-                      {renderField("growthObjectives", "Growth Objectives", "e.g., Increase engagement, followers, conversions")}
+                      {renderField("length", "Desired length/duration", "e.g., 60 seconds, 1000 words")}
+                      {renderField("budget", "Budget/resources", "e.g., Small budget, smartphone only")}
+                      {renderField("schedule", "Posting schedule", "e.g., Daily, weekly, monthly")}
+                      {renderField("growthObjectives", "Growth objectives", "e.g., Increase engagement, followers, conversions")}
                     </motion.div>
                   )}
 

@@ -22,8 +22,17 @@ import {
 } from "@/components/ui/select";
 import { AnimatePresence, motion } from "framer-motion";
 
-const UNIFIED_PROMPT_QUERY_TYPE = "stage_screen_unified";
-const QUERY_TYPE_LABEL = "Stage & Screen Assistant";
+const SECTION = "stage";
+const QUERY_TYPE = "stage_screen_unified";
+const SECTION_TITLE = "Stage & Screen Assistant";
+
+const STEP1_OPTIONS = [
+  { value: "structure", label: "Scene Structure & Pacing" },
+  { value: "dialogue", label: "Dialogue Crafting" },
+  { value: "characters", label: "Character Arcs & Dynamics" },
+  { value: "visuals", label: "Visual & Staging Suggestions" },
+  { value: "all", label: "All of the above" }
+];
 
 const fieldConfig = {
   structure: ["premise", "medium", "genre", "structure", "characters"],
@@ -53,8 +62,7 @@ function StageScreen({ onLogout }) {
     visuals: "",
   });
   const [followUp, setFollowUp] = useState("");
-  const [conversationId, setConversationId] = useState(null);
-  const [initialPrompt, setInitialPrompt] = useState("");
+  const [sessionId, setSessionId] = useState(null);
   const conversationEndRef = useRef(null);
 
   useEffect(() => {
@@ -68,7 +76,7 @@ function StageScreen({ onLogout }) {
         const { data, error } = await supabase
           .from("system_prompts")
           .select("prompt_text")
-          .eq("query_type", UNIFIED_PROMPT_QUERY_TYPE)
+          .eq("query_type", QUERY_TYPE)
           .single();
         if (error) throw error;
         setSystemPrompt(data.prompt_text);
@@ -91,37 +99,59 @@ function StageScreen({ onLogout }) {
     setFormData((prev) => ({ ...prev, [id]: value }));
   };
 
-  const getFullPromptText = () => {
+  const buildUserPrompt = () => {
+    const selectedOption = STEP1_OPTIONS.find(opt => opt.value === outputType);
     const visibleFields = fieldConfig[outputType] || [];
-    const promptDetails = visibleFields
-      .map(field => {
-        const value = formData[field]?.trim();
-        if (value) {
-          let fieldLabel = '';
-          switch(field) {
-            case 'premise': fieldLabel = 'Premise/Logline'; break;
-            case 'medium': fieldLabel = 'Medium'; break;
-            case 'genre': fieldLabel = 'Genre/Style'; break;
-            case 'tone': fieldLabel = 'Tone/Mood'; break;
-            case 'characters': fieldLabel = 'Primary Characters & Relationships'; break;
-            case 'structure': fieldLabel = 'Desired Structure'; break;
-            case 'dialogueStyle': fieldLabel = 'Dialogue Style'; break;
-            case 'visuals': fieldLabel = 'Visual/Staging Preferences'; break;
-            default: fieldLabel = field;
-          }
-          return `- **${fieldLabel}:** ${value}`;
+    
+    let prompt = `Generate ${selectedOption?.label || outputType}.`;
+    
+    const details = [];
+    visibleFields.forEach(field => {
+      const value = formData[field]?.trim();
+      if (value) {
+        switch(field) {
+          case 'premise': details.push(`Premise: ${value}`); break;
+          case 'medium': details.push(`Medium: ${value}`); break;
+          case 'genre': details.push(`Genre: ${value}`); break;
+          case 'tone': details.push(`Tone: ${value}`); break;
+          case 'characters': details.push(`Characters: ${value}`); break;
+          case 'structure': details.push(`Structure: ${value}`); break;
+          case 'dialogueStyle': details.push(`Dialogue style: ${value}`); break;
+          case 'visuals': details.push(`Visual preferences: ${value}`); break;
         }
-        return null;
-      })
-      .filter(Boolean)
-      .join("\n");
+      }
+    });
+    
+    if (details.length > 0) {
+      prompt += `\n\n${details.join('\n')}`;
+    }
+    
+    return prompt;
+  };
 
-    return `
-      **Output Type Requested:** ${outputType}
+  const saveToHistory = async (promptMd, responseMd, subcategory, sessionId = null) => {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return null;
 
-      **Creative Parameters:**
-      ${promptDetails || "No specific parameters provided. Please use your expertise to generate compelling content."}
-    `;
+      const { data, error } = await supabase
+        .from('query_history')
+        .insert({
+          user_id: user.id,
+          query_type: SECTION,
+          query_text: promptMd,
+          response_text: responseMd,
+          conversation_id: sessionId || crypto.randomUUID(),
+        })
+        .select()
+        .single();
+
+      if (error) throw error;
+      return data;
+    } catch (error) {
+      console.error('Error saving to history:', error);
+      return null;
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -137,12 +167,12 @@ function StageScreen({ onLogout }) {
 
     setIsLoading(true);
     setConversation([]);
-    setConversationId(null);
+    setSessionId(null);
 
-    const userPrompt = getFullPromptText();
-    setInitialPrompt(userPrompt);
+    const userPrompt = buildUserPrompt();
+    const selectedOption = STEP1_OPTIONS.find(opt => opt.value === outputType);
 
-    const queryCheckResult = await handleQuery(UNIFIED_PROMPT_QUERY_TYPE, userPrompt, "");
+    const queryCheckResult = await handleQuery(QUERY_TYPE, userPrompt, "");
     if (!queryCheckResult.success) {
       toast({
         title: "Action Denied",
@@ -165,11 +195,11 @@ function StageScreen({ onLogout }) {
       ];
       setConversation(newConversation);
 
-      const { data: historyEntry, error } = await handleQuery(UNIFIED_PROMPT_QUERY_TYPE, userPrompt, responseText, true);
-      if(error) throw error;
-      if (historyEntry) {
-        setConversationId(historyEntry.id);
-      }
+      const newSessionId = crypto.randomUUID();
+      setSessionId(newSessionId);
+      
+      await saveToHistory(userPrompt, responseText, selectedOption?.label || outputType, newSessionId);
+      
       toast({
         title: "Success!",
         description: "Your script elements have been generated.",
@@ -195,7 +225,7 @@ function StageScreen({ onLogout }) {
 
     setIsLoading(true);
     
-    const queryCheckResult = await handleQuery(UNIFIED_PROMPT_QUERY_TYPE, followUp, "");
+    const queryCheckResult = await handleQuery(QUERY_TYPE, followUp, "");
     if (!queryCheckResult.success) {
       toast({
         title: "Action Denied",
@@ -213,17 +243,14 @@ function StageScreen({ onLogout }) {
     try {
       const messagesForApi = [
         { role: "system", content: systemPrompt },
-         ...currentConversation.map(turn => ({ role: turn.role, content: turn.content })),
+        ...currentConversation.map(turn => ({ role: turn.role, content: turn.content })),
       ];
 
       const responseText = await makeOpenAIRequest(messagesForApi);
       const newConversation = [...currentConversation, { role: "assistant", content: responseText }];
       setConversation(newConversation);
       
-      const fullQueryText = initialPrompt + "\n\n--- Follow-ups ---\n" + newConversation.slice(1).map(c => `${c.role}: ${c.content}`).join('\n');
-      const fullResponseText = newConversation.filter(c => c.role === 'assistant').map(c => c.content).join('\n\n---\n\n');
-
-      await handleQuery(UNIFIED_PROMPT_QUERY_TYPE, fullQueryText, fullResponseText, true, conversationId);
+      await saveToHistory(followUp, responseText, "Follow-up", sessionId);
       
       toast({ title: "Success!", description: "Follow-up response generated." });
     } catch (error) {
@@ -233,7 +260,6 @@ function StageScreen({ onLogout }) {
       setIsLoading(false);
     }
   };
-
 
   const renderField = (id, label, placeholder, isTextarea = false) => {
     const isVisible = outputType && (fieldConfig[outputType]?.includes(id) ?? false);
@@ -259,7 +285,7 @@ function StageScreen({ onLogout }) {
   return (
     <>
       <Helmet>
-        <title>Stage & Screen Assistant | The Write Stuff</title>
+        <title>{SECTION_TITLE} | The Write Stuff</title>
         <meta name="description" content="A unified tool for scriptwriting, from scene structure to character arcs." />
         <link rel="canonical" href="https://writestuffassistant.com/stage-screen" />
       </Helmet>
@@ -270,14 +296,14 @@ function StageScreen({ onLogout }) {
                <Button onClick={() => navigate("/dashboard")} variant="outline" size="sm" className="bg-black text-yellow-400 hover:bg-zinc-800 border-yellow-400">
                   <ArrowLeft className="h-4 w-4 mr-1" /> Back to Categories
                </Button>
-               <Button onClick={() => navigate(`/history/stage_screen_unified`)} variant="outline" size="sm" className="bg-black text-yellow-400 hover:bg-zinc-800 border-yellow-400">
+               <Button onClick={() => navigate(`/stage/history`)} variant="outline" size="sm" className="bg-black text-yellow-400 hover:bg-zinc-800 border-yellow-400">
                   <History className="h-4 w-4 mr-1" /> View History
                 </Button>
             </div>
             <AuthActionButtons onLogout={onLogout} />
           </header>
           
-          <h1 className="text-center text-3xl sm:text-4xl font-bold mb-2 text-yellow-400">{QUERY_TYPE_LABEL}</h1>
+          <h1 className="text-center text-3xl sm:text-4xl font-bold mb-2 text-yellow-400">{SECTION_TITLE}</h1>
           <p className="text-center text-yellow-400/80 mb-8">Your all-in-one tool for crafting compelling scripts.</p>
           
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -294,11 +320,9 @@ function StageScreen({ onLogout }) {
                         <SelectValue placeholder="Select an element..." />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="structure">Scene Structure & Pacing</SelectItem>
-                        <SelectItem value="dialogue">Dialogue Crafting</SelectItem>
-                        <SelectItem value="characters">Character Arcs & Dynamics</SelectItem>
-                        <SelectItem value="visuals">Visual & Staging Suggestions</SelectItem>
-                        <SelectItem value="all">All of the Above</SelectItem>
+                        {STEP1_OPTIONS.map(option => (
+                          <SelectItem key={option.value} value={option.value}>{option.label}</SelectItem>
+                        ))}
                       </SelectContent>
                     </Select>
                   </div>
@@ -306,14 +330,14 @@ function StageScreen({ onLogout }) {
                   {outputType && (
                     <motion.div initial={{opacity: 0}} animate={{opacity: 1}} transition={{delay: 0.2}} className="space-y-4">
                       <Label className="text-yellow-400 font-bold text-base">Step 2: Add optional details</Label>
-                      {renderField("premise", "Premise/Logline", "e.g., A detective must solve a murder on a space station.", true)}
+                      {renderField("premise", "Premise/Logline", "e.g., A detective must solve a murder on a space station", true)}
                       {renderField("medium", "Medium", "e.g., Theatre, Film, TV Series")}
                       {renderField("genre", "Genre/Style", "e.g., Drama, Comedy, Thriller")}
                       {renderField("tone", "Tone/Mood", "e.g., Lighthearted, Gritty, Suspenseful")}
-                      {renderField("characters", "Primary Characters & Relationships", "e.g., Protagonist, Antagonist, Ensemble details", true)}
-                      {renderField("structure", "Desired Structure", "e.g., Three-act, Five-act, Episodic")}
-                      {renderField("dialogueStyle", "Dialogue Style", "e.g., Naturalistic, Witty, Stylized")}
-                      {renderField("visuals", "Visual/Staging Preferences", "e.g., Minimalist, Elaborate, Modern", true)}
+                      {renderField("characters", "Primary characters & relationships", "e.g., Protagonist, Antagonist, Ensemble details", true)}
+                      {renderField("structure", "Desired structure", "e.g., Three-act, Five-act, Episodic")}
+                      {renderField("dialogueStyle", "Dialogue style", "e.g., Naturalistic, Witty, Stylized")}
+                      {renderField("visuals", "Visual/Staging preferences", "e.g., Minimalist, Elaborate, Modern", true)}
                     </motion.div>
                   )}
 

@@ -22,14 +22,23 @@ import {
 } from "@/components/ui/select";
 import { AnimatePresence, motion } from "framer-motion";
 
-const UNIFIED_PROMPT_QUERY_TYPE = "fictional_prose_unified";
-const QUERY_TYPE_LABEL = "Fictional Prose Assistant";
+const SECTION = "prose";
+const QUERY_TYPE = "fictional_prose_unified";
+const SECTION_TITLE = "Fictional Prose Assistant";
+
+const STEP1_OPTIONS = [
+  { value: "world", label: "World description" },
+  { value: "characters", label: "Character list / dramatis personae" },
+  { value: "style", label: "Style guidance" },
+  { value: "outline", label: "Story outline" },
+  { value: "all", label: "All of the above" }
+];
 
 const fieldConfig = {
-  world: ["setting", "genre", "storyIdea"],
-  characters: ["character", "genre", "storyIdea"],
-  outline: ["setting", "character", "length", "genre", "storyIdea"],
-  style: ["tone", "genre", "storyIdea"],
+  world: ["genre", "setting", "storyIdea"],
+  characters: ["genre", "setting", "character", "storyIdea"],
+  style: ["genre", "tone", "storyIdea"],
+  outline: ["genre", "setting", "character", "tone", "length", "storyIdea"],
   all: ["genre", "setting", "character", "tone", "length", "storyIdea"],
 };
 
@@ -51,8 +60,7 @@ function Prose({ onLogout }) {
     storyIdea: "",
   });
   const [followUp, setFollowUp] = useState("");
-  const [conversationId, setConversationId] = useState(null);
-  const [initialPrompt, setInitialPrompt] = useState("");
+  const [sessionId, setSessionId] = useState(null);
   const conversationEndRef = useRef(null);
 
   useEffect(() => {
@@ -66,7 +74,7 @@ function Prose({ onLogout }) {
         const { data, error } = await supabase
           .from("system_prompts")
           .select("prompt_text")
-          .eq("query_type", UNIFIED_PROMPT_QUERY_TYPE)
+          .eq("query_type", QUERY_TYPE)
           .single();
         if (error) throw error;
         setSystemPrompt(data.prompt_text);
@@ -89,35 +97,57 @@ function Prose({ onLogout }) {
     setFormData((prev) => ({ ...prev, [id]: value }));
   };
 
-  const getFullPromptText = () => {
+  const buildUserPrompt = () => {
+    const selectedOption = STEP1_OPTIONS.find(opt => opt.value === outputType);
     const visibleFields = fieldConfig[outputType] || [];
-    const promptDetails = visibleFields
-      .map(field => {
-        const value = formData[field]?.trim();
-        if (value) {
-          let fieldLabel = '';
-          switch(field) {
-            case 'genre': fieldLabel = 'Genre'; break;
-            case 'setting': fieldLabel = 'Setting Details'; break;
-            case 'character': fieldLabel = 'Main Character Traits'; break;
-            case 'tone': fieldLabel = 'Desired Tone'; break;
-            case 'length': fieldLabel = 'Target Length / Format'; break;
-            case 'storyIdea': fieldLabel = 'Story Idea / Premise'; break;
-            default: fieldLabel = field;
-          }
-          return `- **${fieldLabel}:** ${value}`;
+    
+    let prompt = `Generate ${selectedOption?.label || outputType}.`;
+    
+    const details = [];
+    visibleFields.forEach(field => {
+      const value = formData[field]?.trim();
+      if (value) {
+        switch(field) {
+          case 'genre': details.push(`Genre: ${value}`); break;
+          case 'setting': details.push(`Setting: ${value}`); break;
+          case 'character': details.push(`Main character: ${value}`); break;
+          case 'tone': details.push(`Tone: ${value}`); break;
+          case 'length': details.push(`Length: ${value}`); break;
+          case 'storyIdea': details.push(`Story premise: ${value}`); break;
         }
-        return null;
-      })
-      .filter(Boolean)
-      .join("\n");
+      }
+    });
+    
+    if (details.length > 0) {
+      prompt += `\n\n${details.join('\n')}`;
+    }
+    
+    return prompt;
+  };
 
-    return `
-      **Output Type Requested:** ${outputType}
+  const saveToHistory = async (promptMd, responseMd, subcategory, sessionId = null) => {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return null;
 
-      **Creative Parameters:**
-      ${promptDetails || "No specific parameters provided. Please use your creative expertise to generate compelling content."}
-    `;
+      const { data, error } = await supabase
+        .from('query_history')
+        .insert({
+          user_id: user.id,
+          query_type: SECTION,
+          query_text: promptMd,
+          response_text: responseMd,
+          conversation_id: sessionId || crypto.randomUUID(),
+        })
+        .select()
+        .single();
+
+      if (error) throw error;
+      return data;
+    } catch (error) {
+      console.error('Error saving to history:', error);
+      return null;
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -133,12 +163,12 @@ function Prose({ onLogout }) {
 
     setIsLoading(true);
     setConversation([]);
-    setConversationId(null);
+    setSessionId(null);
 
-    const userPrompt = getFullPromptText();
-    setInitialPrompt(userPrompt);
+    const userPrompt = buildUserPrompt();
+    const selectedOption = STEP1_OPTIONS.find(opt => opt.value === outputType);
 
-    const queryCheckResult = await handleQuery(UNIFIED_PROMPT_QUERY_TYPE, userPrompt, "");
+    const queryCheckResult = await handleQuery(QUERY_TYPE, userPrompt, "");
     if (!queryCheckResult.success) {
       toast({
         title: "Action Denied",
@@ -161,14 +191,14 @@ function Prose({ onLogout }) {
       ];
       setConversation(newConversation);
 
-      const { data: historyEntry, error } = await handleQuery(UNIFIED_PROMPT_QUERY_TYPE, userPrompt, responseText, true);
-      if(error) throw error;
-      if (historyEntry) {
-        setConversationId(historyEntry.id);
-      }
+      const newSessionId = crypto.randomUUID();
+      setSessionId(newSessionId);
+      
+      await saveToHistory(userPrompt, responseText, selectedOption?.label || outputType, newSessionId);
+      
       toast({
         title: "Success!",
-        description: "Your fictional prose elements have been generated.",
+        description: "Your content has been generated.",
       });
     } catch (error) {
       console.error("Error generating content:", error);
@@ -191,7 +221,7 @@ function Prose({ onLogout }) {
 
     setIsLoading(true);
     
-    const queryCheckResult = await handleQuery(UNIFIED_PROMPT_QUERY_TYPE, followUp, "");
+    const queryCheckResult = await handleQuery(QUERY_TYPE, followUp, "");
     if (!queryCheckResult.success) {
       toast({
         title: "Action Denied",
@@ -209,17 +239,14 @@ function Prose({ onLogout }) {
     try {
       const messagesForApi = [
         { role: "system", content: systemPrompt },
-         ...currentConversation.map(turn => ({ role: turn.role, content: turn.content })),
+        ...currentConversation.map(turn => ({ role: turn.role, content: turn.content })),
       ];
 
       const responseText = await makeOpenAIRequest(messagesForApi);
       const newConversation = [...currentConversation, { role: "assistant", content: responseText }];
       setConversation(newConversation);
       
-      const fullQueryText = initialPrompt + "\n\n--- Follow-ups ---\n" + newConversation.slice(1).map(c => `${c.role}: ${c.content}`).join('\n');
-      const fullResponseText = newConversation.filter(c => c.role === 'assistant').map(c => c.content).join('\n\n---\n\n');
-
-      await handleQuery(UNIFIED_PROMPT_QUERY_TYPE, fullQueryText, fullResponseText, true, conversationId);
+      await saveToHistory(followUp, responseText, "Follow-up", sessionId);
       
       toast({ title: "Success!", description: "Follow-up response generated." });
     } catch (error) {
@@ -229,7 +256,6 @@ function Prose({ onLogout }) {
       setIsLoading(false);
     }
   };
-
 
   const renderField = (id, label, placeholder, isTextarea = false) => {
     const isVisible = outputType && (fieldConfig[outputType]?.includes(id) ?? false);
@@ -255,7 +281,7 @@ function Prose({ onLogout }) {
   return (
     <>
       <Helmet>
-        <title>Fictional Prose Assistant | The Write Stuff</title>
+        <title>{SECTION_TITLE} | The Write Stuff</title>
         <meta name="description" content="A unified tool to generate world descriptions, character profiles, style guides, and story outlines." />
         <link rel="canonical" href="https://writestuffassistant.com/prose" />
       </Helmet>
@@ -266,14 +292,14 @@ function Prose({ onLogout }) {
                <Button onClick={() => navigate("/dashboard")} variant="outline" size="sm" className="bg-black text-yellow-400 hover:bg-zinc-800 border-yellow-400">
                   <ArrowLeft className="h-4 w-4 mr-1" /> Back to Categories
                </Button>
-               <Button onClick={() => navigate(`/history/fictional_prose_unified`)} variant="outline" size="sm" className="bg-black text-yellow-400 hover:bg-zinc-800 border-yellow-400">
+               <Button onClick={() => navigate(`/prose/history`)} variant="outline" size="sm" className="bg-black text-yellow-400 hover:bg-zinc-800 border-yellow-400">
                   <History className="h-4 w-4 mr-1" /> View History
                 </Button>
             </div>
             <AuthActionButtons onLogout={onLogout} />
           </header>
           
-          <h1 className="text-center text-3xl sm:text-4xl font-bold mb-2 text-yellow-400">{QUERY_TYPE_LABEL}</h1>
+          <h1 className="text-center text-3xl sm:text-4xl font-bold mb-2 text-yellow-400">{SECTION_TITLE}</h1>
           <p className="text-center text-yellow-400/80 mb-8">Your modular tool for crafting compelling stories.</p>
           
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -290,11 +316,9 @@ function Prose({ onLogout }) {
                         <SelectValue placeholder="Select an element..." />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="world">World Description</SelectItem>
-                        <SelectItem value="characters">Character List / Dramatis Personae</SelectItem>
-                        <SelectItem value="outline">Story Outline</SelectItem>
-                        <SelectItem value="style">Style Guidance</SelectItem>
-                        <SelectItem value="all">All of the Above</SelectItem>
+                        {STEP1_OPTIONS.map(option => (
+                          <SelectItem key={option.value} value={option.value}>{option.label}</SelectItem>
+                        ))}
                       </SelectContent>
                     </Select>
                   </div>
@@ -302,12 +326,12 @@ function Prose({ onLogout }) {
                   {outputType && (
                     <motion.div initial={{opacity: 0}} animate={{opacity: 1}} transition={{delay: 0.2}} className="space-y-4">
                       <Label className="text-yellow-400 font-bold text-base">Step 2: Add optional details</Label>
-                      {renderField("storyIdea", "Story Idea / Premise (optional)", "e.g., A young adventurer must save her city from a mysterious plague", true)}
                       {renderField("genre", "Genre", "e.g., Sci-Fi, Fantasy, Mystery")}
-                      {renderField("setting", "Setting Details", "e.g., Medieval kingdom, Mars colony")}
-                      {renderField("character", "Main Character Traits", "e.g., Cynical detective with a heart of gold")}
-                      {renderField("tone", "Desired Tone", "e.g., Optimistic, dark, whimsical")}
-                      {renderField("length", "Target Length / Format", "e.g., Detailed outline, 3-act structure")}
+                      {renderField("setting", "Setting details", "e.g., Medieval kingdom, Mars colony")}
+                      {renderField("character", "Main character traits", "e.g., Cynical detective with a heart of gold")}
+                      {renderField("tone", "Desired tone", "e.g., Optimistic, dark, whimsical")}
+                      {renderField("length", "Target length/format", "e.g., Detailed outline, 3-act structure")}
+                      {renderField("storyIdea", "Story idea / premise", "e.g., A young adventurer must save her city from a mysterious plague", true)}
                     </motion.div>
                   )}
 
@@ -349,7 +373,7 @@ function Prose({ onLogout }) {
 
                   {conversation.length > 0 && (
                     <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mt-4 pt-4 border-t border-yellow-400/20">
-                      <Label htmlFor="followUp" className="font-bold text-yellow-400">Refine Your Results / Ask a Follow-Up</Label>
+                      <Label htmlFor="followUp" className="font-bold text-yellow-400">Refine or ask a follow-up</Label>
                       <form onSubmit={handleFollowUp} className="flex items-start gap-2 mt-2">
                         <Textarea 
                           id="followUp"

@@ -1,4 +1,5 @@
 import React from "react";
+import HeaderCTA from "@/components/HeaderCTA";
     import { useLocation } from "react-router-dom";
     import { useBackgroundImage } from "@/lib/hooks/useBackgroundImage";
     import Footer from "@/components/ui/Footer";
@@ -25,6 +26,7 @@ import React from "react";
           className="min-h-screen relative bg-black"
           style={isLandingPage ? {} : defaultPageStyle}
         >
+          {!isLandingPage && <HeaderCTA />}
           <div className="pb-24"> {/* Added padding-bottom to ensure space above the fixed footer */}
             {children}
           </div>

@@ -9,7 +9,7 @@ import SignUp from "@/pages/SignUp";
 import SignIn from "@/pages/SignIn";
 import PasswordResetForm from "@/components/PasswordResetForm";
 import Dashboard from "@/pages/Dashboard";
-import History from "@/pages/History";
+import UnifiedHistory from "@/pages/UnifiedHistory";
 
 import Prose from "@/pages/Prose";
 import Poetry from "@/pages/Poetry";
@@ -55,7 +55,37 @@ const AppContent = () => {
         <Route path="/online-content" element={<ProtectedRoute element={OnlineContent} />} />
         <Route path="/songwriting" element={<ProtectedRoute element={Songwriting} />} />
         <Route path="/stage-screen" element={<ProtectedRoute element={StageScreen} />} />
-        <Route path="/history/:section" element={<ProtectedRoute element={History} />} />
+        <Route path="/:section/history" element={<ProtectedRoute element={UnifiedHistory} />} />
+        
+        {/* Legacy redirects */}
+        <Route path="/world-building" element={<Navigate to="/prose" />} />
+        <Route path="/character-development" element={<Navigate to="/prose" />} />
+        <Route path="/style-enhancement" element={<Navigate to="/prose" />} />
+        <Route path="/story-outline" element={<Navigate to="/prose" />} />
+        <Route path="/poetry-form-structure" element={<Navigate to="/poetry" />} />
+        <Route path="/poetry-language-imagery" element={<Navigate to="/poetry" />} />
+        <Route path="/poetry-rhyme-rhythm" element={<Navigate to="/poetry" />} />
+        <Route path="/poetry-style-voice" element={<Navigate to="/poetry" />} />
+        <Route path="/poetry-revision-clarity" element={<Navigate to="/poetry" />} />
+        <Route path="/research-fact-checking" element={<Navigate to="/nonfiction" />} />
+        <Route path="/organization-structure" element={<Navigate to="/nonfiction" />} />
+        <Route path="/voice-tone-development" element={<Navigate to="/nonfiction" />} />
+        <Route path="/clarity-conciseness" element={<Navigate to="/nonfiction" />} />
+        <Route path="/audience-platform-strategy" element={<Navigate to="/online-content" />} />
+        <Route path="/content-idea-generation" element={<Navigate to="/online-content" />} />
+        <Route path="/scripting-storyboarding" element={<Navigate to="/online-content" />} />
+        <Route path="/filming-production-tips" element={<Navigate to="/online-content" />} />
+        <Route path="/posting-optimization-growth" element={<Navigate to="/online-content" />} />
+        <Route path="/theme-concept-development" element={<Navigate to="/songwriting" />} />
+        <Route path="/lyrics-wordcraft" element={<Navigate to="/songwriting" />} />
+        <Route path="/melody-hook-creation" element={<Navigate to="/songwriting" />} />
+        <Route path="/song-structure-arrangement" element={<Navigate to="/songwriting" />} />
+        <Route path="/style-genre-performance-tips" element={<Navigate to="/songwriting" />} />
+        <Route path="/scene-structure-pacing" element={<Navigate to="/stage-screen" />} />
+        <Route path="/dialogue-crafting" element={<Navigate to="/stage-screen" />} />
+        <Route path="/character-arcs-dynamics" element={<Navigate to="/stage-screen" />} />
+        <Route path="/visual-staging-suggestions" element={<Navigate to="/stage-screen" />} />
+        
         <Route path="*" element={<Navigate to="/dashboard" />} />
       </Routes>
     </Layout>

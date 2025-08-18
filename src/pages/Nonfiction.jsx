@@ -22,8 +22,18 @@ import {
 } from "@/components/ui/select";
 import { AnimatePresence, motion } from "framer-motion";
 
-const UNIFIED_PROMPT_QUERY_TYPE = "nonfiction_unified";
-const QUERY_TYPE_LABEL = "Nonfiction Assistant";
+const SECTION = "nonfiction";
+const QUERY_TYPE = "nonfiction_unified";
+const SECTION_TITLE = "Nonfiction Assistant";
+
+const STEP1_OPTIONS = [
+  { value: "research", label: "Fact-checked research summary" },
+  { value: "outline", label: "Outline/Structure" },
+  { value: "voice_tone", label: "Voice & Tone guidance" },
+  { value: "clarity", label: "Clarity & Conciseness" },
+  { value: "openings_conclusions", label: "Engaging Opening & Conclusion" },
+  { value: "all", label: "All of the above" }
+];
 
 const fieldConfig = {
   research: ["topic", "researchQuestion"],
@@ -53,8 +63,7 @@ function Nonfiction({ onLogout }) {
     keyPoints: "",
   });
   const [followUp, setFollowUp] = useState("");
-  const [conversationId, setConversationId] = useState(null);
-  const [initialPrompt, setInitialPrompt] = useState("");
+  const [sessionId, setSessionId] = useState(null);
   const conversationEndRef = useRef(null);
 
   useEffect(() => {
@@ -68,7 +77,7 @@ function Nonfiction({ onLogout }) {
         const { data, error } = await supabase
           .from("system_prompts")
           .select("prompt_text")
-          .eq("query_type", UNIFIED_PROMPT_QUERY_TYPE)
+          .eq("query_type", QUERY_TYPE)
           .single();
         if (error) throw error;
         setSystemPrompt(data.prompt_text);
@@ -91,36 +100,58 @@ function Nonfiction({ onLogout }) {
     setFormData((prev) => ({ ...prev, [id]: value }));
   };
 
-  const getFullPromptText = () => {
+  const buildUserPrompt = () => {
+    const selectedOption = STEP1_OPTIONS.find(opt => opt.value === outputType);
     const visibleFields = fieldConfig[outputType] || [];
-    const promptDetails = visibleFields
-      .map(field => {
-        const value = formData[field]?.trim();
-        if (value) {
-          let fieldLabel = '';
-          switch(field) {
-            case 'topic': fieldLabel = 'Topic/Subject'; break;
-            case 'researchQuestion': fieldLabel = 'Research Question'; break;
-            case 'premise': fieldLabel = 'Premise/Objective'; break;
-            case 'audience': fieldLabel = 'Target Audience'; break;
-            case 'toneStyle': fieldLabel = 'Tone/Style'; break;
-            case 'lengthFormat': fieldLabel = 'Length/Format'; break;
-            case 'keyPoints': fieldLabel = 'Key Points/Structure Hints'; break;
-            default: fieldLabel = field;
-          }
-          return `- **${fieldLabel}:** ${value}`;
+    
+    let prompt = `Generate ${selectedOption?.label || outputType}.`;
+    
+    const details = [];
+    visibleFields.forEach(field => {
+      const value = formData[field]?.trim();
+      if (value) {
+        switch(field) {
+          case 'topic': details.push(`Topic: ${value}`); break;
+          case 'researchQuestion': details.push(`Research question: ${value}`); break;
+          case 'premise': details.push(`Premise: ${value}`); break;
+          case 'audience': details.push(`Audience: ${value}`); break;
+          case 'toneStyle': details.push(`Tone: ${value}`); break;
+          case 'lengthFormat': details.push(`Format: ${value}`); break;
+          case 'keyPoints': details.push(`Key points: ${value}`); break;
         }
-        return null;
-      })
-      .filter(Boolean)
-      .join("\n");
+      }
+    });
+    
+    if (details.length > 0) {
+      prompt += `\n\n${details.join('\n')}`;
+    }
+    
+    return prompt;
+  };
 
-    return `
-      **Output Type Requested:** ${outputType}
+  const saveToHistory = async (promptMd, responseMd, subcategory, sessionId = null) => {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return null;
 
-      **Creative Parameters:**
-      ${promptDetails || "No specific parameters provided. Please use your analytical expertise to generate compelling content."}
-    `;
+      const { data, error } = await supabase
+        .from('query_history')
+        .insert({
+          user_id: user.id,
+          query_type: SECTION,
+          query_text: promptMd,
+          response_text: responseMd,
+          conversation_id: sessionId || crypto.randomUUID(),
+        })
+        .select()
+        .single();
+
+      if (error) throw error;
+      return data;
+    } catch (error) {
+      console.error('Error saving to history:', error);
+      return null;
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -136,12 +167,12 @@ function Nonfiction({ onLogout }) {
 
     setIsLoading(true);
     setConversation([]);
-    setConversationId(null);
+    setSessionId(null);
 
-    const userPrompt = getFullPromptText();
-    setInitialPrompt(userPrompt);
+    const userPrompt = buildUserPrompt();
+    const selectedOption = STEP1_OPTIONS.find(opt => opt.value === outputType);
 
-    const queryCheckResult = await handleQuery(UNIFIED_PROMPT_QUERY_TYPE, userPrompt, "");
+    const queryCheckResult = await handleQuery(QUERY_TYPE, userPrompt, "");
     if (!queryCheckResult.success) {
       toast({
         title: "Action Denied",
@@ -164,14 +195,14 @@ function Nonfiction({ onLogout }) {
       ];
       setConversation(newConversation);
 
-      const { data: historyEntry, error } = await handleQuery(UNIFIED_PROMPT_QUERY_TYPE, userPrompt, responseText, true);
-      if(error) throw error;
-      if (historyEntry) {
-        setConversationId(historyEntry.id);
-      }
+      const newSessionId = crypto.randomUUID();
+      setSessionId(newSessionId);
+      
+      await saveToHistory(userPrompt, responseText, selectedOption?.label || outputType, newSessionId);
+      
       toast({
         title: "Success!",
-        description: "Your nonfiction elements have been generated.",
+        description: "Your nonfiction content has been generated.",
       });
     } catch (error) {
       console.error("Error generating content:", error);
@@ -194,7 +225,7 @@ function Nonfiction({ onLogout }) {
 
     setIsLoading(true);
     
-    const queryCheckResult = await handleQuery(UNIFIED_PROMPT_QUERY_TYPE, followUp, "");
+    const queryCheckResult = await handleQuery(QUERY_TYPE, followUp, "");
     if (!queryCheckResult.success) {
       toast({
         title: "Action Denied",
@@ -212,17 +243,14 @@ function Nonfiction({ onLogout }) {
     try {
       const messagesForApi = [
         { role: "system", content: systemPrompt },
-         ...currentConversation.map(turn => ({ role: turn.role, content: turn.content })),
+        ...currentConversation.map(turn => ({ role: turn.role, content: turn.content })),
       ];
 
       const responseText = await makeOpenAIRequest(messagesForApi);
       const newConversation = [...currentConversation, { role: "assistant", content: responseText }];
       setConversation(newConversation);
       
-      const fullQueryText = initialPrompt + "\n\n--- Follow-ups ---\n" + newConversation.slice(1).map(c => `${c.role}: ${c.content}`).join('\n');
-      const fullResponseText = newConversation.filter(c => c.role === 'assistant').map(c => c.content).join('\n\n---\n\n');
-
-      await handleQuery(UNIFIED_PROMPT_QUERY_TYPE, fullQueryText, fullResponseText, true, conversationId);
+      await saveToHistory(followUp, responseText, "Follow-up", sessionId);
       
       toast({ title: "Success!", description: "Follow-up response generated." });
     } catch (error) {
@@ -232,7 +260,6 @@ function Nonfiction({ onLogout }) {
       setIsLoading(false);
     }
   };
-
 
   const renderField = (id, label, placeholder, isTextarea = false) => {
     const isVisible = outputType && (fieldConfig[outputType]?.includes(id) ?? false);
@@ -258,7 +285,7 @@ function Nonfiction({ onLogout }) {
   return (
     <>
       <Helmet>
-        <title>Nonfiction Assistant | The Write Stuff</title>
+        <title>{SECTION_TITLE} | The Write Stuff</title>
         <meta name="description" content="A unified tool to generate fact-checked research, outlines, and tone guidance for nonfiction writing." />
         <link rel="canonical" href="https://writestuffassistant.com/nonfiction" />
       </Helmet>
@@ -269,14 +296,14 @@ function Nonfiction({ onLogout }) {
                <Button onClick={() => navigate("/dashboard")} variant="outline" size="sm" className="bg-black text-yellow-400 hover:bg-zinc-800 border-yellow-400">
                   <ArrowLeft className="h-4 w-4 mr-1" /> Back to Categories
                </Button>
-               <Button onClick={() => navigate(`/history/nonfiction_unified`)} variant="outline" size="sm" className="bg-black text-yellow-400 hover:bg-zinc-800 border-yellow-400">
+               <Button onClick={() => navigate(`/nonfiction/history`)} variant="outline" size="sm" className="bg-black text-yellow-400 hover:bg-zinc-800 border-yellow-400">
                   <History className="h-4 w-4 mr-1" /> View History
                 </Button>
             </div>
             <AuthActionButtons onLogout={onLogout} />
           </header>
           
-          <h1 className="text-center text-3xl sm:text-4xl font-bold mb-2 text-yellow-400">{QUERY_TYPE_LABEL}</h1>
+          <h1 className="text-center text-3xl sm:text-4xl font-bold mb-2 text-yellow-400">{SECTION_TITLE}</h1>
           <p className="text-center text-yellow-400/80 mb-8">Your modular tool for crafting clear and compelling nonfiction.</p>
           
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -293,12 +320,9 @@ function Nonfiction({ onLogout }) {
                         <SelectValue placeholder="Select an element..." />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="research">Fact-Checked Research Summary</SelectItem>
-                        <SelectItem value="outline">Outline/Structure</SelectItem>
-                        <SelectItem value="voice_tone">Voice & Tone Guidance</SelectItem>
-                        <SelectItem value="clarity">Clarity & Conciseness Recommendations</SelectItem>
-                        <SelectItem value="openings_conclusions">Engaging Opening & Conclusion</SelectItem>
-                        <SelectItem value="all">All of the Above</SelectItem>
+                        {STEP1_OPTIONS.map(option => (
+                          <SelectItem key={option.value} value={option.value}>{option.label}</SelectItem>
+                        ))}
                       </SelectContent>
                     </Select>
                   </div>
@@ -307,12 +331,12 @@ function Nonfiction({ onLogout }) {
                     <motion.div initial={{opacity: 0}} animate={{opacity: 1}} transition={{delay: 0.2}} className="space-y-4">
                       <Label className="text-yellow-400 font-bold text-base">Step 2: Add optional details</Label>
                       {renderField("topic", "Topic/Subject", "e.g., The life of Ada Lovelace", true)}
-                      {renderField("researchQuestion", "Research Question", "e.g., What were the primary causes of urban heat islands?")}
-                      {renderField("premise", "Premise/Objective", "Your thesis or main argument", true)}
-                      {renderField("audience", "Target Audience", "e.g., General public, academic, business professionals")}
+                      {renderField("researchQuestion", "Research question / points to cover", "e.g., What were the primary causes of urban heat islands?")}
+                      {renderField("premise", "Premise/Objective (thesis)", "Your thesis or main argument", true)}
+                      {renderField("audience", "Target audience", "e.g., General public, academic, business professionals")}
                       {renderField("toneStyle", "Tone/Style", "e.g., Formal, persuasive, conversational")}
                       {renderField("lengthFormat", "Length/Format", "e.g., Short summary, detailed article outline")}
-                      {renderField("keyPoints", "Key Points or Structure Hints", "Bulleted list of main arguments or sections", true)}
+                      {renderField("keyPoints", "Key points / structure hints", "Bulleted list of main arguments or sections", true)}
                     </motion.div>
                   )}
 

@@ -19,48 +19,26 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { cleanHistoryEntry } from "@/lib/utils";
 
 const sectionTitles = {
-  'world_building': 'World Building History',
-  'character_development': 'Character Development History',
-  'style_enhancement': 'Style Enhancement History',
-  'story_outline': 'Story Outline History',
-  'brainstorming': 'Brainstorming History',
-  'fictional_prose_unified': 'Fictional Prose History',
-  'poetry_form_structure': 'Poetry Form & Structure History',
-  'poetry_language_imagery': 'Poetry Language & Imagery History',
-  'poetry_rhyme_rhythm': 'Poetry Rhyme & Rhythm History',
-  'poetry_style_voice': 'Poetry Style & Voice History',
-  'poetry_revision_clarity': 'Poetry Revision & Clarity History',
-  'poetry_unified': 'Poetry History',
-  'scene_structure_pacing': 'Scene Structure & Pacing History',
-  'dialogue_crafting': 'Dialogue Crafting History',
-  'character_arcs_dynamics': 'Character Arcs & Dynamics History',
-  'visual_staging_suggestions': 'Visual & Staging Suggestions History',
-  'genre_formatting_conventions': 'Genre Formatting & Conventions History',
-  'stage_screen_unified': 'Stage & Screen History',
-  'research_fact_checking': 'Research & Fact-Checking History',
-  'organization_structure': 'Organization & Structure History',
-  'voice_tone_development': 'Voice & Tone Development History',
-  'clarity_conciseness': 'Clarity & Conciseness History',
-  'engaging_openings_conclusions': 'Engaging Openings & Conclusions History',
-  'nonfiction_unified': 'Nonfiction History',
-  'audience_platform_strategy': 'Audience & Platform Strategy History',
-  'content_idea_generation': 'Content Idea Generation History',
-  'scripting_storyboarding': 'Scripting & Storyboarding History',
-  'filming_production_tips': 'Filming & Production Tips History',
-  'posting_optimization_growth': 'Posting, Optimization & Growth History',
-  'content_creation_unified': 'Content Creation History',
-  'theme_concept_development': 'Theme & Concept Development History',
-  'lyrics_wordcraft': 'Lyrics & Wordcraft History',
-  'melody_hook_creation': 'Melody & Hook Creation History',
-  'song_structure_arrangement': 'Song Structure & Arrangement History',
-  'style_genre_performance_tips': 'Style, Genre & Performance Tips History',
-  'songwriting_unified': 'Songwriting History',
+  'prose': 'Fictional Prose History',
+  'poetry': 'Poetry History',
+  'nonfiction': 'Nonfiction History',
+  'content': 'Content Creation History',
+  'songwriting': 'Songwriting History',
+  'stage': 'Stage & Screen History',
 };
 
-function HistoryPage() {
+const sectionPaths = {
+  'prose': '/prose',
+  'poetry': '/poetry',
+  'nonfiction': '/nonfiction',
+  'content': '/online-content',
+  'songwriting': '/songwriting',
+  'stage': '/stage-screen',
+};
+
+function UnifiedHistory() {
   const navigate = useNavigate();
   const { section } = useParams();
   const { user } = useAuth();
@@ -130,8 +108,7 @@ function HistoryPage() {
   };
 
   const handleDownload = (entry) => {
-    const { prompt, response } = cleanHistoryEntry(entry.query_text, entry.response_text);
-    const content = `**Prompt:**\n${prompt}\n\n**Response:**\n${response}`;
+    const content = `**Prompt:**\n${entry.query_text}\n\n**Response:**\n${entry.response_text}`;
     
     const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
     const url = URL.createObjectURL(blob);
@@ -146,7 +123,7 @@ function HistoryPage() {
     toast({ title: "Downloaded", description: "History entry downloaded successfully." });
   };
 
-  const handleBack = () => navigate(-1);
+  const handleBack = () => navigate(sectionPaths[section] || '/dashboard');
   const handleHome = () => navigate('/dashboard');
 
   if (!user) {
@@ -193,9 +170,7 @@ function HistoryPage() {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {history.map((item) => {
-                const { prompt, response } = cleanHistoryEntry(item.query_text, item.response_text);
-                const followUpCount = (prompt.match(/Follow-up/g) || []).length;
-                const description = prompt.split('\n\n')[0].replace('**Initial Prompt:**\n', '').substring(0, 150) + '...';
+                const description = item.query_text.substring(0, 150) + '...';
 
                 return (
                   <Card key={item.id} className="bg-zinc-900/50 border border-yellow-400/20 hover:border-yellow-400/50 transition-colors">
@@ -205,11 +180,6 @@ function HistoryPage() {
                       </CardTitle>
                       <CardDescription className="text-yellow-400/60 line-clamp-3 text-xs">
                         {description}
-                        {followUpCount > 0 && (
-                          <span className="text-yellow-400/80 font-bold block mt-1">
-                            (and {followUpCount} follow-up{followUpCount > 1 ? 's' : ''})
-                          </span>
-                        )}
                       </CardDescription>
                     </CardHeader>
                     <CardContent className="flex justify-end gap-2 pt-0">
@@ -260,11 +230,11 @@ function HistoryPage() {
               <div className="max-h-[60vh] overflow-y-auto pr-4">
                 <h4 className="font-bold mt-4 mb-2 text-yellow-300">Prompt:</h4>
                 <div className="text-sm p-3 bg-zinc-900 rounded-md border border-yellow-400/20">
-                  <MarkdownRenderer markdownText={cleanHistoryEntry(selectedEntry.query_text, selectedEntry.response_text).prompt} />
+                  <MarkdownRenderer markdownText={selectedEntry.query_text} />
                 </div>
                 <h4 className="font-bold mt-4 mb-2 text-yellow-300">Response:</h4>
                 <div className="prose prose-sm prose-invert prose-p:text-yellow-400/90 prose-headings:text-yellow-400 prose-strong:text-yellow-300 prose-ul:text-yellow-400/90 prose-ol:text-yellow-400/90 max-w-none p-3 bg-zinc-900 rounded-md border border-yellow-400/20">
-                  <MarkdownRenderer markdownText={cleanHistoryEntry(selectedEntry.query_text, selectedEntry.response_text).response} />
+                  <MarkdownRenderer markdownText={selectedEntry.response_text} />
                 </div>
               </div>
               <AlertDialogFooter>
@@ -278,4 +248,4 @@ function HistoryPage() {
   );
 }
 
-export default HistoryPage;
+export default UnifiedHistory;

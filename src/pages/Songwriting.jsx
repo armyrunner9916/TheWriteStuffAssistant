@@ -22,8 +22,18 @@ import {
 } from "@/components/ui/select";
 import { AnimatePresence, motion } from "framer-motion";
 
-const UNIFIED_PROMPT_QUERY_TYPE = "songwriting_unified";
-const QUERY_TYPE_LABEL = "Songwriting Assistant";
+const SECTION = "songwriting";
+const QUERY_TYPE = "songwriting_unified";
+const SECTION_TITLE = "Songwriting Assistant";
+
+const STEP1_OPTIONS = [
+  { value: "theme", label: "Theme/Concept" },
+  { value: "lyrics", label: "Lyrics & Wordcraft" },
+  { value: "melody", label: "Melody & Hook" },
+  { value: "structure", label: "Structure/Arrangement" },
+  { value: "style", label: "Style/Genre & Performance tips" },
+  { value: "all", label: "All of the above" }
+];
 
 const fieldConfig = {
   theme: ["genre", "theme", "mood"],
@@ -53,8 +63,7 @@ function Songwriting({ onLogout }) {
     performanceContext: "",
   });
   const [followUp, setFollowUp] = useState("");
-  const [conversationId, setConversationId] = useState(null);
-  const [initialPrompt, setInitialPrompt] = useState("");
+  const [sessionId, setSessionId] = useState(null);
   const conversationEndRef = useRef(null);
 
   useEffect(() => {
@@ -68,7 +77,7 @@ function Songwriting({ onLogout }) {
         const { data, error } = await supabase
           .from("system_prompts")
           .select("prompt_text")
-          .eq("query_type", UNIFIED_PROMPT_QUERY_TYPE)
+          .eq("query_type", QUERY_TYPE)
           .single();
         if (error) throw error;
         setSystemPrompt(data.prompt_text);
@@ -91,36 +100,58 @@ function Songwriting({ onLogout }) {
     setFormData((prev) => ({ ...prev, [id]: value }));
   };
 
-  const getFullPromptText = () => {
+  const buildUserPrompt = () => {
+    const selectedOption = STEP1_OPTIONS.find(opt => opt.value === outputType);
     const visibleFields = fieldConfig[outputType] || [];
-    const promptDetails = visibleFields
-      .map(field => {
-        const value = formData[field]?.trim();
-        if (value) {
-          let fieldLabel = '';
-          switch(field) {
-            case 'genre': fieldLabel = 'Genre/Style'; break;
-            case 'theme': fieldLabel = 'Theme or Concept'; break;
-            case 'mood': fieldLabel = 'Tone or Mood'; break;
-            case 'length': fieldLabel = 'Desired Length'; break;
-            case 'structure': fieldLabel = 'Structure Hints'; break;
-            case 'melody': fieldLabel = 'Melody or Hook Description'; break;
-            case 'performanceContext': fieldLabel = 'Performance Context'; break;
-            default: fieldLabel = field;
-          }
-          return `- **${fieldLabel}:** ${value}`;
+    
+    let prompt = `Generate ${selectedOption?.label || outputType}.`;
+    
+    const details = [];
+    visibleFields.forEach(field => {
+      const value = formData[field]?.trim();
+      if (value) {
+        switch(field) {
+          case 'genre': details.push(`Genre: ${value}`); break;
+          case 'theme': details.push(`Theme: ${value}`); break;
+          case 'mood': details.push(`Mood: ${value}`); break;
+          case 'length': details.push(`Length: ${value}`); break;
+          case 'structure': details.push(`Structure: ${value}`); break;
+          case 'melody': details.push(`Melody idea: ${value}`); break;
+          case 'performanceContext': details.push(`Performance context: ${value}`); break;
         }
-        return null;
-      })
-      .filter(Boolean)
-      .join("\n");
+      }
+    });
+    
+    if (details.length > 0) {
+      prompt += `\n\n${details.join('\n')}`;
+    }
+    
+    return prompt;
+  };
 
-    return `
-      **Output Type Requested:** ${outputType}
+  const saveToHistory = async (promptMd, responseMd, subcategory, sessionId = null) => {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return null;
 
-      **Creative Parameters:**
-      ${promptDetails || "No specific parameters provided. Please use your musical expertise to generate compelling content."}
-    `;
+      const { data, error } = await supabase
+        .from('query_history')
+        .insert({
+          user_id: user.id,
+          query_type: SECTION,
+          query_text: promptMd,
+          response_text: responseMd,
+          conversation_id: sessionId || crypto.randomUUID(),
+        })
+        .select()
+        .single();
+
+      if (error) throw error;
+      return data;
+    } catch (error) {
+      console.error('Error saving to history:', error);
+      return null;
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -136,12 +167,12 @@ function Songwriting({ onLogout }) {
 
     setIsLoading(true);
     setConversation([]);
-    setConversationId(null);
+    setSessionId(null);
 
-    const userPrompt = getFullPromptText();
-    setInitialPrompt(userPrompt);
+    const userPrompt = buildUserPrompt();
+    const selectedOption = STEP1_OPTIONS.find(opt => opt.value === outputType);
 
-    const queryCheckResult = await handleQuery(UNIFIED_PROMPT_QUERY_TYPE, userPrompt, "");
+    const queryCheckResult = await handleQuery(QUERY_TYPE, userPrompt, "");
     if (!queryCheckResult.success) {
       toast({
         title: "Action Denied",
@@ -164,11 +195,11 @@ function Songwriting({ onLogout }) {
       ];
       setConversation(newConversation);
 
-      const { data: historyEntry, error } = await handleQuery(UNIFIED_PROMPT_QUERY_TYPE, userPrompt, responseText, true);
-      if(error) throw error;
-      if (historyEntry) {
-        setConversationId(historyEntry.id);
-      }
+      const newSessionId = crypto.randomUUID();
+      setSessionId(newSessionId);
+      
+      await saveToHistory(userPrompt, responseText, selectedOption?.label || outputType, newSessionId);
+      
       toast({
         title: "Success!",
         description: "Your song elements have been generated.",
@@ -194,7 +225,7 @@ function Songwriting({ onLogout }) {
 
     setIsLoading(true);
     
-    const queryCheckResult = await handleQuery(UNIFIED_PROMPT_QUERY_TYPE, followUp, "");
+    const queryCheckResult = await handleQuery(QUERY_TYPE, followUp, "");
     if (!queryCheckResult.success) {
       toast({
         title: "Action Denied",
@@ -212,17 +243,14 @@ function Songwriting({ onLogout }) {
     try {
       const messagesForApi = [
         { role: "system", content: systemPrompt },
-         ...currentConversation.map(turn => ({ role: turn.role, content: turn.content })),
+        ...currentConversation.map(turn => ({ role: turn.role, content: turn.content })),
       ];
 
       const responseText = await makeOpenAIRequest(messagesForApi);
       const newConversation = [...currentConversation, { role: "assistant", content: responseText }];
       setConversation(newConversation);
       
-      const fullQueryText = initialPrompt + "\n\n--- Follow-ups ---\n" + newConversation.slice(1).map(c => `${c.role}: ${c.content}`).join('\n');
-      const fullResponseText = newConversation.filter(c => c.role === 'assistant').map(c => c.content).join('\n\n---\n\n');
-
-      await handleQuery(UNIFIED_PROMPT_QUERY_TYPE, fullQueryText, fullResponseText, true, conversationId);
+      await saveToHistory(followUp, responseText, "Follow-up", sessionId);
       
       toast({ title: "Success!", description: "Follow-up response generated." });
     } catch (error) {
@@ -232,7 +260,6 @@ function Songwriting({ onLogout }) {
       setIsLoading(false);
     }
   };
-
 
   const renderField = (id, label, placeholder, isTextarea = false) => {
     const isVisible = outputType && (fieldConfig[outputType]?.includes(id) ?? false);
@@ -258,7 +285,7 @@ function Songwriting({ onLogout }) {
   return (
     <>
       <Helmet>
-        <title>Songwriting Assistant | The Write Stuff</title>
+        <title>{SECTION_TITLE} | The Write Stuff</title>
         <meta name="description" content="A unified tool to generate song themes, lyrics, melodies, and more." />
         <link rel="canonical" href="https://writestuffassistant.com/songwriting" />
       </Helmet>
@@ -269,14 +296,14 @@ function Songwriting({ onLogout }) {
                <Button onClick={() => navigate("/dashboard")} variant="outline" size="sm" className="bg-black text-yellow-400 hover:bg-zinc-800 border-yellow-400">
                   <ArrowLeft className="h-4 w-4 mr-1" /> Back to Categories
                </Button>
-               <Button onClick={() => navigate(`/history/songwriting_unified`)} variant="outline" size="sm" className="bg-black text-yellow-400 hover:bg-zinc-800 border-yellow-400">
+               <Button onClick={() => navigate(`/songwriting/history`)} variant="outline" size="sm" className="bg-black text-yellow-400 hover:bg-zinc-800 border-yellow-400">
                   <History className="h-4 w-4 mr-1" /> View History
                 </Button>
             </div>
             <AuthActionButtons onLogout={onLogout} />
           </header>
           
-          <h1 className="text-center text-3xl sm:text-4xl font-bold mb-2 text-yellow-400">{QUERY_TYPE_LABEL}</h1>
+          <h1 className="text-center text-3xl sm:text-4xl font-bold mb-2 text-yellow-400">{SECTION_TITLE}</h1>
           <p className="text-center text-yellow-400/80 mb-8">Your all-in-one studio for crafting unforgettable songs.</p>
           
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -293,12 +320,9 @@ function Songwriting({ onLogout }) {
                         <SelectValue placeholder="Select an element..." />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="theme">Theme/Concept</SelectItem>
-                        <SelectItem value="lyrics">Lyrics & Wordcraft</SelectItem>
-                        <SelectItem value="melody">Melody & Hook</SelectItem>
-                        <SelectItem value="structure">Structure/Arrangement</SelectItem>
-                        <SelectItem value="style">Style/Genre & Performance Tips</SelectItem>
-                        <SelectItem value="all">All of the Above</SelectItem>
+                        {STEP1_OPTIONS.map(option => (
+                          <SelectItem key={option.value} value={option.value}>{option.label}</SelectItem>
+                        ))}
                       </SelectContent>
                     </Select>
                   </div>
@@ -307,12 +331,12 @@ function Songwriting({ onLogout }) {
                     <motion.div initial={{opacity: 0}} animate={{opacity: 1}} transition={{delay: 0.2}} className="space-y-4">
                       <Label className="text-yellow-400 font-bold text-base">Step 2: Add optional details</Label>
                       {renderField("genre", "Genre/Style", "e.g., Pop, rock, ballad")}
-                      {renderField("theme", "Theme or Concept", "The core idea or message", true)}
-                      {renderField("mood", "Tone or Mood", "e.g., Upbeat, melancholic, romantic")}
-                      {renderField("length", "Desired Length", "e.g., 2 verses, 1 chorus")}
-                      {renderField("structure", "Structure Hints", "e.g., Verse-Chorus-Verse, AABA")}
-                      {renderField("melody", "Melody or Hook Description", "e.g., A simple, catchy synth line", true)}
-                      {renderField("performanceContext", "Performance Context", "e.g., Live acoustic, studio recording")}
+                      {renderField("theme", "Theme/Concept", "The core idea or message", true)}
+                      {renderField("mood", "Tone/Mood", "e.g., Upbeat, melancholic, romantic")}
+                      {renderField("length", "Desired length", "e.g., 2 verses, 1 chorus")}
+                      {renderField("structure", "Structure hints", "e.g., Verse-Chorus-Verse, AABA")}
+                      {renderField("melody", "Melody/hook idea", "e.g., A simple, catchy synth line", true)}
+                      {renderField("performanceContext", "Performance context", "e.g., Live acoustic, studio recording")}
                     </motion.div>
                   )}
 
