@@ -46,6 +46,13 @@ export const AuthProvider = ({ children }) => {
             description: "Your session has expired. Please sign in again.",
             variant: "destructive",
           });
+        } else if (error && error.message.includes("refresh_token_not_found")) {
+          await supabase.auth.signOut();
+          toast({
+            title: "Session Expired",
+            description: "Your session has expired. Please sign in again.",
+            variant: "destructive",
+          });
         } else if (error) {
            toast({
             title: "Session Issue",
