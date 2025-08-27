@@ -21,7 +21,7 @@ function AuthDialog() {
           className="bg-yellow-400 text-black font-bold hover:bg-yellow-300 transition-colors duration-300 px-8 py-3 text-lg"
           size="lg"
         >
-          Sign Up / Sign In
+          Start Free 30-Day Trial
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px] bg-black border-2 border-yellow-400 text-yellow-400">
