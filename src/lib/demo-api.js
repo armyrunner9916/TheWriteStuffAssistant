@@ -1,7 +1,7 @@
 import { supabase } from '@/lib/supabase';
 
-// Demo API key will be set here - placeholder for now
-const DEMO_API_KEY = 'DEMO_API_KEY_PLACEHOLDER';
+// Demo API key from environment variables
+const DEMO_API_KEY = import.meta.env.VITE_DEMO_OPENAI_API_KEY;
 
 const DEMO_QUERY_LIMIT = 7;
 
