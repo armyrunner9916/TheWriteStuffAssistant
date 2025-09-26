@@ -21,6 +21,11 @@ import StageScreen from "@/pages/StageScreen";
 // Demo pages
 import DemoDashboard from "@/pages/demo/DemoDashboard";
 import DemoProse from "@/pages/demo/DemoProse";
+import DemoPoetry from "@/pages/demo/DemoPoetry";
+import DemoNonfiction from "@/pages/demo/DemoNonfiction";
+import DemoOnlineContent from "@/pages/demo/DemoOnlineContent";
+import DemoSongwriting from "@/pages/demo/DemoSongwriting";
+import DemoStageScreen from "@/pages/demo/DemoStageScreen";
 
 const ProtectedRoute = ({ element: Element, ...rest }) => {
   const { isAuthenticated } = useAuth();
@@ -64,6 +69,11 @@ const AppContent = () => {
         {/* Demo routes - no authentication required */}
         <Route path="/demo" element={<DemoDashboard />} />
         <Route path="/demo/prose" element={<DemoProse />} />
+        <Route path="/demo/poetry" element={<DemoPoetry />} />
+        <Route path="/demo/nonfiction" element={<DemoNonfiction />} />
+        <Route path="/demo/online-content" element={<DemoOnlineContent />} />
+        <Route path="/demo/songwriting" element={<DemoSongwriting />} />
+        <Route path="/demo/stage-screen" element={<DemoStageScreen />} />
         
         {/* Legacy redirects */}
         <Route path="/world-building" element={<Navigate to="/prose" />} />
