@@ -18,6 +18,10 @@ import OnlineContent from "@/pages/OnlineContent";
 import Songwriting from "@/pages/Songwriting";
 import StageScreen from "@/pages/StageScreen";
 
+// Demo pages
+import DemoDashboard from "@/pages/demo/DemoDashboard";
+import DemoProse from "@/pages/demo/DemoProse";
+
 const ProtectedRoute = ({ element: Element, ...rest }) => {
   const { isAuthenticated } = useAuth();
   if (!isAuthenticated) {
@@ -56,6 +60,10 @@ const AppContent = () => {
         <Route path="/songwriting" element={<ProtectedRoute element={Songwriting} />} />
         <Route path="/stage-screen" element={<ProtectedRoute element={StageScreen} />} />
         <Route path="/:section/history" element={<ProtectedRoute element={UnifiedHistory} />} />
+        
+        {/* Demo routes - no authentication required */}
+        <Route path="/demo" element={<DemoDashboard />} />
+        <Route path="/demo/prose" element={<DemoProse />} />
         
         {/* Legacy redirects */}
         <Route path="/world-building" element={<Navigate to="/prose" />} />

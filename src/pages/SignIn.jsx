@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Helmet } from 'react-helmet-async';
+import { Button } from '@/components/ui/button';
 import AuthDialog from '@/components/AuthDialog';
 
 function SignIn() {
@@ -48,9 +49,18 @@ function SignIn() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.3 }}
-            className="mt-8 flex flex-col items-center gap-4"
+            className="mt-8 flex flex-col items-center gap-6"
           >
-            <AuthDialog />
+            <div className="flex flex-col sm:flex-row gap-4 items-center">
+              <AuthDialog />
+              <Button
+                onClick={() => window.location.href = '/demo'}
+                className="bg-transparent border-2 border-yellow-400 text-yellow-400 font-bold hover:bg-yellow-400 hover:text-black transition-colors duration-300 px-8 py-3 text-lg"
+                size="lg"
+              >
+                Take A Test Run Now
+              </Button>
+            </div>
             <div className="flex flex-col sm:flex-row items-center gap-6 mt-6">
               <a href="https://youtu.be/fHXTLOqXb30?si=ja1qCphUY62mcCB5" target="_blank" rel="noopener noreferrer" className="text-yellow-400 hover:text-yellow-300 transition-transform hover:scale-105 group">
                 <div className="w-64 h-36 rounded-lg overflow-hidden border-2 border-yellow-400/50 group-hover:border-yellow-300 transition-colors">

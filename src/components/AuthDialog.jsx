@@ -18,10 +18,10 @@ function AuthDialog() {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button
-          className="bg-yellow-400 text-black font-bold hover:bg-yellow-300 transition-colors duration-300 px-8 py-3 text-lg"
+          className="bg-yellow-400 text-black font-bold hover:bg-yellow-300 transition-colors duration-300 px-6 py-3 text-lg"
           size="lg"
         >
-          Start Free 30-Day Trial
+          Sign Up / Sign In
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px] bg-black border-2 border-yellow-400 text-yellow-400">
