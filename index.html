@@ -1,0 +1,62 @@
+<!doctype html>
+    <html lang="en">
+      <head>
+        <meta charset="UTF-8" />
+        <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>The Write Stuff</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+        <script>
+          console.log('[Init] HTML loaded, initializing error handlers');
+
+          window.addEventListener('error', function(event) {
+            const errorDetails = {
+              message: event.message,
+              filename: event.filename,
+              lineno: event.lineno,
+              colno: event.colno,
+              error: event.error ? {
+                name: event.error.name,
+                message: event.error.message,
+                stack: event.error.stack
+              } : null,
+              timestamp: new Date().toISOString()
+            };
+            console.error('[Init] Global error caught:', errorDetails);
+
+            if (window.parent) {
+              window.parent.postMessage({
+                type: 'horizons-global-error',
+                error: errorDetails
+              }, '*');
+            }
+          }, true);
+
+          window.addEventListener('unhandledrejection', function(event) {
+            const errorDetails = {
+              reason: event.reason?.toString(),
+              stack: event.reason?.stack,
+              name: event.reason?.name,
+              message: event.reason?.message,
+              timestamp: new Date().toISOString()
+            };
+            console.error('[Init] Unhandled rejection caught:', errorDetails);
+
+            if (window.parent) {
+              window.parent.postMessage({
+                type: 'horizons-init-rejection',
+                error: errorDetails
+              }, '*');
+            }
+          });
+
+          console.log('[Init] Error handlers initialized');
+        </script>
+      </head>
+      <body>
+        <div id="root"></div>
+        <script type="module" src="/src/main.jsx"></script>
+      </body>
+    </html>
