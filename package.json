@@ -6,10 +6,6 @@
   "engines": {
     "node": ">=18"
   },
-  "overrides": {
-    "esbuild": "0.18.20",
-    "esbuild-wasm": "0.18.20"
-  },
   "scripts": {
     "dev": "vite",
     "build": "vite build",
