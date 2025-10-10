@@ -1,8 +1,5 @@
 import { supabase } from '@/lib/supabase';
 
-// Demo API key from environment variables
-const DEMO_API_KEY = import.meta.env.VITE_DEMO_OPENAI_API_KEY;
-
 const DEMO_QUERY_LIMIT = 7;
 
 export const getDemoQueryCount = () => {
@@ -29,7 +26,7 @@ export const resetDemoQueryCount = () => {
   localStorage.removeItem('demo_query_count');
 };
 
-export const makeOpenAIDemoRequest = async (messages) => {
+export const makeClaudeDemoRequest = async (messages) => {
   try {
     if (!canMakeDemoQuery()) {
       throw new Error('Demo query limit reached. Please sign up to continue.');
@@ -38,7 +35,7 @@ export const makeOpenAIDemoRequest = async (messages) => {
     const systemMessage = messages.find(msg => msg.role === 'system');
     const userMessages = messages.filter(msg => msg.role !== 'system');
 
-    const response = await fetch("https://oirtcplqedetfhzrdgas.supabase.co/functions/v1/claude-proxy-demo", {
+    const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/claude-proxy-demo`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

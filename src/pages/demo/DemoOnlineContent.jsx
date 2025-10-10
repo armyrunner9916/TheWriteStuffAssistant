@@ -8,7 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/components/ui/use-toast";
 import { ArrowLeft, Loader2, Sparkles, Send } from "lucide-react";
 import { Helmet } from "react-helmet-async";
-import { makeOpenAIDemoRequest, getSystemPrompt, canMakeDemoQuery, getDemoQueriesRemaining } from "@/lib/demo-api";
+import { makeClaudeDemoRequest, getSystemPrompt, canMakeDemoQuery, getDemoQueriesRemaining } from "@/lib/demo-api";
 import MarkdownRenderer from "@/components/MarkdownRenderer";
 import DemoLayout from "@/components/DemoLayout";
 import {
@@ -153,7 +153,7 @@ function DemoOnlineContent() {
         { role: "system", content: systemPrompt },
         { role: "user", content: userPrompt },
       ];
-      const responseText = await makeOpenAIDemoRequest(messagesForApi);
+      const responseText = await makeClaudeDemoRequest(messagesForApi);
       const newConversation = [
         { role: "user", content: userPrompt },
         { role: "assistant", content: responseText },
@@ -212,7 +212,7 @@ function DemoOnlineContent() {
         ...currentConversation.map(turn => ({ role: turn.role, content: turn.content })),
       ];
 
-      const responseText = await makeOpenAIDemoRequest(messagesForApi);
+      const responseText = await makeClaudeDemoRequest(messagesForApi);
       const newConversation = [...currentConversation, { role: "assistant", content: responseText }];
       setConversation(newConversation);
       

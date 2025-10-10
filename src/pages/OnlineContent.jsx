@@ -9,7 +9,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { ArrowLeft, History, Loader2, Sparkles, Send } from "lucide-react";
 import AuthActionButtons from "@/components/AuthActionButtons";
 import { Helmet } from "react-helmet-async";
-import { makeOpenAIRequest } from "@/lib/api";
+import { makeClaudeRequest } from "@/lib/api";
 import { supabase } from "@/lib/supabase";
 import { useQueries } from "@/lib/hooks/useQueries";
 import MarkdownRenderer from "@/components/MarkdownRenderer";
@@ -193,7 +193,7 @@ function OnlineContent({ onLogout }) {
         { role: "system", content: systemPrompt },
         { role: "user", content: userPrompt },
       ];
-      const responseText = await makeOpenAIRequest(messagesForApi);
+      const responseText = await makeClaudeRequest(messagesForApi);
       const newConversation = [
         { role: "user", content: userPrompt },
         { role: "assistant", content: responseText },
@@ -251,7 +251,7 @@ function OnlineContent({ onLogout }) {
         ...currentConversation.map(turn => ({ role: turn.role, content: turn.content })),
       ];
 
-      const responseText = await makeOpenAIRequest(messagesForApi);
+      const responseText = await makeClaudeRequest(messagesForApi);
       const newConversation = [...currentConversation, { role: "assistant", content: responseText }];
       setConversation(newConversation);
       
