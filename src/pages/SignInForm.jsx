@@ -46,24 +46,28 @@ function SignInForm({ onClose }) {
         <Label htmlFor="email-signin" className="text-yellow-400">Email</Label>
         <Input
           id="email-signin"
+          name="email"
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
           className="bg-zinc-800 border-yellow-400/50 text-white placeholder:text-gray-400"
           placeholder="you@example.com"
+          autoComplete="email"
         />
       </div>
       <div className="space-y-2">
         <Label htmlFor="password-signin" className="text-yellow-400">Password</Label>
         <Input
           id="password-signin"
+          name="password"
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
           className="bg-zinc-800 border-yellow-400/50 text-white placeholder:text-gray-400"
           placeholder="••••••••"
+          autoComplete="current-password"
         />
       </div>
       <Button type="submit" className="w-full bg-yellow-400 text-black hover:bg-yellow-300" disabled={loading}>

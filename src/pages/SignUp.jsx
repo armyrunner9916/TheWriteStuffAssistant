@@ -102,6 +102,8 @@ function SignUp({ onLogin }) {
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
               <Input
+                id="email-signup"
+                name="email"
                 type="email"
                 placeholder="Email"
                 value={email}
@@ -109,10 +111,13 @@ function SignUp({ onLogin }) {
                 required
                 className="input-field"
                 disabled={loading}
+                autoComplete="email"
               />
             </div>
             <div className="space-y-2">
               <Input
+                id="password-signup"
+                name="password"
                 type="password"
                 placeholder="Password"
                 value={password}
@@ -120,10 +125,13 @@ function SignUp({ onLogin }) {
                 required
                 className="input-field"
                 disabled={loading}
+                autoComplete="new-password"
               />
             </div>
             <div className="space-y-2">
               <Input
+                id="confirm-password-signup"
+                name="confirmPassword"
                 type="password"
                 placeholder="Confirm Password"
                 value={confirmPassword}
@@ -131,6 +139,7 @@ function SignUp({ onLogin }) {
                 required
                 className="input-field"
                 disabled={loading}
+                autoComplete="new-password"
               />
             </div>
             <Button 

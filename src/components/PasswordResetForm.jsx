@@ -75,6 +75,7 @@ import React from "react";
              <label htmlFor="newPassword" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-content">New Password</label>
             <Input
               id="newPassword"
+              name="newPassword"
               type="password"
               placeholder="Enter new password"
               value={newPassword}
@@ -82,12 +83,14 @@ import React from "react";
               required
               className="input-field"
               disabled={loading}
+              autoComplete="new-password"
             />
           </div>
           <div className="space-y-2">
             <label htmlFor="confirmPassword" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-content">Confirm New Password</label>
             <Input
               id="confirmPassword"
+              name="confirmPassword"
               type="password"
               placeholder="Confirm new password"
               value={confirmPassword}
@@ -95,6 +98,7 @@ import React from "react";
               required
               className="input-field"
               disabled={loading}
+              autoComplete="new-password"
             />
           </div>
           <Button 
