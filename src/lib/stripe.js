@@ -1,7 +1,13 @@
 import { loadStripe } from '@stripe/stripe-js';
 import { supabase } from '@/lib/supabase';
 
-    export const stripePromise = loadStripe('pk_live_51RHt8yC8j5ZYmSqnQyuwWApe0c4hkctb95rIlfBvWF7A61VqV3QDOd5ba1S9jCaQ78g1aUDTrxgBat9AKFTgFTug00ekRitI2P');
+const stripePublishableKey = import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY;
+
+if (!stripePublishableKey) {
+  console.warn('Missing Stripe publishable key');
+}
+
+export const stripePromise = stripePublishableKey ? loadStripe(stripePublishableKey) : null;
 
     export const createSubscription = async (hasTrialEnded = false) => {
       try {
@@ -19,7 +25,8 @@ import { supabase } from '@/lib/supabase';
 
         // If user is already subscribed, redirect to manage subscription
         if (subscription?.is_subscribed) {
-          window.location.href = 'https://billing.stripe.com/p/login/test_00000000000000';
+          const billingPortalUrl = import.meta.env.VITE_STRIPE_BILLING_PORTAL_URL || 'https://billing.stripe.com/p/login/test_00g00g9rDeUu5WgdQQ';
+          window.location.href = billingPortalUrl;
           return;
         }
 
