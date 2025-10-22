@@ -20,7 +20,9 @@ import HeaderCTA from "@/components/HeaderCTA";
                 />
                 <div className="absolute inset-0 bg-black/60 fixed"></div>
               </div>
-              <HeaderCTA />
+              <div className="relative z-10">
+                <HeaderCTA />
+              </div>
             </>
           )}
           <div className={`pb-24 ${!isLandingPage ? 'relative z-10' : ''}`}>

@@ -121,13 +121,15 @@ function DemoDashboard() {
       </Helmet>
       <div className="min-h-screen p-4 sm:p-8 flex flex-col">
         <main className="flex-grow flex flex-col items-center mt-[10vh] sm:mt-[12vh]">
-          <div className="text-center mb-8">
-            <h1 className="text-3xl sm:text-4xl font-bold text-yellow-400 mb-2">
-              Try The Write Stuff Assistant
-            </h1>
-            <p className="text-yellow-400/80 text-lg">
-              Explore all our writing tools - no signup required!
-            </p>
+          <div className="text-center mb-8 w-full max-w-4xl px-4">
+            <div className="bg-black/45 border border-yellow-400/20 backdrop-blur-[16px] backdrop-saturate-[180%] rounded-[20px] shadow-[0_8px_32px_rgba(0,0,0,0.6),0_16px_64px_rgba(0,0,0,0.4),0_2px_8px_rgba(255,212,0,0.15),inset_0_1px_0_rgba(255,255,255,0.05)] p-8">
+              <h1 className="text-3xl sm:text-4xl font-bold text-yellow-400 mb-2">
+                Try The Write Stuff Assistant
+              </h1>
+              <p className="text-yellow-400/80 text-lg">
+                Explore all our writing tools - no signup required!
+              </p>
+            </div>
           </div>
 
           <div className="w-full max-w-5xl grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
