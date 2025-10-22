@@ -5,6 +5,7 @@ import { AuthProvider, useAuth } from "@/lib/hooks/useAuth";
 import { HelmetProvider } from "react-helmet-async";
 import Layout from "@/components/Layout";
 import ErrorBoundary from "@/components/ErrorBoundary";
+import ScrollToTop from "@/components/ScrollToTop";
 
 import SignUp from "@/pages/SignUp";
 import SignIn from "@/pages/SignIn";
@@ -53,6 +54,7 @@ const AppContent = () => {
 
   return (
     <Layout>
+      <ScrollToTop />
       <Routes>
         <Route path="/" element={<PublicRoute element={SignIn} />} />
         <Route path="/signup" element={<PublicRoute element={SignUp} />} />
