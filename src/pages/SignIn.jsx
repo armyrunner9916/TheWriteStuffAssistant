@@ -38,9 +38,10 @@ function SignIn() {
               Welcome to The Write Stuff
             </h1>
             <p className="mt-4 max-w-2xl text-md sm:text-lg text-yellow-400/90">
-              Pick a task, fill a few details, and get focused results—worlds, characters, poems, outlines, and more—that you can refine with follow-ups. No prompt-crafting required.
+              Pick a task, fill a few details, and get focused results—worlds, characters, poems, outlines, and more—that you can then refine with follow-ups.
             </p>
-            <p className="mt-2 max-w-2xl text-md sm:text-lg text-yellow-400/90">
+
+            <p className="mt-6 max-w-2xl text-md sm:text-lg text-yellow-400/90">
               Try it free for 30 days. Then just $5/month. Click below to get started today!
             </p>
           </motion.div>
@@ -55,7 +56,7 @@ function SignIn() {
               <AuthDialog />
               <Button
                 onClick={() => window.location.href = '/demo'}
-                className="bg-transparent border-2 border-yellow-400 text-yellow-400 font-bold hover:bg-yellow-400 hover:text-black transition-colors duration-300 px-8 py-3 text-lg"
+                className="bg-yellow-400 text-black font-bold hover:bg-yellow-300 transition-colors duration-300 px-6 py-3 text-lg"
                 size="lg"
               >
                 Take A Test Run Now
