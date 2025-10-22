@@ -7,10 +7,11 @@ import HeaderCTA from "@/components/HeaderCTA";
       const location = useLocation();
 
       const isLandingPage = location.pathname === "/" || location.pathname === "/signin";
+      const isDemoPage = location.pathname.startsWith("/demo");
 
       return (
         <div className="min-h-screen relative">
-          {!isLandingPage && (
+          {!isLandingPage && !isDemoPage && (
             <>
               <div className="absolute inset-0 z-0">
                 <img
@@ -25,10 +26,10 @@ import HeaderCTA from "@/components/HeaderCTA";
               </div>
             </>
           )}
-          <div className={`pb-24 ${!isLandingPage ? 'relative z-10' : ''}`}>
+          <div className={`pb-24 ${!isLandingPage && !isDemoPage ? 'relative z-10' : ''}`}>
             {children}
           </div>
-          <Footer showSubscription={false} />
+          {!isDemoPage && <Footer showSubscription={false} />}
         </div>
       );
     }
