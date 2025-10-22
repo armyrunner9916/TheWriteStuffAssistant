@@ -1,6 +1,5 @@
 import React from "react";
 import DemoBanner from "@/components/DemoBanner";
-import DemoNavigation from "@/components/DemoNavigation";
 import Footer from "@/components/ui/Footer";
 import { ExternalLink } from "lucide-react";
 
@@ -27,8 +26,7 @@ function DemoLayout({ children, showBackButton = false }) {
             <ExternalLink className="h-3 w-3" />
           </a>
         </div>
-        <DemoBanner />
-        <DemoNavigation showBackButton={showBackButton} />
+        <DemoBanner showBackButton={showBackButton} />
       </div>
       <div className="pb-24 relative z-10">
         {children}
