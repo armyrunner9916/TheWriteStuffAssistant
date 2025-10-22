@@ -110,31 +110,42 @@ import React from "react";
             <meta name="description" content="Access your dashboard for The Write Stuff Assistant." />
             <meta name="robots" content="noindex,nofollow" />
           </Helmet>
-          <div className="min-h-screen p-4 sm:p-8 flex flex-col">
-            <header className="w-full max-w-6xl mx-auto flex justify-end items-center mb-8">
-              <AuthActionButtons onLogout={onLogout} />
-            </header>
+          <div className="min-h-screen relative">
+            <div className="absolute inset-0 z-0">
+              <img
+                className="object-cover w-full h-full fixed"
+                alt="Background bookshelf with warm lighting"
+                src="https://images.unsplash.com/photo-1630320778004-ffd02f18f93f"
+              />
+              <div className="absolute inset-0 bg-black/60 fixed"></div>
+            </div>
 
-            <main className="flex-grow flex flex-col items-center mt-[15vh] sm:mt-[18vh]">
-              <div className="w-full max-w-5xl grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 mb-10">
-                {categories.map((category, index) =>
-                  renderCategoryCard(category, index)
-                )}
-              </div>
+            <div className="relative z-10 p-4 sm:p-8 flex flex-col min-h-screen">
+              <header className="w-full max-w-6xl mx-auto flex justify-end items-center mb-8">
+                <AuthActionButtons onLogout={onLogout} />
+              </header>
 
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.5 }}
-                className="w-full max-w-md"
-              >
-                <SubscriptionStatus
-                  isSubscribed={isSubscribed}
-                  subscriptionEndDate={subscriptionEndDate}
-                  className="bg-black border-yellow-400 text-yellow-400"
-                />
-              </motion.div>
-            </main>
+              <main className="flex-grow flex flex-col items-center mt-[15vh] sm:mt-[18vh]">
+                <div className="w-full max-w-5xl grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 mb-10">
+                  {categories.map((category, index) =>
+                    renderCategoryCard(category, index)
+                  )}
+                </div>
+
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 0.5 }}
+                  className="w-full max-w-md"
+                >
+                  <SubscriptionStatus
+                    isSubscribed={isSubscribed}
+                    subscriptionEndDate={subscriptionEndDate}
+                    className="bg-black border-yellow-400 text-yellow-400"
+                  />
+                </motion.div>
+              </main>
+            </div>
           </div>
         </>
       );

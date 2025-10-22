@@ -27,9 +27,9 @@ import React from "react";
           ref={ref}
           className={cn(
             "fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4",
-            "bg-black/30 backdrop-blur-[16px] backdrop-saturate-[180%]",
-            "border border-yellow-400/20 rounded-[24px] p-8",
-            "shadow-[0_8px_32px_rgba(0,0,0,0.35),0_16px_64px_rgba(0,0,0,0.25)]",
+            "bg-black/50 backdrop-blur-[20px] backdrop-saturate-[180%]",
+            "border border-yellow-400/25 rounded-[24px] p-8",
+            "shadow-[0_12px_48px_rgba(0,0,0,0.7),0_24px_96px_rgba(0,0,0,0.5),0_2px_12px_rgba(255,212,0,0.2),inset_0_1px_0_rgba(255,255,255,0.08)]",
             "duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out",
             "data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
             "data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95",

@@ -32,7 +32,7 @@ function SignIn() {
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
-            className="bg-black/75 border-2 border-yellow-400 rounded-lg p-6 sm:p-8 max-w-3xl"
+            className="bg-black/50 backdrop-blur-[20px] backdrop-saturate-[180%] border border-yellow-400/25 rounded-[24px] p-6 sm:p-8 max-w-3xl shadow-[0_12px_48px_rgba(0,0,0,0.7),0_24px_96px_rgba(0,0,0,0.5),0_2px_12px_rgba(255,212,0,0.2),inset_0_1px_0_rgba(255,255,255,0.08)]"
           >
             <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-yellow-400 drop-shadow-lg" style={{ fontFamily: 'cursive, sans-serif' }}>
               Welcome to The Write Stuff

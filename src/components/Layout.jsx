@@ -1,33 +1,29 @@
 import React from "react";
 import HeaderCTA from "@/components/HeaderCTA";
     import { useLocation } from "react-router-dom";
-    import { useBackgroundImage } from "@/lib/hooks/useBackgroundImage";
     import Footer from "@/components/ui/Footer";
 
     function Layout({ children }) {
-      const { isBackgroundLoaded, backgroundImageUrl } = useBackgroundImage();
       const location = useLocation();
 
       const isLandingPage = location.pathname === "/" || location.pathname === "/signin";
 
-      const defaultPageStyle = {
-        backgroundImage: isBackgroundLoaded && !isLandingPage
-          ? `linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1)), url(${backgroundImageUrl})`
-          : 'linear-gradient(to bottom right, #000000, #1a1a1a)',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat',
-        backgroundAttachment: 'fixed',
-        transition: 'background-image 0.5s ease-in-out',
-      };
-
       return (
-        <div
-          className="min-h-screen relative bg-black"
-          style={isLandingPage ? {} : defaultPageStyle}
-        >
-          {!isLandingPage && <HeaderCTA />}
-          <div className="pb-24"> {/* Added padding-bottom to ensure space above the fixed footer */}
+        <div className="min-h-screen relative">
+          {!isLandingPage && (
+            <>
+              <div className="absolute inset-0 z-0">
+                <img
+                  className="object-cover w-full h-full fixed"
+                  alt="Background bookshelf with warm lighting"
+                  src="https://images.unsplash.com/photo-1630320778004-ffd02f18f93f"
+                />
+                <div className="absolute inset-0 bg-black/60 fixed"></div>
+              </div>
+              <HeaderCTA />
+            </>
+          )}
+          <div className={`pb-24 ${!isLandingPage ? 'relative z-10' : ''}`}>
             {children}
           </div>
           <Footer showSubscription={false} />
