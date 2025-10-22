@@ -1,9 +1,10 @@
 import React from "react";
 import DemoBanner from "@/components/DemoBanner";
+import DemoNavigation from "@/components/DemoNavigation";
 import Footer from "@/components/ui/Footer";
 import { ExternalLink } from "lucide-react";
 
-function DemoLayout({ children }) {
+function DemoLayout({ children, showBackButton = false }) {
   return (
     <div className="min-h-screen relative">
       <div className="absolute inset-0 z-0">
@@ -27,6 +28,7 @@ function DemoLayout({ children }) {
           </a>
         </div>
         <DemoBanner />
+        <DemoNavigation showBackButton={showBackButton} />
       </div>
       <div className="pb-24 relative z-10">
         {children}

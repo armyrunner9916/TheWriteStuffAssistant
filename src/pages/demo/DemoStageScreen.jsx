@@ -260,7 +260,7 @@ function DemoStageScreen() {
   };
 
   return (
-    <DemoLayout>
+    <DemoLayout showBackButton={true}>
       <Helmet>
         <title>{SECTION_TITLE} | The Write Stuff</title>
         <meta name="description" content="Try our scriptwriting tools - no signup required!" />
@@ -268,13 +268,8 @@ function DemoStageScreen() {
       </Helmet>
       <div className="min-h-screen bg-black text-yellow-400 p-4 sm:p-6 flex flex-col items-center">
         <div className="w-full max-w-5xl">
-          <header className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-6">
-            <Button onClick={() => navigate("/demo")} variant="outline" size="sm" className="bg-black/60 backdrop-blur-md text-yellow-400 hover:bg-black/80 border-yellow-400/50 shadow-lg">
-              <ArrowLeft className="h-4 w-4 mr-1" /> Back to Demo
-            </Button>
-          </header>
           
-          <h1 className="text-center text-3xl sm:text-4xl font-bold mb-2 text-yellow-400">{SECTION_TITLE}</h1>
+          <h1 className="text-center text-3xl sm:text-4xl font-bold mb-2 text-yellow-400 mt-6">{SECTION_TITLE}</h1>
           <p className="text-center text-yellow-400/80 mb-8">Try our all-in-one tool for crafting compelling scripts.</p>
           
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
