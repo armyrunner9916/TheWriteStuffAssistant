@@ -54,8 +54,23 @@
 
           console.log('[Init] Error handlers initialized');
         </script>
-        <script type="module" crossorigin src="/assets/index-GRmDUfud.js"></script>
-        <link rel="stylesheet" crossorigin href="/assets/index-CTtm1vfW.css">
+        <script>
+          if (history.scrollRestoration) {
+            history.scrollRestoration = 'manual';
+          }
+
+          window.addEventListener('pageshow', function() {
+            window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+          });
+
+          window.addEventListener('load', function() {
+            setTimeout(function() {
+              window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+            }, 100);
+          });
+        </script>
+        <script type="module" crossorigin src="/assets/index-BioE4Ow_.js"></script>
+        <link rel="stylesheet" crossorigin href="/assets/index-BtFD_2lr.css">
         <script type="module">
 window.onerror = (message, source, lineno, colno, errorObj) => {
 	const errorDetails = errorObj ? JSON.stringify({
