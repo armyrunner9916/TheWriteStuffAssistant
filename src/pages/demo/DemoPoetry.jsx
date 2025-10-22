@@ -60,7 +60,9 @@ function DemoPoetry() {
   const conversationEndRef = useRef(null);
 
   useEffect(() => {
-    conversationEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    if (conversation.length > 0) {
+      conversationEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    }
   }, [conversation]);
 
   useEffect(() => {
