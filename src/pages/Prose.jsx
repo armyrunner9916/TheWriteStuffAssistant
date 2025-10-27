@@ -285,8 +285,9 @@ function Prose({ onLogout }) {
   return (
     <>
       <Helmet>
-        <title>{SECTION_TITLE} | The Write Stuff</title>
+        <title>Fictional Prose Assistant | The Write Stuff Assistant</title>
         <meta name="description" content="A unified tool to generate world descriptions, character profiles, style guides, and story outlines." />
+        <meta name="robots" content="noindex,nofollow" />
         <link rel="canonical" href="https://writestuffassistant.com/prose" />
       </Helmet>
       <div className="min-h-screen bg-black text-yellow-400 p-4 sm:p-6 flex flex-col items-center">

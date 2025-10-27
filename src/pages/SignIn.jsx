@@ -10,12 +10,13 @@ function SignIn() {
   return (
     <>
       <Helmet>
-        <title>The Write Stuff Assistant – AI‑Powered Tools for Writers</title>
-        <meta name="description" content="Discover AI‑powered tools to enhance your creative writing. Perfect for authors, poets, screenwriters, nonfiction writers, content creators and songwriters." />
+        <title>The Write Stuff Assistant – AI‑Powered Writing Tools</title>
+        <meta name="description" content="Pick a task, fill a few details, and get tailored writing results—worlds, characters, poems, outlines, and more—free for 30 days." />
+        <meta name="robots" content="index,follow" />
         <link rel="canonical" href="https://writestuffassistant.com/" />
         <meta property="og:type" content="website" />
-        <meta property="og:title" content="The Write Stuff Assistant – AI‑Powered Tools for Writers" />
-        <meta property="og:description" content="Discover AI‑powered tools to enhance your creative writing. Perfect for authors, poets, screenwriters, nonfiction writers, content creators and songwriters." />
+        <meta property="og:title" content="The Write Stuff Assistant – AI‑Powered Writing Tools" />
+        <meta property="og:description" content="Pick a task, fill a few details, and get tailored writing results—worlds, characters, poems, outlines, and more—free for 30 days." />
         <meta property="og:url" content="https://writestuffassistant.com/" />
         <meta property="og:image" content="https://images.unsplash.com/photo-1630320778004-ffd02f18f93f" />
         <meta property="og:image:alt" content="Background image of a bookshelf filled with books under warm lighting" />
@@ -142,7 +143,7 @@ function SignIn() {
             `}
           </style>
 
-          <div className="liquid-glass-spotlight border border-yellow-400/25 p-6 sm:p-8 max-w-3xl shadow-[0_2px_12px_rgba(255,212,0,0.2),inset_0_1px_0_rgba(255,255,255,0.08)]">
+          <div className="liquid-glass-spotlight border border-yellow-400/25 p-6 sm:p-8 max-w-3xl shadow-[0_2px_12px_rgba(255,212,0,0.2),inset_0_1px_0_rgba(255,255,255,0.08)]" role="main">
             <h1 className="hero-heading text-4xl sm:text-5xl md:text-6xl font-bold text-yellow-400 drop-shadow-lg" style={{ fontFamily: 'cursive, sans-serif' }}>
               Welcome to The Write Stuff
             </h1>

@@ -262,9 +262,10 @@ function DemoStageScreen() {
   return (
     <DemoLayout showBackButton={true}>
       <Helmet>
-        <title>{SECTION_TITLE} | The Write Stuff</title>
-        <meta name="description" content="Try our scriptwriting tools - no signup required!" />
-        <meta name="robots" content="noindex,nofollow" />
+        <title>Stage & Screen Assistant Demo – The Write Stuff Assistant</title>
+        <meta name="description" content="Try our scriptwriting tools in demo mode. Develop scripts for theatre, film, and television - no signup required." />
+        <meta name="robots" content="noindex,follow" />
+        <link rel="canonical" href="https://writestuffassistant.com/demo/stage-screen" />
       </Helmet>
       <div className="min-h-screen bg-black text-yellow-400 p-4 sm:p-6 flex flex-col items-center">
         <div className="w-full max-w-5xl lg:assistant-desktop-container">

@@ -260,19 +260,20 @@ function DemoPoetry() {
   return (
     <DemoLayout showBackButton={true}>
       <Helmet>
-        <title>{SECTION_TITLE} | The Write Stuff</title>
-        <meta name="description" content="Try our poetry writing tools - no signup required!" />
-        <meta name="robots" content="noindex,nofollow" />
+        <title>Poetry Assistant Demo – The Write Stuff Assistant</title>
+        <meta name="description" content="Try our poetry writing tools in demo mode. Craft verses, explore forms, and enhance imagery - no signup required." />
+        <meta name="robots" content="noindex,follow" />
+        <link rel="canonical" href="https://writestuffassistant.com/demo/poetry" />
       </Helmet>
       <div className="min-h-screen bg-black text-yellow-400 p-4 sm:p-6 flex flex-col items-center">
         <div className="w-full max-w-5xl lg:assistant-desktop-container">
-          <h1 className="text-center text-3xl sm:text-4xl font-bold mb-2 text-yellow-400 mt-6">{SECTION_TITLE}</h1>
+          <h1 className="text-center text-3xl sm:text-4xl font-bold mb-2 text-yellow-400 mt-6">Poetry Assistant (Demo)</h1>
           <p className="text-center text-yellow-400/80 mb-8">Try our modular tool for crafting powerful poetry.</p>
           
           <div className="grid grid-cols-1 lg:assistant-desktop-grid gap-8">
             <Card className="bg-zinc-900/50 border-yellow-400/30 lg:assistant-control-panel">
               <CardHeader>
-                <CardTitle className="text-yellow-400 text-2xl">Create Your Poem</CardTitle>
+                <CardTitle as="h2" className="text-yellow-400 text-2xl">Create Your Poem</CardTitle>
               </CardHeader>
               <CardContent>
                 <form onSubmit={handleSubmit} className="space-y-6">
@@ -314,7 +315,7 @@ function DemoPoetry() {
             <div className="flex flex-col lg:assistant-content-panel">
               <Card className="flex-grow bg-zinc-900/50 border-yellow-400/30 flex flex-col">
                 <CardHeader>
-                  <CardTitle className="text-yellow-400 text-2xl">Generated Content</CardTitle>
+                  <CardTitle as="h2" className="text-yellow-400 text-2xl">Generated Content</CardTitle>
                 </CardHeader>
                 <CardContent className="flex-grow flex flex-col h-[500px]">
                    <div className="flex-grow overflow-y-auto pr-4 space-y-4 lg:assistant-content-text">

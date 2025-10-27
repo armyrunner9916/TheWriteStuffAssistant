@@ -63,15 +63,17 @@ function Resources() {
   return (
     <>
       <Helmet>
-        <title>Resources | The Write Stuff Assistant</title>
-        <meta name="description" content="Find helpful resources, tutorials, and guides for The Write Stuff Assistant." />
+        <title>Resources & Support – The Write Stuff Assistant</title>
+        <meta name="description" content="Discover helpful links, writing guides, FAQs, and contact support for The Write Stuff Assistant." />
+        <meta name="robots" content="index,follow" />
         <link rel="canonical" href="https://writestuffassistant.com/resources" />
       </Helmet>
       <div className="min-h-screen relative">
         <div className="absolute inset-0 z-0">
           <img
             className="object-cover w-full h-full fixed"
-            alt="Background bookshelf with warm lighting"
+            alt=""
+            role="presentation"
             src="https://images.unsplash.com/photo-1630320778004-ffd02f18f93f"
           />
           <div className="absolute inset-0 bg-black/60 fixed"></div>
@@ -84,8 +86,9 @@ function Resources() {
               variant="outline"
               size="sm"
               className="bg-black text-yellow-400 hover:bg-zinc-800 border-yellow-400"
+              aria-label="Back to previous page"
             >
-              <ArrowLeft className="h-4 w-4 mr-1" /> Back
+              <ArrowLeft className="h-4 w-4 mr-1" aria-hidden="true" /> Back
             </Button>
           </header>
 
@@ -115,8 +118,8 @@ function Resources() {
                   <Card className="h-full bg-zinc-900/50 border-yellow-400/30 hover:border-yellow-400/50 transition-all">
                     <CardHeader className="pb-3">
                       <div className="flex items-center gap-3 mb-2">
-                        <resource.icon className="h-6 w-6 text-yellow-400" />
-                        <CardTitle className="text-yellow-400 text-xl">{resource.title}</CardTitle>
+                        <resource.icon className="h-6 w-6 text-yellow-400" aria-hidden="true" />
+                        <CardTitle as="h2" className="text-yellow-400 text-xl">{resource.title}</CardTitle>
                       </div>
                       <CardDescription className="text-yellow-400/70">
                         {resource.description}
@@ -132,8 +135,9 @@ function Resources() {
                               target="_blank"
                               rel="noopener noreferrer"
                               className="block text-yellow-400 hover:text-yellow-300 hover:underline transition-colors"
+                              aria-label={link.text}
                             >
-                              → {link.text}
+                              <span aria-hidden="true">→</span> {link.text}
                             </a>
                           ))}
                         </div>

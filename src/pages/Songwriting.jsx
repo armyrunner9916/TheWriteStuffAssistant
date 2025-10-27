@@ -289,8 +289,9 @@ function Songwriting({ onLogout }) {
   return (
     <>
       <Helmet>
-        <title>{SECTION_TITLE} | The Write Stuff</title>
+        <title>Songwriting Assistant | The Write Stuff Assistant</title>
         <meta name="description" content="A unified tool to generate song themes, lyrics, melodies, and more." />
+        <meta name="robots" content="noindex,nofollow" />
         <link rel="canonical" href="https://writestuffassistant.com/songwriting" />
       </Helmet>
       <div className="min-h-screen bg-black text-yellow-400 p-4 sm:p-6 flex flex-col items-center">

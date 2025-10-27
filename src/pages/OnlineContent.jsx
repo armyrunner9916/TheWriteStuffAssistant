@@ -293,8 +293,9 @@ function OnlineContent({ onLogout }) {
   return (
     <>
       <Helmet>
-        <title>{SECTION_TITLE} | The Write Stuff</title>
+        <title>Online Content Creation Assistant | The Write Stuff Assistant</title>
         <meta name="description" content="A unified tool for content strategy, idea generation, scripting, and growth." />
+        <meta name="robots" content="noindex,nofollow" />
         <link rel="canonical" href="https://writestuffassistant.com/online-content" />
       </Helmet>
       <div className="min-h-screen bg-black text-yellow-400 p-4 sm:p-6 flex flex-col items-center">

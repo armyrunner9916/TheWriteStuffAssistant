@@ -289,8 +289,9 @@ function StageScreen({ onLogout }) {
   return (
     <>
       <Helmet>
-        <title>{SECTION_TITLE} | The Write Stuff</title>
+        <title>Stage & Screen Assistant | The Write Stuff Assistant</title>
         <meta name="description" content="A unified tool for scriptwriting, from scene structure to character arcs." />
+        <meta name="robots" content="noindex,nofollow" />
         <link rel="canonical" href="https://writestuffassistant.com/stage-screen" />
       </Helmet>
       <div className="min-h-screen bg-black text-yellow-400 p-4 sm:p-6 flex flex-col items-center">

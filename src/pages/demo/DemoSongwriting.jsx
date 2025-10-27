@@ -262,9 +262,10 @@ function DemoSongwriting() {
   return (
     <DemoLayout showBackButton={true}>
       <Helmet>
-        <title>{SECTION_TITLE} | The Write Stuff</title>
-        <meta name="description" content="Try our songwriting tools - no signup required!" />
-        <meta name="robots" content="noindex,nofollow" />
+        <title>Songwriting Assistant Demo – The Write Stuff Assistant</title>
+        <meta name="description" content="Try our songwriting tools in demo mode. Create lyrics, melodies, song structures, and more - no signup required." />
+        <meta name="robots" content="noindex,follow" />
+        <link rel="canonical" href="https://writestuffassistant.com/demo/songwriting" />
       </Helmet>
       <div className="min-h-screen bg-black text-yellow-400 p-4 sm:p-6 flex flex-col items-center">
         <div className="w-full max-w-5xl lg:assistant-desktop-container">

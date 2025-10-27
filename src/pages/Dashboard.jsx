@@ -110,12 +110,14 @@ import React from "react";
             <title>Dashboard | The Write Stuff Assistant</title>
             <meta name="description" content="Access your dashboard for The Write Stuff Assistant." />
             <meta name="robots" content="noindex,nofollow" />
+            <link rel="canonical" href="https://writestuffassistant.com/dashboard" />
           </Helmet>
           <div className="min-h-screen relative">
             <div className="absolute inset-0 z-0">
               <img
                 className="object-cover w-full h-full fixed"
-                alt="Background bookshelf with warm lighting"
+                alt=""
+                role="presentation"
                 src="https://images.unsplash.com/photo-1630320778004-ffd02f18f93f"
               />
               <div className="absolute inset-0 bg-black/60 fixed"></div>
@@ -128,8 +130,9 @@ import React from "react";
                   variant="outline"
                   size="sm"
                   className="bg-black text-yellow-400 hover:bg-zinc-800 border-yellow-400"
+                  aria-label="Navigate to resources and support page"
                 >
-                  <BookOpen className="h-4 w-4 mr-1" /> More Resources
+                  <BookOpen className="h-4 w-4 mr-1" aria-hidden="true" /> More Resources
                 </Button>
                 <AuthActionButtons onLogout={onLogout} />
               </header>

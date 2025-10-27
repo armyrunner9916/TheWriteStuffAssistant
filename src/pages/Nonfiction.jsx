@@ -289,8 +289,9 @@ function Nonfiction({ onLogout }) {
   return (
     <>
       <Helmet>
-        <title>{SECTION_TITLE} | The Write Stuff</title>
+        <title>Nonfiction Writing Assistant | The Write Stuff Assistant</title>
         <meta name="description" content="A unified tool to generate fact-checked research, outlines, and tone guidance for nonfiction writing." />
+        <meta name="robots" content="noindex,nofollow" />
         <link rel="canonical" href="https://writestuffassistant.com/nonfiction" />
       </Helmet>
       <div className="min-h-screen bg-black text-yellow-400 p-4 sm:p-6 flex flex-col items-center">

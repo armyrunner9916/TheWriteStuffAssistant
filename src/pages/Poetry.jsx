@@ -287,19 +287,20 @@ function Poetry({ onLogout }) {
   return (
     <>
       <Helmet>
-        <title>{SECTION_TITLE} | The Write Stuff</title>
+        <title>Poetry Assistant | The Write Stuff Assistant</title>
         <meta name="description" content="A unified tool to generate poems, imagery, rhyme schemes, and style guidance." />
+        <meta name="robots" content="noindex,nofollow" />
         <link rel="canonical" href="https://writestuffassistant.com/poetry" />
       </Helmet>
       <div className="min-h-screen bg-black text-yellow-400 p-4 sm:p-6 flex flex-col items-center">
         <div className="w-full max-w-5xl lg:assistant-desktop-container">
           <header className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-6">
             <div className="flex gap-2 flex-wrap justify-center sm:justify-start">
-               <Button onClick={() => navigate("/dashboard")} variant="outline" size="sm" className="bg-black text-yellow-400 hover:bg-zinc-800 border-yellow-400">
-                  <ArrowLeft className="h-4 w-4 mr-1" /> Back to Categories
+               <Button onClick={() => navigate("/dashboard")} variant="outline" size="sm" className="bg-black text-yellow-400 hover:bg-zinc-800 border-yellow-400" aria-label="Back to categories dashboard">
+                  <ArrowLeft className="h-4 w-4 mr-1" aria-hidden="true" /> Back to Categories
                </Button>
-               <Button onClick={() => navigate(`/poetry/history`)} variant="outline" size="sm" className="bg-black text-yellow-400 hover:bg-zinc-800 border-yellow-400">
-                  <History className="h-4 w-4 mr-1" /> View History
+               <Button onClick={() => navigate(`/poetry/history`)} variant="outline" size="sm" className="bg-black text-yellow-400 hover:bg-zinc-800 border-yellow-400" aria-label="View poetry writing history">
+                  <History className="h-4 w-4 mr-1" aria-hidden="true" /> View History
                 </Button>
             </div>
             <AuthActionButtons onLogout={onLogout} />
