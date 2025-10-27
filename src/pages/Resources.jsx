@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { motion } from 'framer-motion';
-import { ArrowLeft, BookOpen, Youtube, FileText, HelpCircle } from 'lucide-react';
+import { ArrowLeft, BookOpen, Globe, FileText, HelpCircle } from 'lucide-react';
 import { Helmet } from 'react-helmet-async';
 
 function Resources() {
@@ -11,13 +11,17 @@ function Resources() {
 
   const resources = [
     {
-      title: 'Video Tutorials',
-      description: 'Check out our YouTube channel for guides and to see our other projects!',
-      icon: Youtube,
+      title: 'Helpful Links',
+      description: 'Check out these sites for more information on this product and to see what else we have to offer!',
+      icon: Globe,
       links: [
         {
           text: 'Visit Our YouTube Channel',
           url: 'https://www.youtube.com/@Armyrunner-Studios',
+        },
+        {
+          text: 'Explore Our Other Products Here',
+          url: 'https://armyrunner-studios.com',
         },
       ],
     },
@@ -28,7 +32,6 @@ function Resources() {
       content: [
         'Drop-down menus make the prompting process as simple and user-friendly as possible',
         'Respond to the model using the follow-up dialog to further refine your ideas',
-        'Experiment with different tone and style options',
         'Easily combine tools within an assistant to get the most out of your session',
       ],
     },
@@ -37,10 +40,9 @@ function Resources() {
       description: 'Common questions and answers about The Write Stuff Assistant.',
       icon: HelpCircle,
       content: [
-        'Q: How does the free trial work? A: Get 30 days of full access, then just $5/month.',
-        'Q: Can I cancel anytime? A: Yes, cancel your subscription at any time with no penalties.',
-        'Q: What payment methods do you accept? A: We accept all major credit cards via Stripe.',
         'Q: Is my content private? A: Yes, your content is stored securely and never shared.',
+        'Q: How does the free trial work? A: Get 30 days of full access, then just $5/month. Cancel anytime, no penalties.',
+        'Q: What payment methods do you accept? A: We accept all major credit cards via Stripe.',
       ],
     },
     {
@@ -48,7 +50,7 @@ function Resources() {
       description: 'Need help? Our support team is here for you.',
       icon: FileText,
       content: [
-        { type: 'link', text: 'Email us at support@armyrunner-studios.com', email: 'support@armyrunner-studios.com' },
+        { type: 'emailPart', text: 'Email us at ', email: 'support@armyrunner-studios.com' },
         { type: 'text', text: 'Response time: Usually within 24 hours' },
         { type: 'text', text: 'Include your account email for faster assistance' },
       ],
@@ -108,7 +110,7 @@ function Resources() {
                   transition={{ duration: 0.5, delay: index * 0.1 }}
                 >
                   <Card className="h-full bg-zinc-900/50 border-yellow-400/30 hover:border-yellow-400/50 transition-all">
-                    <CardHeader>
+                    <CardHeader className="pb-3">
                       <div className="flex items-center gap-3 mb-2">
                         <resource.icon className="h-6 w-6 text-yellow-400" />
                         <CardTitle className="text-yellow-400 text-xl">{resource.title}</CardTitle>
@@ -117,7 +119,7 @@ function Resources() {
                         {resource.description}
                       </CardDescription>
                     </CardHeader>
-                    <CardContent>
+                    <CardContent className="pt-0">
                       {resource.links && (
                         <div className="space-y-2">
                           {resource.links.map((link) => (
@@ -134,26 +136,26 @@ function Resources() {
                         </div>
                       )}
                       {resource.content && (
-                        <ul className="space-y-2 text-yellow-400/80 text-sm">
+                        <div className="space-y-1.5 text-yellow-400/80 text-sm">
                           {resource.content.map((item, idx) => {
                             if (typeof item === 'string') {
-                              return <li key={idx}>• {item}</li>;
+                              return <div key={idx}>{item}</div>;
                             }
-                            if (item.type === 'link' && item.email) {
+                            if (item.type === 'emailPart') {
                               return (
-                                <li key={idx}>
-                                  • <a
+                                <div key={idx}>
+                                  {item.text}<a
                                     href={`mailto:${item.email}`}
                                     className="text-yellow-400 hover:text-yellow-300 hover:underline transition-colors"
                                   >
-                                    {item.text}
+                                    {item.email}
                                   </a>
-                                </li>
+                                </div>
                               );
                             }
-                            return <li key={idx}>• {item.text}</li>;
+                            return <div key={idx}>{item.text}</div>;
                           })}
-                        </ul>
+                        </div>
                       )}
                     </CardContent>
                   </Card>
