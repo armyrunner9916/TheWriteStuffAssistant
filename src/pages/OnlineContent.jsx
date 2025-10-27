@@ -297,7 +297,7 @@ function OnlineContent({ onLogout }) {
         <link rel="canonical" href="https://writestuffassistant.com/online-content" />
       </Helmet>
       <div className="min-h-screen bg-black text-yellow-400 p-4 sm:p-6 flex flex-col items-center">
-        <div className="w-full max-w-5xl">
+        <div className="w-full max-w-5xl lg:assistant-desktop-container">
           <header className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-6">
             <div className="flex gap-2 flex-wrap justify-center sm:justify-start">
                <Button onClick={() => navigate("/dashboard")} variant="outline" size="sm" className="bg-black text-yellow-400 hover:bg-zinc-800 border-yellow-400">
@@ -313,8 +313,8 @@ function OnlineContent({ onLogout }) {
           <h1 className="text-center text-3xl sm:text-4xl font-bold mb-2 text-yellow-400">{SECTION_TITLE}</h1>
           <p className="text-center text-yellow-400/80 mb-8">Your modular tool for building a successful content strategy.</p>
           
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <Card className="bg-zinc-900/50 border-yellow-400/30">
+          <div className="grid grid-cols-1 lg:assistant-desktop-grid gap-8">
+            <Card className="bg-zinc-900/50 border-yellow-400/30 lg:assistant-control-panel">
               <CardHeader>
                 <CardTitle className="text-yellow-400 text-2xl">Create Your Content Plan</CardTitle>
               </CardHeader>
@@ -357,13 +357,13 @@ function OnlineContent({ onLogout }) {
               </CardContent>
             </Card>
 
-            <div className="flex flex-col">
+            <div className="flex flex-col lg:assistant-content-panel">
               <Card className="flex-grow bg-zinc-900/50 border-yellow-400/30 flex flex-col">
                 <CardHeader>
                   <CardTitle className="text-yellow-400 text-2xl">Generated Content</CardTitle>
                 </CardHeader>
                 <CardContent className="flex-grow flex flex-col h-[500px]">
-                   <div className="flex-grow overflow-y-auto pr-4 space-y-4">
+                   <div className="flex-grow overflow-y-auto pr-4 space-y-4 lg:assistant-content-text">
                      {conversation.length > 0 ? (
                        conversation.filter(turn => turn.role === 'assistant').map((turn, index) => (
                          <div key={index} className="p-3 rounded-lg bg-transparent">
