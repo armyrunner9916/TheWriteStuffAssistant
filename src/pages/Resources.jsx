@@ -80,12 +80,12 @@ function Resources() {
         <div className="relative z-10 p-4 sm:p-8 flex flex-col min-h-screen pb-24">
           <header className="w-full max-w-6xl mx-auto flex justify-start items-center mb-8">
             <Button
-              onClick={() => navigate('/')}
+              onClick={() => navigate(-1)}
               variant="outline"
               size="sm"
               className="bg-black text-yellow-400 hover:bg-zinc-800 border-yellow-400"
             >
-              <ArrowLeft className="h-4 w-4 mr-1" /> Back to Home
+              <ArrowLeft className="h-4 w-4 mr-1" /> Back
             </Button>
           </header>
 

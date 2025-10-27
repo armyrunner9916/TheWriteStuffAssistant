@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { getDemoQueriesRemaining } from '@/lib/demo-api';
-import { TestTube, ArrowRight, Home, ArrowLeft } from 'lucide-react';
+import { TestTube, ArrowRight, Home, ArrowLeft, BookOpen } from 'lucide-react';
 
 function DemoBanner({ showBackButton = false }) {
   const queriesRemaining = getDemoQueriesRemaining();
@@ -32,6 +32,15 @@ function DemoBanner({ showBackButton = false }) {
               <ArrowLeft className="h-5 w-5" />
             </Button>
           )}
+          <Button
+            onClick={() => navigate('/resources')}
+            variant="outline"
+            size="icon"
+            className="bg-black/30 backdrop-blur-sm text-yellow-400 hover:bg-black/50 border-yellow-400/30 shadow-md h-10 w-10"
+            title="More Resources"
+          >
+            <BookOpen className="h-5 w-5" />
+          </Button>
         </div>
 
         <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4 flex-1">
