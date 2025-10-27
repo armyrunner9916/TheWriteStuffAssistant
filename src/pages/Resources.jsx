@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { motion } from 'framer-motion';
 import { ArrowLeft, BookOpen, Globe, FileText, HelpCircle } from 'lucide-react';
 import { Helmet } from 'react-helmet-async';
+import AuthDialog from '@/components/AuthDialog';
 
 function Resources() {
   const navigate = useNavigate();
@@ -34,6 +35,7 @@ function Resources() {
         'Respond to the model using the follow-up dialog to further refine your ideas',
         'Easily combine tools within an assistant to get the most out of your session',
       ],
+      useBullets: true,
     },
     {
       title: 'FAQs',
@@ -136,10 +138,10 @@ function Resources() {
                         </div>
                       )}
                       {resource.content && (
-                        <div className="space-y-1.5 text-yellow-400/80 text-sm">
+                        <div className={`space-y-1.5 text-yellow-400/80 text-sm ${resource.useBullets ? '' : ''}`}>
                           {resource.content.map((item, idx) => {
                             if (typeof item === 'string') {
-                              return <div key={idx}>{item}</div>;
+                              return <div key={idx}>{resource.useBullets ? '• ' : ''}{item}</div>;
                             }
                             if (item.type === 'emailPart') {
                               return (
@@ -169,13 +171,16 @@ function Resources() {
               transition={{ duration: 0.5, delay: 0.6 }}
               className="text-center mb-8"
             >
-              <Button
-                onClick={() => navigate('/demo')}
-                className="bg-yellow-400 text-black hover:bg-yellow-500 font-bold px-8 py-3 text-lg"
-                size="lg"
-              >
-                Try The Demo
-              </Button>
+              <div className="flex flex-col sm:flex-row gap-4 items-center justify-center">
+                <AuthDialog />
+                <Button
+                  onClick={() => navigate('/demo')}
+                  className="bg-yellow-400 text-black hover:bg-yellow-500 font-bold px-8 py-3 text-lg"
+                  size="lg"
+                >
+                  Try The Demo
+                </Button>
+              </div>
             </motion.div>
           </main>
         </div>

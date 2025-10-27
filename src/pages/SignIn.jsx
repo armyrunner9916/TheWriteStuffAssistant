@@ -168,8 +168,7 @@ function SignIn() {
             <div className="mt-4">
               <Button
                 onClick={() => window.location.href = '/resources'}
-                variant="outline"
-                className="bg-transparent text-yellow-400 border-yellow-400 hover:bg-yellow-400/10 hover:text-yellow-300 font-semibold px-6 py-2"
+                className="hero-button hero-button-primary text-black font-bold px-6 py-3 text-lg"
                 size="lg"
               >
                 More Resources
