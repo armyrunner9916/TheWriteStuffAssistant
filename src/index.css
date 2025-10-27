@@ -207,15 +207,15 @@
     .assistant-desktop-grid {
       display: grid;
       grid-template-columns: 380px 1fr;
-      gap: 1rem;
+      gap: 1.5rem;
     }
 
     .assistant-control-panel {
-      margin-left: -0.5rem;
+      margin-left: -1rem;
     }
 
     .assistant-content-panel {
-      margin-right: -0.5rem;
+      margin-right: -1.5rem;
     }
 
     .assistant-content-text {

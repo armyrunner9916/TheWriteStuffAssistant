@@ -10,6 +10,22 @@ import React from 'react';
 
       return (
         <div className="prose prose-sm sm:prose-base lg:prose-lg xl:prose-xl 2xl:prose-2xl prose-invert max-w-none text-gray-200">
+          <style>
+            {`
+              .prose h1 {
+                font-size: 1.1rem !important;
+              }
+              .prose h2 {
+                font-size: 1rem !important;
+              }
+              .prose h3 {
+                font-size: 0.95rem !important;
+              }
+              .prose p, .prose li, .prose ul, .prose ol {
+                font-size: 0.9em !important;
+              }
+            `}
+          </style>
           <ReactMarkdown remarkPlugins={[remarkGfm, remarkBreaks]}>
             {markdownText}
           </ReactMarkdown>

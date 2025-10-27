@@ -165,19 +165,15 @@ function SignIn() {
                 Take A Test Run Now
               </Button>
             </div>
-            <div className="flex flex-col sm:flex-row items-center gap-6 mt-6">
-              <a href="https://youtu.be/fHXTLOqXb30?si=ja1qCphUY62mcCB5" target="_blank" rel="noopener noreferrer" className="text-yellow-400 hover:text-yellow-300 transition-transform hover:scale-105 group">
-                <div className="w-64 h-36 rounded-lg overflow-hidden border-2 border-yellow-400/50 group-hover:border-yellow-300 transition-colors">
-                  <img  className="w-full h-full object-cover" alt="Official YouTube thumbnail for The Write Stuff video" src="https://img.youtube.com/vi/fHXTLOqXb30/hqdefault.jpg" />
-                </div>
-                <p className="mt-2 text-sm font-semibold">Watch on YouTube</p>
-              </a>
-              <a href="https://youtu.be/e501z70QMpk?si=oQeijFjAAk7igE4j" target="_blank" rel="noopener noreferrer" className="text-yellow-400 hover:text-yellow-300 transition-transform hover:scale-105 group">
-                 <div className="w-64 h-36 rounded-lg overflow-hidden border-2 border-yellow-400/50 group-hover:border-yellow-300 transition-colors">
-                  <img  className="w-full h-full object-cover" alt="Official YouTube thumbnail for The Write Stuff video" src="https://img.youtube.com/vi/e501z70QMpk/hqdefault.jpg" />
-                </div>
-                <p className="mt-2 text-sm font-semibold">Watch on YouTube</p>
-              </a>
+            <div className="mt-4">
+              <Button
+                onClick={() => window.location.href = '/resources'}
+                variant="outline"
+                className="bg-transparent text-yellow-400 border-yellow-400 hover:bg-yellow-400/10 hover:text-yellow-300 font-semibold px-6 py-2"
+                size="lg"
+              >
+                More Resources
+              </Button>
             </div>
           </div>
         </main>

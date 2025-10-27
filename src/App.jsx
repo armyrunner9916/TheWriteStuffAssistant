@@ -19,6 +19,7 @@ import Nonfiction from "@/pages/Nonfiction";
 import OnlineContent from "@/pages/OnlineContent";
 import Songwriting from "@/pages/Songwriting";
 import StageScreen from "@/pages/StageScreen";
+import Resources from "@/pages/Resources";
 
 // Demo pages
 import DemoDashboard from "@/pages/demo/DemoDashboard";
@@ -60,6 +61,7 @@ const AppContent = () => {
         <Route path="/signup" element={<PublicRoute element={SignUp} />} />
         <Route path="/signin" element={<Navigate to="/" />} />
         <Route path="/password-reset" element={<PasswordResetForm />} />
+        <Route path="/resources" element={<Resources />} />
         <Route path="/dashboard" element={<ProtectedRoute element={Dashboard} />} />
         <Route path="/prose" element={<ProtectedRoute element={Prose} />} />
         <Route path="/poetry" element={<ProtectedRoute element={Poetry} />} />

@@ -1,0 +1,174 @@
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { motion } from 'framer-motion';
+import { ArrowLeft, BookOpen, Youtube, FileText, HelpCircle } from 'lucide-react';
+import { Helmet } from 'react-helmet-async';
+
+function Resources() {
+  const navigate = useNavigate();
+
+  const resources = [
+    {
+      title: 'Video Tutorials',
+      description: 'Watch comprehensive guides on how to use each writing assistant tool.',
+      icon: Youtube,
+      links: [
+        {
+          text: 'Getting Started with The Write Stuff',
+          url: 'https://youtu.be/fHXTLOqXb30?si=ja1qCphUY62mcCB5',
+        },
+        {
+          text: 'Advanced Features Overview',
+          url: 'https://youtu.be/e501z70QMpk?si=oQeijFjAAk7igE4j',
+        },
+      ],
+    },
+    {
+      title: 'Writing Guides',
+      description: 'Tips and best practices for getting the most out of each assistant.',
+      icon: BookOpen,
+      content: [
+        'Start with clear, specific prompts for better results',
+        'Use the follow-up feature to refine and iterate on generated content',
+        'Experiment with different tone and style options',
+        'Combine multiple assistant tools for comprehensive project planning',
+      ],
+    },
+    {
+      title: 'FAQs',
+      description: 'Common questions and answers about The Write Stuff Assistant.',
+      icon: HelpCircle,
+      content: [
+        'Q: How does the free trial work? A: Get 30 days of full access, then just $5/month.',
+        'Q: Can I cancel anytime? A: Yes, cancel your subscription at any time with no penalties.',
+        'Q: What payment methods do you accept? A: We accept all major credit cards via Stripe.',
+        'Q: Is my content private? A: Yes, your content is stored securely and never shared.',
+      ],
+    },
+    {
+      title: 'Contact Support',
+      description: 'Need help? Our support team is here for you.',
+      icon: FileText,
+      content: [
+        'Email us at support@armyrunner-studios.com',
+        'Response time: Usually within 24 hours',
+        'Include your account email for faster assistance',
+      ],
+    },
+  ];
+
+  return (
+    <>
+      <Helmet>
+        <title>Resources | The Write Stuff Assistant</title>
+        <meta name="description" content="Find helpful resources, tutorials, and guides for The Write Stuff Assistant." />
+        <link rel="canonical" href="https://writestuffassistant.com/resources" />
+      </Helmet>
+      <div className="min-h-screen relative">
+        <div className="absolute inset-0 z-0">
+          <img
+            className="object-cover w-full h-full fixed"
+            alt="Background bookshelf with warm lighting"
+            src="https://images.unsplash.com/photo-1630320778004-ffd02f18f93f"
+          />
+          <div className="absolute inset-0 bg-black/60 fixed"></div>
+        </div>
+
+        <div className="relative z-10 p-4 sm:p-8 flex flex-col min-h-screen">
+          <header className="w-full max-w-6xl mx-auto flex justify-start items-center mb-8">
+            <Button
+              onClick={() => navigate('/')}
+              variant="outline"
+              size="sm"
+              className="bg-black text-yellow-400 hover:bg-zinc-800 border-yellow-400"
+            >
+              <ArrowLeft className="h-4 w-4 mr-1" /> Back to Home
+            </Button>
+          </header>
+
+          <main className="flex-grow flex flex-col items-center">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              className="w-full max-w-5xl mb-8"
+            >
+              <h1 className="text-center text-4xl sm:text-5xl font-bold mb-4 text-yellow-400">
+                Resources & Support
+              </h1>
+              <p className="text-center text-yellow-400/80 text-lg mb-8">
+                Everything you need to make the most of The Write Stuff Assistant
+              </p>
+            </motion.div>
+
+            <div className="w-full max-w-5xl grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
+              {resources.map((resource, index) => (
+                <motion.div
+                  key={resource.title}
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: index * 0.1 }}
+                >
+                  <Card className="h-full bg-zinc-900/50 border-yellow-400/30 hover:border-yellow-400/50 transition-all">
+                    <CardHeader>
+                      <div className="flex items-center gap-3 mb-2">
+                        <resource.icon className="h-6 w-6 text-yellow-400" />
+                        <CardTitle className="text-yellow-400 text-xl">{resource.title}</CardTitle>
+                      </div>
+                      <CardDescription className="text-yellow-400/70">
+                        {resource.description}
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      {resource.links && (
+                        <div className="space-y-2">
+                          {resource.links.map((link) => (
+                            <a
+                              key={link.url}
+                              href={link.url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="block text-yellow-400 hover:text-yellow-300 hover:underline transition-colors"
+                            >
+                              → {link.text}
+                            </a>
+                          ))}
+                        </div>
+                      )}
+                      {resource.content && (
+                        <ul className="space-y-2 text-yellow-400/80 text-sm">
+                          {resource.content.map((item, idx) => (
+                            <li key={idx}>• {item}</li>
+                          ))}
+                        </ul>
+                      )}
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              ))}
+            </div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.6 }}
+              className="text-center mb-8"
+            >
+              <Button
+                onClick={() => navigate('/demo')}
+                className="bg-yellow-400 text-black hover:bg-yellow-500 font-bold px-8 py-3 text-lg"
+                size="lg"
+              >
+                Try The Demo
+              </Button>
+            </motion.div>
+          </main>
+        </div>
+      </div>
+    </>
+  );
+}
+
+export default Resources;
