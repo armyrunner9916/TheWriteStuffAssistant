@@ -4,6 +4,7 @@ import { Helmet } from 'react-helmet-async';
 import { Button } from '@/components/ui/button';
 import AuthDialog from '@/components/AuthDialog';
 import { ExternalLink } from 'lucide-react';
+import Footer from '@/components/ui/Footer';
 
 function SignIn() {
   return (
@@ -19,13 +20,13 @@ function SignIn() {
         <meta property="og:image" content="https://images.unsplash.com/photo-1630320778004-ffd02f18f93f" />
         <meta property="og:image:alt" content="Background image of a bookshelf filled with books under warm lighting" />
       </Helmet>
-      <div className="relative min-h-screen w-full flex flex-col overflow-hidden">
+      <div className="relative min-h-screen w-full flex flex-col">
         <div className="absolute inset-0 z-0">
           <img
-            className="object-cover w-full h-full"
+            className="object-cover w-full h-full fixed"
             alt="Background image of a bookshelf filled with books under warm lighting"
            src="https://images.unsplash.com/photo-1630320778004-ffd02f18f93f" />
-          <div className="absolute inset-0 bg-black/60"></div>
+          <div className="absolute inset-0 bg-black/60 fixed"></div>
         </div>
 
         <div className="relative z-10 bg-yellow-400 text-black py-2 px-4 text-center text-sm font-medium">
@@ -176,6 +177,7 @@ function SignIn() {
             </div>
           </div>
         </main>
+        <Footer showSubscription={false} />
       </div>
     </>
   );

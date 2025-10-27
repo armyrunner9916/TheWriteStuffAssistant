@@ -4,10 +4,8 @@ import React from "react";
     function Footer({ showSubscription = true }) {
       const location = useLocation();
 
-      // Don't show the footer on sign-in or sign-up pages
-      if (location.pathname === '/signin' || location.pathname === '/signup') {
-        return null;
-      }
+      // Footer is now shown on all pages including sign-in
+      // Only hide if explicitly needed (none for now)
 
       return (
         <div className="fixed bottom-0 left-0 right-0 p-4 text-center bg-black bg-opacity-50 backdrop-blur-sm">

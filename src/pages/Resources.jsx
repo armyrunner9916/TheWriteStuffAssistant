@@ -6,6 +6,7 @@ import { motion } from 'framer-motion';
 import { ArrowLeft, BookOpen, Globe, FileText, HelpCircle } from 'lucide-react';
 import { Helmet } from 'react-helmet-async';
 import AuthDialog from '@/components/AuthDialog';
+import Footer from '@/components/ui/Footer';
 
 function Resources() {
   const navigate = useNavigate();
@@ -76,7 +77,7 @@ function Resources() {
           <div className="absolute inset-0 bg-black/60 fixed"></div>
         </div>
 
-        <div className="relative z-10 p-4 sm:p-8 flex flex-col min-h-screen">
+        <div className="relative z-10 p-4 sm:p-8 flex flex-col min-h-screen pb-24">
           <header className="w-full max-w-6xl mx-auto flex justify-start items-center mb-8">
             <Button
               onClick={() => navigate('/')}
@@ -184,6 +185,7 @@ function Resources() {
             </motion.div>
           </main>
         </div>
+        <Footer showSubscription={false} />
       </div>
     </>
   );
