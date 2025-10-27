@@ -21,6 +21,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { AnimatePresence, motion } from "framer-motion";
+import Footer from "@/components/ui/Footer";
 
 const SECTION = "prose";
 const QUERY_TYPE = "fictional_prose_unified";
@@ -398,6 +399,7 @@ function Prose({ onLogout }) {
             </div>
           </div>
         </div>
+        <Footer showSubscription={false} />
       </div>
     </>
   );

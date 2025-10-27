@@ -19,6 +19,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import Footer from "@/components/ui/Footer";
 
 // Which query_type values belong to each section (legacy + unified)
 const SECTION_TO_QUERY_TYPES = {
@@ -417,6 +418,7 @@ function UnifiedHistory() {
             </AlertDialogContent>
           </AlertDialog>
         )}
+        <Footer showSubscription={false} />
       </div>
     </>
   );

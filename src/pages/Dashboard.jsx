@@ -9,6 +9,7 @@ import React from "react";
     import AuthActionButtons from "@/components/AuthActionButtons";
     import { useToast } from "@/components/ui/use-toast";
     import { Helmet } from "react-helmet-async";
+    import Footer from "@/components/ui/Footer";
 
     function Dashboard({ onLogout }) {
       const navigate = useNavigate();
@@ -120,7 +121,7 @@ import React from "react";
               <div className="absolute inset-0 bg-black/60 fixed"></div>
             </div>
 
-            <div className="relative z-10 p-4 sm:p-8 flex flex-col min-h-screen">
+            <div className="relative z-10 p-4 sm:p-8 flex flex-col min-h-screen pb-24">
               <header className="w-full max-w-6xl mx-auto flex justify-end items-center mb-8">
                 <AuthActionButtons onLogout={onLogout} />
               </header>
@@ -146,6 +147,7 @@ import React from "react";
                 </motion.div>
               </main>
             </div>
+            <Footer showSubscription={false} />
           </div>
         </>
       );

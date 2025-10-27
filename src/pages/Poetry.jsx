@@ -21,6 +21,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { AnimatePresence, motion } from "framer-motion";
+import Footer from "@/components/ui/Footer";
 
 const SECTION = "poetry";
 const QUERY_TYPE = "poetry_unified";
@@ -401,6 +402,7 @@ function Poetry({ onLogout }) {
             </div>
           </div>
         </div>
+        <Footer showSubscription={false} />
       </div>
     </>
   );

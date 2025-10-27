@@ -21,6 +21,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { AnimatePresence, motion } from "framer-motion";
+import Footer from "@/components/ui/Footer";
 
 const SECTION = "content";
 const QUERY_TYPE = "content_creation_unified";
@@ -406,6 +407,7 @@ function OnlineContent({ onLogout }) {
             </div>
           </div>
         </div>
+        <Footer showSubscription={false} />
       </div>
     </>
   );

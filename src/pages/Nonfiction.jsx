@@ -21,6 +21,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { AnimatePresence, motion } from "framer-motion";
+import Footer from "@/components/ui/Footer";
 
 const SECTION = "nonfiction";
 const QUERY_TYPE = "nonfiction_unified";
@@ -400,6 +401,7 @@ function Nonfiction({ onLogout }) {
             </div>
           </div>
         </div>
+        <Footer showSubscription={false} />
       </div>
     </>
   );

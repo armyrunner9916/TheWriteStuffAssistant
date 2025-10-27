@@ -21,6 +21,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { AnimatePresence, motion } from "framer-motion";
+import Footer from "@/components/ui/Footer";
 
 const SECTION = "stage";
 const QUERY_TYPE = "stage_screen_unified";
@@ -401,6 +402,7 @@ function StageScreen({ onLogout }) {
             </div>
           </div>
         </div>
+        <Footer showSubscription={false} />
       </div>
     </>
   );
