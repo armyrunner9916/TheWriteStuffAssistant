@@ -12,16 +12,12 @@ function Resources() {
   const resources = [
     {
       title: 'Video Tutorials',
-      description: 'Watch comprehensive guides on how to use each writing assistant tool.',
+      description: 'Check out our YouTube channel for guides and to see our other projects!',
       icon: Youtube,
       links: [
         {
-          text: 'Getting Started with The Write Stuff',
-          url: 'https://youtu.be/fHXTLOqXb30?si=ja1qCphUY62mcCB5',
-        },
-        {
-          text: 'Advanced Features Overview',
-          url: 'https://youtu.be/e501z70QMpk?si=oQeijFjAAk7igE4j',
+          text: 'Visit Our YouTube Channel',
+          url: 'https://www.youtube.com/@Armyrunner-Studios',
         },
       ],
     },
@@ -30,10 +26,10 @@ function Resources() {
       description: 'Tips and best practices for getting the most out of each assistant.',
       icon: BookOpen,
       content: [
-        'Start with clear, specific prompts for better results',
-        'Use the follow-up feature to refine and iterate on generated content',
+        'Drop-down menus make the prompting process as simple and user-friendly as possible',
+        'Respond to the model using the follow-up dialog to further refine your ideas',
         'Experiment with different tone and style options',
-        'Combine multiple assistant tools for comprehensive project planning',
+        'Easily combine tools within an assistant to get the most out of your session',
       ],
     },
     {
@@ -52,9 +48,9 @@ function Resources() {
       description: 'Need help? Our support team is here for you.',
       icon: FileText,
       content: [
-        'Email us at support@armyrunner-studios.com',
-        'Response time: Usually within 24 hours',
-        'Include your account email for faster assistance',
+        { type: 'link', text: 'Email us at support@armyrunner-studios.com', email: 'support@armyrunner-studios.com' },
+        { type: 'text', text: 'Response time: Usually within 24 hours' },
+        { type: 'text', text: 'Include your account email for faster assistance' },
       ],
     },
   ];
@@ -139,9 +135,24 @@ function Resources() {
                       )}
                       {resource.content && (
                         <ul className="space-y-2 text-yellow-400/80 text-sm">
-                          {resource.content.map((item, idx) => (
-                            <li key={idx}>• {item}</li>
-                          ))}
+                          {resource.content.map((item, idx) => {
+                            if (typeof item === 'string') {
+                              return <li key={idx}>• {item}</li>;
+                            }
+                            if (item.type === 'link' && item.email) {
+                              return (
+                                <li key={idx}>
+                                  • <a
+                                    href={`mailto:${item.email}`}
+                                    className="text-yellow-400 hover:text-yellow-300 hover:underline transition-colors"
+                                  >
+                                    {item.text}
+                                  </a>
+                                </li>
+                              );
+                            }
+                            return <li key={idx}>• {item.text}</li>;
+                          })}
                         </ul>
                       )}
                     </CardContent>
