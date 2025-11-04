@@ -82,10 +82,10 @@ function Blog() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
-              className="w-full max-w-4xl mb-8"
+              className="w-full max-w-4xl mb-4"
             >
               <div className="bg-zinc-900/80 border border-yellow-400/30 backdrop-blur-sm rounded-lg shadow-lg p-8 mb-8">
-                <h1 className="text-center text-3xl sm:text-4xl md:text-5xl font-bold mb-6 text-yellow-400">
+                <h1 className="text-center text-4xl sm:text-5xl md:text-6xl font-script mb-6 text-yellow-400">
                   Your Questions About AI & Writing, Answered
                 </h1>
                 <p className="text-yellow-400/80 text-base sm:text-lg leading-relaxed mb-4">
@@ -104,9 +104,8 @@ function Blog() {
               className="w-full max-w-4xl mb-10"
             >
               <div className="bg-zinc-900/80 border border-yellow-400/30 backdrop-blur-sm rounded-lg shadow-lg overflow-hidden">
-                <div className="p-6 sm:p-8 border-b border-yellow-400/20">
+                <div className="px-4 py-3 sm:px-6 sm:py-4 border-b border-yellow-400/20">
                   <h2 className="text-2xl sm:text-3xl font-bold text-yellow-400">Deep Dive: Full Articles</h2>
-                  <p className="text-yellow-400/70 mt-2">Click on each article to read the full discussion</p>
                 </div>
 
                 <Accordion type="single" collapsible className="w-full">
