@@ -20,6 +20,7 @@ import OnlineContent from "@/pages/OnlineContent";
 import Songwriting from "@/pages/Songwriting";
 import StageScreen from "@/pages/StageScreen";
 import Resources from "@/pages/Resources";
+import Blog from "@/pages/Blog";
 
 // Demo pages
 import DemoDashboard from "@/pages/demo/DemoDashboard";
@@ -62,6 +63,7 @@ const AppContent = () => {
         <Route path="/signin" element={<Navigate to="/" />} />
         <Route path="/password-reset" element={<PasswordResetForm />} />
         <Route path="/resources" element={<Resources />} />
+        <Route path="/blog" element={<Blog />} />
         <Route path="/dashboard" element={<ProtectedRoute element={Dashboard} />} />
         <Route path="/prose" element={<ProtectedRoute element={Prose} />} />
         <Route path="/poetry" element={<ProtectedRoute element={Poetry} />} />

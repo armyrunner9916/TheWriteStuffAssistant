@@ -25,6 +25,11 @@ function Resources() {
           text: 'Explore Our Other Products Here',
           url: 'https://armyrunner-studios.com',
         },
+        {
+          text: 'Read: Addressing Writers\' Concerns About AI',
+          url: '/blog',
+          internal: true,
+        },
       ],
     },
     {
@@ -128,18 +133,29 @@ function Resources() {
                     <CardContent className="pt-0">
                       {resource.links && (
                         <div className="space-y-2">
-                          {resource.links.map((link) => (
-                            <a
-                              key={link.url}
-                              href={link.url}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="block text-yellow-400 hover:text-yellow-300 hover:underline transition-colors"
-                              aria-label={link.text}
-                            >
-                              <span aria-hidden="true">→</span> {link.text}
-                            </a>
-                          ))}
+                          {resource.links.map((link) =>
+                            link.internal ? (
+                              <button
+                                key={link.url}
+                                onClick={() => navigate(link.url)}
+                                className="block text-yellow-400 hover:text-yellow-300 hover:underline transition-colors text-left w-full"
+                                aria-label={link.text}
+                              >
+                                <span aria-hidden="true">→</span> {link.text}
+                              </button>
+                            ) : (
+                              <a
+                                key={link.url}
+                                href={link.url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="block text-yellow-400 hover:text-yellow-300 hover:underline transition-colors"
+                                aria-label={link.text}
+                              >
+                                <span aria-hidden="true">→</span> {link.text}
+                              </a>
+                            )
+                          )}
                         </div>
                       )}
                       {resource.content && (
