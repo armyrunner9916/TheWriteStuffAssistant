@@ -167,13 +167,20 @@ function SignIn() {
                 Take A Test Run Now
               </Button>
             </div>
-            <div className="mt-4">
+            <div className="mt-4 flex flex-col sm:flex-row gap-4 items-center">
               <Button
                 onClick={() => window.location.href = '/resources'}
                 className="hero-button hero-button-primary text-black font-bold px-6 py-3 text-lg"
                 size="lg"
               >
                 More Resources
+              </Button>
+              <Button
+                onClick={() => window.location.href = '/blog'}
+                className="hero-button hero-button-primary text-black font-bold px-6 py-3 text-lg"
+                size="lg"
+              >
+                Blog
               </Button>
             </div>
           </div>

@@ -112,6 +112,44 @@ function Resources() {
             </Button>
           </header>
 
+          <style>
+            {`
+              .liquid-glass-header {
+                position: relative;
+                background: rgba(255, 255, 255, 0.07);
+                backdrop-filter: blur(18px) saturate(180%);
+                border-radius: 28px;
+                box-shadow: 0 8px 40px rgba(0, 0, 0, 0.35);
+              }
+
+              .liquid-glass-header::before {
+                content: '';
+                position: absolute;
+                inset: 0;
+                border-radius: 28px;
+                background: linear-gradient(145deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.03));
+                pointer-events: none;
+              }
+
+              .liquid-glass-card {
+                position: relative;
+                background: rgba(255, 255, 255, 0.07);
+                backdrop-filter: blur(18px) saturate(180%);
+                border-radius: 28px;
+                box-shadow: 0 8px 40px rgba(0, 0, 0, 0.35);
+              }
+
+              .liquid-glass-card::before {
+                content: '';
+                position: absolute;
+                inset: 0;
+                border-radius: 28px;
+                background: linear-gradient(145deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.03));
+                pointer-events: none;
+              }
+            `}
+          </style>
+
           <main className="flex-grow flex flex-col items-center">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -119,12 +157,14 @@ function Resources() {
               transition={{ duration: 0.5 }}
               className="w-full max-w-5xl mb-8"
             >
-              <h1 className="text-center text-4xl sm:text-5xl font-bold mb-4 text-yellow-400">
-                Resources & Support
-              </h1>
-              <p className="text-center text-yellow-400/80 text-lg mb-8">
-                Everything you need to make the most of The Write Stuff Assistant
-              </p>
+              <div className="liquid-glass-header border border-yellow-400/25 p-6 sm:p-8 shadow-[0_2px_12px_rgba(255,212,0,0.2),inset_0_1px_0_rgba(255,255,255,0.08)]">
+                <h1 className="text-center text-4xl sm:text-5xl md:text-6xl font-bold mb-4 text-yellow-400 drop-shadow-lg" style={{ fontFamily: 'cursive, sans-serif' }}>
+                  Resources & Support
+                </h1>
+                <p className="text-center text-yellow-400/80 text-lg">
+                  Everything you need to make the most of The Write Stuff Assistant
+                </p>
+              </div>
             </motion.div>
 
             <div className="w-full max-w-5xl grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
@@ -135,7 +175,7 @@ function Resources() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: index * 0.1 }}
                 >
-                  <Card className="h-full bg-zinc-900/50 border-yellow-400/30 hover:border-yellow-400/50 transition-all">
+                  <Card className="h-full liquid-glass-card border-yellow-400/30 hover:border-yellow-400/50 transition-all">
                     <CardHeader className="pb-3">
                       <div className="flex items-center gap-3 mb-2">
                         <resource.icon className="h-6 w-6 text-yellow-400" aria-hidden="true" />
