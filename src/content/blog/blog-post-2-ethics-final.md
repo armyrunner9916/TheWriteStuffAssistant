@@ -1,5 +1,3 @@
-# The Messy Middle: AI, Copyright, and What Actually Matters
-
 I'm not going to sugarcoat this: the ethics around AI and copyright are complicated. Really complicated. These models train on massive datasets pulled from all over the internet, and yes, that includes copyrighted material. Courts are still sorting through what that means legally, and honestly? We're all watching this play out in real time. It's messy, and anyone who tells you otherwise is selling something.
 
 But here's what I think gets lost in these conversations - there's a massive difference between USING AI as a tool and passing off AI-generated content as your own original work. When you ask an AI to help you brainstorm ten different opening lines for your novel, or to suggest ways to restructure a paragraph that's not quite working, you're using it the same way you'd use a thesaurus or a style guide. The creative thinking? That's still YOU. The decisions about what works and what doesn't? That's YOU. If you take what the AI suggests and reshape it, add your own examples, change the tone entirely - that's authorship. That's craft.

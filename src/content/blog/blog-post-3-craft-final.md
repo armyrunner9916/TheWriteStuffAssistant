@@ -1,5 +1,3 @@
-# The Craft Question: What AI Can't Learn From You
-
 You've spent YEARS learning to write. Actual years. You know when to use "whispered" versus "said." You understand pacing - when to slow down and let a moment breathe, when to speed up and create urgency. You've learned about show versus tell, about creating subtext, about the delicate balance of description. You earned every bit of that knowledge through thousands of hours at the keyboard and probably just as many rejection letters. So yeah, I completely understand why AI feels like it's devaluing all that hard-won expertise.
 
 But here's something I've noticed working with these tools and watching other writers use them: the people with real craft use AI completely differently than beginners do. A novice writer might type "write a sad scene about losing a pet" and publish whatever the AI spits out. But you? You would NEVER do that. You know it takes more than sad words strung together to create genuine emotion on the page. You know about setup and payoff. You understand that sometimes what you DON'T say is more powerful than what you do. That knowledge doesn't just evaporate because AI exists.
