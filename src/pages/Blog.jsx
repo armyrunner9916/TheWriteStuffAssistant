@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { motion } from 'framer-motion';
@@ -13,7 +13,6 @@ import {
   AccordionTrigger,
 } from '@/components/ui/accordion';
 
-import concernsContent from '@/content/blog/original-4-concerns.md?raw';
 import voiceContent from '@/content/blog/blog-post-1-voice-final.md?raw';
 import ethicsContent from '@/content/blog/blog-post-2-ethics-final.md?raw';
 import craftContent from '@/content/blog/blog-post-3-craft-final.md?raw';
@@ -45,12 +44,6 @@ function Blog() {
     },
   ];
 
-  const concerns = [
-    { number: 1, title: 'Loss of Authentic Voice', description: 'Fear that AI will homogenize their unique writing style and make everything sound generic.' },
-    { number: 2, title: 'Ethical/Copyright Issues', description: 'Concerns about AI training on copyrighted work and potential plagiarism.' },
-    { number: 3, title: 'Devaluation of Craft', description: 'Worry that relying on AI diminishes the skill they\'ve spent years developing.' },
-    { number: 4, title: 'Job Security/Professional Identity', description: 'Anxiety that AI tools will make human writers obsolete.' },
-  ];
 
   return (
     <>
@@ -92,40 +85,15 @@ function Blog() {
               className="w-full max-w-4xl mb-8"
             >
               <div className="bg-zinc-900/80 border border-yellow-400/30 backdrop-blur-sm rounded-lg shadow-lg p-8 mb-8">
-                <h1 className="text-center text-3xl sm:text-4xl md:text-5xl font-bold mb-4 text-yellow-400">
+                <h1 className="text-center text-3xl sm:text-4xl md:text-5xl font-bold mb-6 text-yellow-400">
                   Your Questions About AI & Writing, Answered
                 </h1>
-                <p className="text-center text-yellow-400/90 text-lg sm:text-xl mb-6">
-                  Real talk from an AI developer about what AI can and can't do for writers
+                <p className="text-yellow-400/80 text-base sm:text-lg leading-relaxed mb-4">
+                  If you're a writer, you've probably got concerns about AI. Will it replace your voice? Is it ethical? Does your craft still matter? What about your job?
                 </p>
                 <p className="text-yellow-400/80 text-base sm:text-lg leading-relaxed">
-                  If you're a writer, you've probably got questions about AI. Maybe you're worried about losing your unique voice,
-                  concerned about ethics and copyright, wondering if your hard-earned craft still matters, or anxious about job security.
-                  These are all valid concerns, and they deserve honest answers. Below, I address each of these four major concerns that
-                  writers face when thinking about AI tools.
+                  Fair questions. Here are some honest answers.
                 </p>
-              </div>
-
-              <div className="bg-zinc-900/80 border border-yellow-400/30 backdrop-blur-sm rounded-lg shadow-lg p-6 sm:p-8 mb-8">
-                <h2 className="text-2xl font-bold text-yellow-400 mb-6">The 4 Main Concerns</h2>
-                <div className="space-y-4">
-                  {concerns.map((concern) => (
-                    <motion.div
-                      key={concern.number}
-                      initial={{ opacity: 0, x: -20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ duration: 0.4, delay: concern.number * 0.1 }}
-                      className="border-l-4 border-yellow-400 pl-4 py-2"
-                    >
-                      <h3 className="text-lg font-semibold text-yellow-400 mb-1">
-                        {concern.number}. {concern.title}
-                      </h3>
-                      <p className="text-yellow-400/70 text-sm sm:text-base">
-                        {concern.description}
-                      </p>
-                    </motion.div>
-                  ))}
-                </div>
               </div>
             </motion.div>
 
