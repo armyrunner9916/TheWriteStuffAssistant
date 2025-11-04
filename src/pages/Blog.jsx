@@ -120,7 +120,7 @@ function Blog() {
               className="w-full max-w-4xl mb-4"
             >
               <div className="liquid-glass-card border border-yellow-400/25 p-8">
-                <h1 className="text-center text-4xl sm:text-5xl md:text-6xl font-bold mb-6 text-yellow-400 drop-shadow-lg" style={{ fontFamily: 'cursive, sans-serif' }}>
+                <h1 className="text-center text-4xl sm:text-5xl md:text-6xl font-extrabold mb-6 text-yellow-400 drop-shadow-lg" style={{ fontFamily: 'system-ui, -apple-system, sans-serif' }}>
                   Your Questions About AI & Writing, Answered
                 </h1>
                 <p className="text-yellow-400/80 text-base sm:text-lg leading-relaxed">

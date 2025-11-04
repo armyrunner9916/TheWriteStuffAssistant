@@ -91,7 +91,7 @@ function DemoDashboard() {
       transition={{ duration: 0.5, delay: index * 0.1 }}
     >
       <Card
-        className={`h-full overflow-hidden transition-all duration-300 border-yellow-400 bg-black text-yellow-400 ${
+        className={`h-full overflow-hidden transition-all duration-300 liquid-glass-card border-yellow-400/30 text-yellow-400 ${
           category.active
             ? "cursor-pointer hover:scale-105 hover:shadow-xl"
             : "opacity-60 cursor-not-allowed"
@@ -120,11 +120,48 @@ function DemoDashboard() {
         <meta name="robots" content="noindex,follow" />
         <link rel="canonical" href="https://writestuffassistant.com/demo" />
       </Helmet>
+      <style>
+        {`
+          .liquid-glass-header {
+            position: relative;
+            background: rgba(255, 255, 255, 0.07);
+            backdrop-filter: blur(18px) saturate(180%);
+            border-radius: 28px;
+            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.35);
+          }
+
+          .liquid-glass-header::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 28px;
+            background: linear-gradient(145deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.03));
+            pointer-events: none;
+          }
+
+          .liquid-glass-card {
+            position: relative;
+            background: rgba(255, 255, 255, 0.07);
+            backdrop-filter: blur(18px) saturate(180%);
+            border-radius: 28px;
+            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.35);
+          }
+
+          .liquid-glass-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 28px;
+            background: linear-gradient(145deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.03));
+            pointer-events: none;
+          }
+        `}
+      </style>
       <div className="min-h-screen p-4 sm:p-8 flex flex-col">
         <main className="flex-grow flex flex-col items-center mt-[10vh] sm:mt-[12vh]">
           <div className="text-center mb-8 w-full max-w-4xl px-4">
-            <div className="bg-black/45 border border-yellow-400/20 backdrop-blur-[16px] backdrop-saturate-[180%] rounded-[20px] shadow-[0_8px_32px_rgba(0,0,0,0.6),0_16px_64px_rgba(0,0,0,0.4),0_2px_8px_rgba(255,212,0,0.15),inset_0_1px_0_rgba(255,255,255,0.05)] p-8">
-              <h1 className="text-3xl sm:text-4xl font-bold text-yellow-400 mb-2">
+            <div className="liquid-glass-header border border-yellow-400/25 p-6 sm:p-8 shadow-[0_2px_12px_rgba(255,212,0,0.2),inset_0_1px_0_rgba(255,255,255,0.08)]">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-yellow-400 mb-2" style={{ fontFamily: 'system-ui, -apple-system, sans-serif' }}>
                 Demo Mode: Try The Write Stuff Assistant
               </h1>
               <p className="text-yellow-400/80 text-lg">

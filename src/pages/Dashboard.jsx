@@ -86,7 +86,7 @@ import React from "react";
           transition={{ duration: 0.5, delay: index * 0.1 }}
         >
           <Card
-            className={`h-full overflow-hidden transition-all duration-300 border-yellow-400 bg-black text-yellow-400 ${
+            className={`h-full overflow-hidden transition-all duration-300 liquid-glass-card border-yellow-400/30 text-yellow-400 ${
               category.active
                 ? "cursor-pointer hover:scale-105 hover:shadow-xl"
                 : "opacity-60 cursor-not-allowed"
@@ -112,6 +112,26 @@ import React from "react";
             <meta name="robots" content="noindex,nofollow" />
             <link rel="canonical" href="https://writestuffassistant.com/dashboard" />
           </Helmet>
+          <style>
+            {`
+              .liquid-glass-card {
+                position: relative;
+                background: rgba(255, 255, 255, 0.07);
+                backdrop-filter: blur(18px) saturate(180%);
+                border-radius: 28px;
+                box-shadow: 0 8px 40px rgba(0, 0, 0, 0.35);
+              }
+
+              .liquid-glass-card::before {
+                content: '';
+                position: absolute;
+                inset: 0;
+                border-radius: 28px;
+                background: linear-gradient(145deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.03));
+                pointer-events: none;
+              }
+            `}
+          </style>
           <div className="min-h-screen relative">
             <div className="absolute inset-0 z-0">
               <img

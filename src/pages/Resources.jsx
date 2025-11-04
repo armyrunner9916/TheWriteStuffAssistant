@@ -158,7 +158,7 @@ function Resources() {
               className="w-full max-w-5xl mb-8"
             >
               <div className="liquid-glass-header border border-yellow-400/25 p-6 sm:p-8 shadow-[0_2px_12px_rgba(255,212,0,0.2),inset_0_1px_0_rgba(255,255,255,0.08)]">
-                <h1 className="text-center text-4xl sm:text-5xl md:text-6xl font-bold mb-4 text-yellow-400 drop-shadow-lg" style={{ fontFamily: 'cursive, sans-serif' }}>
+                <h1 className="text-center text-4xl sm:text-5xl md:text-6xl font-extrabold mb-4 text-yellow-400 drop-shadow-lg" style={{ fontFamily: 'system-ui, -apple-system, sans-serif' }}>
                   Resources & Support
                 </h1>
                 <p className="text-center text-yellow-400/80 text-lg">
