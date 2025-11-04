@@ -120,14 +120,11 @@ function Blog() {
               className="w-full max-w-4xl mb-4"
             >
               <div className="liquid-glass-card border border-yellow-400/25 p-8">
-                <h1 className="text-center text-4xl sm:text-5xl md:text-6xl mb-6 text-yellow-400 drop-shadow-lg" style={{ fontFamily: 'Great Vibes, cursive' }}>
+                <h1 className="text-center text-4xl sm:text-5xl md:text-6xl font-bold mb-6 text-yellow-400 drop-shadow-lg" style={{ fontFamily: 'cursive, sans-serif' }}>
                   Your Questions About AI & Writing, Answered
                 </h1>
-                <p className="text-yellow-400/80 text-base sm:text-lg leading-relaxed mb-4">
-                  If you're a writer, you've probably got concerns about AI. Will it replace your voice? Is it ethical? Does your craft still matter? What about your job?
-                </p>
                 <p className="text-yellow-400/80 text-base sm:text-lg leading-relaxed">
-                  Fair questions. Here are some honest answers.
+                  As a writer, you likely have concerns about AI. Will it replace your voice? Is it ethical? Does your craft still matter? What about your job? All valid questions; here are my answers.
                 </p>
               </div>
             </motion.div>
