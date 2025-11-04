@@ -3,13 +3,19 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { motion } from 'framer-motion';
-import { ArrowLeft, BookOpen, Globe, FileText, HelpCircle } from 'lucide-react';
+import { ArrowLeft, Home, BookOpen, Globe, FileText, HelpCircle } from 'lucide-react';
 import { Helmet } from 'react-helmet-async';
 import AuthDialog from '@/components/AuthDialog';
 import Footer from '@/components/ui/Footer';
+import { useAuth } from '@/lib/hooks/useAuth';
 
 function Resources() {
   const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
+
+  const handleHomeClick = () => {
+    navigate(isAuthenticated ? '/dashboard' : '/');
+  };
 
   const resources = [
     {
@@ -85,7 +91,7 @@ function Resources() {
         </div>
 
         <div className="relative z-10 p-4 sm:p-8 flex flex-col min-h-screen pb-24">
-          <header className="w-full max-w-6xl mx-auto flex justify-start items-center mb-8">
+          <header className="w-full max-w-6xl mx-auto flex justify-between items-center mb-8">
             <Button
               onClick={() => navigate(-1)}
               variant="outline"
@@ -94,6 +100,15 @@ function Resources() {
               aria-label="Back to previous page"
             >
               <ArrowLeft className="h-4 w-4 mr-1" aria-hidden="true" /> Back
+            </Button>
+            <Button
+              onClick={handleHomeClick}
+              variant="outline"
+              size="sm"
+              className="bg-black text-yellow-400 hover:bg-zinc-800 border-yellow-400"
+              aria-label="Go to home page"
+            >
+              <Home className="h-4 w-4 mr-1" aria-hidden="true" /> Home
             </Button>
           </header>
 

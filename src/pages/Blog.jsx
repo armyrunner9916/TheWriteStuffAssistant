@@ -2,10 +2,11 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { motion } from 'framer-motion';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Home } from 'lucide-react';
 import { Helmet } from 'react-helmet-async';
 import Footer from '@/components/ui/Footer';
 import MarkdownRenderer from '@/components/MarkdownRenderer';
+import { useAuth } from '@/lib/hooks/useAuth';
 import {
   Accordion,
   AccordionContent,
@@ -20,6 +21,11 @@ import jobContent from '@/content/blog/blog-post-4-job-security-final.md?raw';
 
 function Blog() {
   const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
+
+  const handleHomeClick = () => {
+    navigate(isAuthenticated ? '/dashboard' : '/');
+  };
 
   const blogPosts = [
     {
@@ -65,7 +71,7 @@ function Blog() {
         </div>
 
         <div className="relative z-10 p-4 sm:p-8 flex flex-col min-h-screen pb-24">
-          <header className="w-full max-w-6xl mx-auto flex justify-start items-center mb-8">
+          <header className="w-full max-w-6xl mx-auto flex justify-between items-center mb-8">
             <Button
               onClick={() => navigate('/resources')}
               variant="outline"
@@ -75,17 +81,46 @@ function Blog() {
             >
               <ArrowLeft className="h-4 w-4 mr-1" aria-hidden="true" /> Back to Resources
             </Button>
+            <Button
+              onClick={handleHomeClick}
+              variant="outline"
+              size="sm"
+              className="bg-black text-yellow-400 hover:bg-zinc-800 border-yellow-400"
+              aria-label="Go to home page"
+            >
+              <Home className="h-4 w-4 mr-1" aria-hidden="true" /> Home
+            </Button>
           </header>
 
           <main className="flex-grow flex flex-col items-center">
+            <style>
+              {`
+                .liquid-glass-card {
+                  position: relative;
+                  background: rgba(255, 255, 255, 0.07);
+                  backdrop-filter: blur(18px) saturate(180%);
+                  border-radius: 28px;
+                  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.35), 0 2px 12px rgba(255, 212, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+                }
+
+                .liquid-glass-card::before {
+                  content: '';
+                  position: absolute;
+                  inset: 0;
+                  border-radius: 28px;
+                  background: linear-gradient(145deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.03));
+                  pointer-events: none;
+                }
+              `}
+            </style>
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
               className="w-full max-w-4xl mb-4"
             >
-              <div className="bg-zinc-900/80 border border-yellow-400/30 backdrop-blur-sm rounded-lg shadow-lg p-8 mb-8">
-                <h1 className="text-center text-4xl sm:text-5xl md:text-6xl font-script mb-6 text-yellow-400">
+              <div className="liquid-glass-card border border-yellow-400/25 p-8">
+                <h1 className="text-center text-4xl sm:text-5xl md:text-6xl mb-6 text-yellow-400 drop-shadow-lg" style={{ fontFamily: 'Great Vibes, cursive' }}>
                   Your Questions About AI & Writing, Answered
                 </h1>
                 <p className="text-yellow-400/80 text-base sm:text-lg leading-relaxed mb-4">
@@ -103,7 +138,7 @@ function Blog() {
               transition={{ duration: 0.5, delay: 0.3 }}
               className="w-full max-w-4xl mb-10"
             >
-              <div className="bg-zinc-900/80 border border-yellow-400/30 backdrop-blur-sm rounded-lg shadow-lg overflow-hidden">
+              <div className="liquid-glass-card border border-yellow-400/25 overflow-hidden">
                 <div className="px-4 py-3 sm:px-6 sm:py-4 border-b border-yellow-400/20">
                   <h2 className="text-2xl sm:text-3xl font-bold text-yellow-400">Deep Dive: Full Articles</h2>
                 </div>
