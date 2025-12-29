@@ -138,7 +138,7 @@ function Prose({ onLogout }) {
         .from('query_history')
         .insert({
           user_id: user.id,
-          query_type: SECTION,
+          query_type: QUERY_TYPE,
           query_text: promptMd,
           response_text: responseMd,
           conversation_id: sessionId || crypto.randomUUID(),
