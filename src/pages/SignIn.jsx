@@ -149,33 +149,33 @@ function SignIn() {
             <h1 className="hero-heading text-4xl sm:text-5xl md:text-6xl font-extrabold text-yellow-400 drop-shadow-lg" style={{ fontFamily: 'system-ui, -apple-system, sans-serif' }}>
               Your AI-powered writing companion for every creative need.
             </h1>
-            <p className="hero-subheading mt-4 max-w-2xl text-md sm:text-lg text-yellow-400/90">
+            <p className="hero-subheading mt-6 max-w-2xl text-md sm:text-lg text-yellow-400/90">
               Pick a task, fill in a few details, and get focused results — worlds, characters, poems, scripts, outlines and more. Start a 10-day full-access trial; then just $5/month.
             </p>
 
-            <p className="hero-subheading mt-4 max-w-2xl text-sm sm:text-md text-yellow-400/80 italic">
+            <p className="hero-subheading mt-6 max-w-2xl text-sm sm:text-md text-yellow-400/80 italic">
               Six specialized modules: Fiction, Poetry, Stage & Screen, Nonfiction, Online Content Creation, and Songwriting.
             </p>
           </div>
 
-          <div className="hero-buttons mt-8 flex flex-col items-center gap-4">
+          <div className="hero-buttons mt-8 flex flex-col items-center gap-6">
             <div className="flex flex-col sm:flex-row gap-4 items-center">
               <Button
                 onClick={() => navigate('/auth')}
-                className="hero-button hero-button-primary bg-yellow-400 text-black font-bold hover:bg-yellow-300 transition-colors duration-300 px-8 py-4 text-xl shadow-lg"
+                className="hero-button hero-button-primary bg-yellow-400 text-black font-bold hover:bg-yellow-300 transition-colors duration-300 px-6 py-3 text-lg"
                 size="lg"
               >
                 Start Your Free Trial
               </Button>
               <Button
                 onClick={() => navigate('/demo')}
-                className="hero-button bg-transparent border-2 border-yellow-400 text-yellow-400 font-bold hover:bg-yellow-400 hover:text-black px-6 py-4 text-lg"
+                className="hero-button hero-button-primary text-black font-bold px-6 py-3 text-lg"
                 size="lg"
               >
                 Try a Test Run
               </Button>
             </div>
-            <div className="mt-6 flex flex-row gap-6 items-center text-yellow-400/80">
+            <div className="mt-4 flex flex-row gap-6 items-center text-yellow-400/80">
               <button
                 onClick={() => window.location.href = '/resources'}
                 className="hover:text-yellow-400 transition-colors text-sm underline"
