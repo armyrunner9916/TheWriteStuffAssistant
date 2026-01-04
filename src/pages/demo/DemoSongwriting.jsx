@@ -11,6 +11,7 @@ import { Helmet } from "react-helmet-async";
 import { makeClaudeDemoRequest, getSystemPrompt, canMakeDemoQuery, getDemoQueriesRemaining } from "@/lib/demo-api";
 import MarkdownRenderer from "@/components/MarkdownRenderer";
 import DemoLayout from "@/components/DemoLayout";
+import { trackDemoPageView, trackDemoGeneration, trackDemoFollowUp } from "@/lib/demo-tracking";
 import {
   Select,
   SelectContent,
@@ -87,6 +88,11 @@ function DemoSongwriting() {
     fetchPrompt();
   }, [toast]);
 
+  useEffect(() => {
+    // Track demo page view for analytics
+    trackDemoPageView('songwriting');
+  }, []);
+
   const handleInputChange = (e) => {
     const { id, value } = e.target;
     setFormData((prev) => ({ ...prev, [id]: value }));
@@ -157,7 +163,10 @@ function DemoSongwriting() {
         { role: "assistant", content: responseText },
       ];
       setConversation(newConversation);
-      
+
+      // Track content generation
+      trackDemoGeneration('songwriting', userPrompt);
+
       toast({
         title: "Success!",
         description: `Your song elements have been generated. ${getDemoQueriesRemaining()} queries remaining.`,
@@ -213,10 +222,13 @@ function DemoSongwriting() {
       const responseText = await makeClaudeDemoRequest(messagesForApi);
       const newConversation = [...currentConversation, { role: "assistant", content: responseText }];
       setConversation(newConversation);
-      
-      toast({ 
-        title: "Success!", 
-        description: `Follow-up response generated. ${getDemoQueriesRemaining()} queries remaining.` 
+
+      // Track follow-up question
+      trackDemoFollowUp('songwriting', followUp);
+
+      toast({
+        title: "Success!",
+        description: `Follow-up response generated. ${getDemoQueriesRemaining()} queries remaining.`
       });
     } catch (error) {
       console.error("Error generating follow-up:", error);
