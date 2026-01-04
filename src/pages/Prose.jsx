@@ -389,7 +389,7 @@ function Prose({ onLogout }) {
           <h1 className="text-center text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold mb-2 lg:mb-4 text-yellow-400">{SECTION_TITLE}</h1>
           <p className="text-center text-yellow-400/80 mb-8 lg:mb-10 lg:text-lg xl:text-xl">Your modular tool for crafting compelling stories.</p>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-10">
+          <div className="grid grid-cols-1 lg:grid-cols-[2fr_3fr] gap-8 lg:gap-10">
             <Card className="bg-zinc-900/50 border-yellow-400/30">
               <CardHeader className="lg:p-8">
                 <CardTitle className="text-yellow-400 text-2xl lg:text-3xl xl:text-4xl">Create Your Story Elements</CardTitle>
