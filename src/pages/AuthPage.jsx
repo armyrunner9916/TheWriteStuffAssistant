@@ -209,34 +209,33 @@ function AuthPage() {
 
         <main className="relative z-10 flex-grow container mx-auto px-4 py-8 sm:py-12">
           <div className="max-w-6xl mx-auto">
-            <header className="w-full flex gap-2 items-center mb-8">
-              <Button
-                onClick={() => navigate('/')}
-                variant="outline"
-                size="sm"
-                className="bg-black text-yellow-400 hover:bg-zinc-800 border-yellow-400"
-                aria-label="Back to home page"
-              >
-                <ArrowLeft className="h-4 w-4 mr-1" aria-hidden="true" /> Back
-              </Button>
-              <Button
-                onClick={() => navigate('/resources')}
-                variant="outline"
-                size="sm"
-                className="bg-black text-yellow-400 hover:bg-zinc-800 border-yellow-400"
-                aria-label="Go to resources page"
-              >
-                <BookOpen className="h-4 w-4 mr-1" aria-hidden="true" /> Resources
-              </Button>
-              <Button
-                onClick={() => navigate('/blog')}
-                variant="outline"
-                size="sm"
-                className="bg-black text-yellow-400 hover:bg-zinc-800 border-yellow-400"
-                aria-label="Go to blog page"
-              >
-                <FileText className="h-4 w-4 mr-1" aria-hidden="true" /> Blog
-              </Button>
+            <header className="w-full mb-8">
+              <nav className="flex gap-1.5 items-center" role="navigation" aria-label="Secondary navigation">
+                <Button
+                  onClick={() => navigate('/')}
+                  variant="outline"
+                  className="h-8 px-2.5 text-xs bg-transparent text-yellow-400/80 hover:text-yellow-400 hover:bg-yellow-400/10 border-yellow-400/40 hover:border-yellow-400/60 transition-all"
+                  aria-label="Back to home page"
+                >
+                  <ArrowLeft className="h-3.5 w-3.5 mr-1" aria-hidden="true" /> Back
+                </Button>
+                <Button
+                  onClick={() => navigate('/resources')}
+                  variant="outline"
+                  className="h-8 px-2.5 text-xs bg-transparent text-yellow-400/80 hover:text-yellow-400 hover:bg-yellow-400/10 border-yellow-400/40 hover:border-yellow-400/60 transition-all"
+                  aria-label="Go to resources page"
+                >
+                  <BookOpen className="h-3.5 w-3.5 mr-1" aria-hidden="true" /> Resources
+                </Button>
+                <Button
+                  onClick={() => navigate('/blog')}
+                  variant="outline"
+                  className="h-8 px-2.5 text-xs bg-transparent text-yellow-400/80 hover:text-yellow-400 hover:bg-yellow-400/10 border-yellow-400/40 hover:border-yellow-400/60 transition-all"
+                  aria-label="Go to blog page"
+                >
+                  <FileText className="h-3.5 w-3.5 mr-1" aria-hidden="true" /> Blog
+                </Button>
+              </nav>
             </header>
             <motion.div
               initial={{ opacity: 0, y: 20 }}
