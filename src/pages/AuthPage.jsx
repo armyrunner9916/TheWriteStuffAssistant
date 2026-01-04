@@ -215,25 +215,25 @@ function AuthPage() {
               transition={{ duration: 0.5 }}
               className="text-center mb-8"
             >
-              <h1 className="text-4xl sm:text-5xl font-extrabold text-yellow-400 mb-4">
+              <h1 className="text-4xl sm:text-5xl font-bold text-yellow-400 mb-4" style={{ fontFamily: 'system-ui, -apple-system, sans-serif' }}>
                 Welcome to The Write Stuff
               </h1>
-              <p className="text-xl text-yellow-400/90 max-w-2xl mx-auto">
+              <p className="text-xl text-yellow-400/90 max-w-2xl mx-auto" style={{ fontFamily: 'system-ui, -apple-system, sans-serif' }}>
                 Your AI-powered writing companion for every creative need
               </p>
             </motion.div>
 
-            <div className="grid lg:grid-cols-2 gap-8 items-start">
+            <div className="grid lg:grid-cols-2 gap-8 items-stretch">
               <motion.div
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.5, delay: 0.2 }}
               >
-                <Card className="bg-zinc-900/90 border-yellow-400/30 backdrop-blur-sm">
+                <Card className="bg-zinc-900/90 border-yellow-400/30 backdrop-blur-sm h-full flex flex-col">
                   <CardHeader>
-                    <CardTitle className="text-yellow-400 text-2xl text-center">Get Started Today</CardTitle>
+                    <CardTitle className="text-yellow-400 text-2xl text-center" style={{ fontFamily: 'system-ui, -apple-system, sans-serif' }}>Get Started Today</CardTitle>
                   </CardHeader>
-                  <CardContent>
+                  <CardContent className="flex-grow">
                     <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
                       <TabsList className="grid w-full grid-cols-2 bg-zinc-800 border border-yellow-400/50">
                         <TabsTrigger
@@ -253,7 +253,7 @@ function AuthPage() {
                       <TabsContent value="signin" className="mt-6">
                         <form onSubmit={handleSignIn} className="space-y-4">
                           <div className="space-y-2">
-                            <Label htmlFor="signin-email" className="text-yellow-400">Email</Label>
+                            <Label htmlFor="signin-email" className="text-yellow-400" style={{ fontFamily: 'system-ui, -apple-system, sans-serif' }}>Email</Label>
                             <Input
                               id="signin-email"
                               type="email"
@@ -266,7 +266,7 @@ function AuthPage() {
                             />
                           </div>
                           <div className="space-y-2">
-                            <Label htmlFor="signin-password" className="text-yellow-400">Password</Label>
+                            <Label htmlFor="signin-password" className="text-yellow-400" style={{ fontFamily: 'system-ui, -apple-system, sans-serif' }}>Password</Label>
                             <Input
                               id="signin-password"
                               type="password"
@@ -291,7 +291,7 @@ function AuthPage() {
                       <TabsContent value="signup" className="mt-6">
                         <form onSubmit={handleSignUp} className="space-y-4">
                           <div className="space-y-2">
-                            <Label htmlFor="signup-email" className="text-yellow-400">Email</Label>
+                            <Label htmlFor="signup-email" className="text-yellow-400" style={{ fontFamily: 'system-ui, -apple-system, sans-serif' }}>Email</Label>
                             <Input
                               id="signup-email"
                               type="email"
@@ -304,7 +304,7 @@ function AuthPage() {
                             />
                           </div>
                           <div className="space-y-2">
-                            <Label htmlFor="signup-password" className="text-yellow-400">Password</Label>
+                            <Label htmlFor="signup-password" className="text-yellow-400" style={{ fontFamily: 'system-ui, -apple-system, sans-serif' }}>Password</Label>
                             <Input
                               id="signup-password"
                               type="password"
@@ -317,7 +317,7 @@ function AuthPage() {
                             />
                           </div>
                           <div className="space-y-2">
-                            <Label htmlFor="confirm-password" className="text-yellow-400">Confirm Password</Label>
+                            <Label htmlFor="confirm-password" className="text-yellow-400" style={{ fontFamily: 'system-ui, -apple-system, sans-serif' }}>Confirm Password</Label>
                             <Input
                               id="confirm-password"
                               type="password"
@@ -352,15 +352,15 @@ function AuthPage() {
                 transition={{ duration: 0.5, delay: 0.4 }}
                 className="space-y-6"
               >
-                <Card className="bg-zinc-900/90 border-yellow-400/30 backdrop-blur-sm">
+                <Card className="bg-zinc-900/90 border-yellow-400/30 backdrop-blur-sm h-full flex flex-col">
                   <CardHeader>
-                    <CardTitle className="text-yellow-400 text-xl flex items-center gap-2">
+                    <CardTitle className="text-yellow-400 text-xl flex items-center gap-2" style={{ fontFamily: 'system-ui, -apple-system, sans-serif' }}>
                       <Sparkles className="h-5 w-5" />
                       What You Get
                     </CardTitle>
                   </CardHeader>
-                  <CardContent className="space-y-4">
-                    <ul className="space-y-3">
+                  <CardContent className="space-y-4 flex-grow flex flex-col">
+                    <ul className="space-y-3 flex-grow">
                       {features.map((feature, index) => (
                         <motion.li
                           key={index}
@@ -370,14 +370,14 @@ function AuthPage() {
                           className="flex items-start gap-3 text-yellow-400/90"
                         >
                           <CheckCircle className="h-5 w-5 mt-0.5 flex-shrink-0 text-yellow-400" />
-                          <span>{feature}</span>
+                          <span style={{ fontFamily: 'system-ui, -apple-system, sans-serif' }}>{feature}</span>
                         </motion.li>
                       ))}
                     </ul>
-                    <div className="pt-4 border-t border-yellow-400/20">
+                    <div className="pt-4 border-t border-yellow-400/20 mt-auto">
                       <Button
                         onClick={() => navigate('/demo')}
-                        className="w-full bg-transparent border-2 border-yellow-400 text-yellow-400 hover:bg-yellow-400 hover:text-black rounded-lg font-semibold"
+                        className="w-full bg-yellow-400 text-black hover:bg-yellow-300 rounded-lg font-bold"
                       >
                         Try the Demo First
                       </Button>

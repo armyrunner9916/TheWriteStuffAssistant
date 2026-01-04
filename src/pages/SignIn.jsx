@@ -165,30 +165,31 @@ function SignIn() {
                 className="hero-button hero-button-primary bg-yellow-400 text-black font-bold hover:bg-yellow-300 transition-colors duration-300 px-6 py-3 text-lg"
                 size="lg"
               >
-                Start Your Free Trial
+                Sign Up/Sign In
               </Button>
               <Button
                 onClick={() => navigate('/demo')}
-                className="hero-button hero-button-primary text-black font-bold px-6 py-3 text-lg"
+                className="hero-button hero-button-primary bg-yellow-400 text-black font-bold hover:bg-yellow-300 transition-colors duration-300 px-6 py-3 text-lg"
                 size="lg"
               >
                 Try a Test Run
               </Button>
             </div>
-            <div className="mt-4 flex flex-row gap-6 items-center text-yellow-400/80">
-              <button
-                onClick={() => window.location.href = '/resources'}
-                className="hover:text-yellow-400 transition-colors text-sm underline"
+            <div className="flex flex-col sm:flex-row gap-4 items-center">
+              <Button
+                onClick={() => navigate('/resources')}
+                className="hero-button hero-button-primary bg-yellow-400 text-black font-bold hover:bg-yellow-300 transition-colors duration-300 px-6 py-3 text-lg"
+                size="lg"
               >
                 Resources
-              </button>
-              <span className="text-yellow-400/50">•</span>
-              <button
-                onClick={() => window.location.href = '/blog'}
-                className="hover:text-yellow-400 transition-colors text-sm underline"
+              </Button>
+              <Button
+                onClick={() => navigate('/blog')}
+                className="hero-button hero-button-primary bg-yellow-400 text-black font-bold hover:bg-yellow-300 transition-colors duration-300 px-6 py-3 text-lg"
+                size="lg"
               >
                 Blog
-              </button>
+              </Button>
             </div>
           </div>
         </main>
