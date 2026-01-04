@@ -169,10 +169,13 @@ function Songwriting({ onLogout }) {
           { role: 'assistant', content: responseMd, timestamp }
         );
 
+        const updatedResponseText = (existing.response_text || '') + '\n\n---\n\nFOLLOW-UP RESPONSE:\n' + responseMd;
+
         const { data, error } = await supabase
           .from('query_history')
           .update({
             conversation_history: conversationHistory,
+            response_text: updatedResponseText,
             updated_at: timestamp
           })
           .eq('conversation_id', sessionId)
