@@ -136,21 +136,28 @@ function Songwriting({ onLogout }) {
   const saveToHistory = async (promptMd, responseMd, subcategory, sessionId = null, isFollowUp = false) => {
     try {
       const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return null;
+      if (!user) {
+        console.warn('Cannot save history: No authenticated user');
+        return null;
+      }
 
       const timestamp = new Date().toISOString();
 
       if (isFollowUp && sessionId) {
-        // Update existing row with new conversation turn
+        console.log('Saving follow-up to conversation:', sessionId);
+
         const { data: existing, error: fetchError } = await supabase
           .from('query_history')
-          .select('conversation_history, query_text, response_text')
+          .select('conversation_history, query_text, response_text, created_at')
           .eq('conversation_id', sessionId)
           .eq('user_id', user.id)
           .eq('is_thread_root', true)
           .single();
 
-        if (fetchError) throw fetchError;
+        if (fetchError) {
+          console.error('Error fetching existing conversation:', fetchError);
+          throw fetchError;
+        }
 
         const conversationHistory = existing.conversation_history || [
           { role: 'user', content: existing.query_text, timestamp: existing.created_at },
@@ -174,11 +181,17 @@ function Songwriting({ onLogout }) {
           .select()
           .single();
 
-        if (error) throw error;
+        if (error) {
+          console.error('Error updating conversation history:', error);
+          throw error;
+        }
+
+        console.log('Follow-up saved successfully');
         return data;
       } else {
-        // Create new thread
         const newSessionId = sessionId || crypto.randomUUID();
+        console.log('Creating new conversation thread:', newSessionId);
+
         const { data, error } = await supabase
           .from('query_history')
           .insert({
@@ -196,11 +209,21 @@ function Songwriting({ onLogout }) {
           .select()
           .single();
 
-        if (error) throw error;
+        if (error) {
+          console.error('Error creating new conversation:', error);
+          throw error;
+        }
+
+        console.log('New conversation created successfully');
         return data;
       }
     } catch (error) {
       console.error('Error saving to history:', error);
+      toast({
+        title: "Save Warning",
+        description: "Content generated but may not be saved to history.",
+        variant: "destructive",
+      });
       return null;
     }
   };
@@ -436,13 +459,16 @@ function Songwriting({ onLogout }) {
                   <CardTitle className="text-yellow-400 text-2xl lg:text-3xl xl:text-4xl">Generated Content</CardTitle>
                 </CardHeader>
                 <CardContent className="flex-grow flex flex-col h-[500px] lg:h-[600px] lg:px-8 lg:pb-8">
-                   <div className="flex-grow overflow-y-auto pr-4 space-y-4 lg:text-lg">
+                   <div className="flex-grow overflow-y-auto pr-4 space-y-4 lg:text-lg pb-6">
                      {conversation.length > 0 ? (
-                       conversation.filter(turn => turn.role === 'assistant').map((turn, index) => (
-                         <div key={index} className="p-3 rounded-lg bg-transparent">
-                           <MarkdownRenderer markdownText={turn.content} />
-                         </div>
-                       ))
+                       <>
+                         {conversation.filter(turn => turn.role === 'assistant').map((turn, index) => (
+                           <div key={index} className="p-3 rounded-lg bg-transparent">
+                             <MarkdownRenderer markdownText={turn.content} />
+                           </div>
+                         ))}
+                         <div ref={conversationEndRef} />
+                       </>
                      ) : isLoading ? (
                        <div className="flex items-center justify-center h-full">
                          <Loader2 className="h-12 w-12 animate-spin text-yellow-400" />
@@ -452,7 +478,6 @@ function Songwriting({ onLogout }) {
                          <p>Select an element to generate and your song ideas will appear here.</p>
                        </div>
                      )}
-                      <div ref={conversationEndRef} />
                    </div>
 
                   {conversation.length > 0 && (
