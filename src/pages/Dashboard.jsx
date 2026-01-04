@@ -93,12 +93,12 @@ import React from "react";
             }`}
             onClick={() => handleCardClick(category)}
           >
-            <CardHeader className="p-4">
-              <div className={`flex items-center gap-3 p-3 rounded-md mb-3 ${category.color}`}>
-                <category.icon className="h-5 w-5 text-white flex-shrink-0" />
-                <CardTitle className="text-lg font-bold text-white leading-tight">{category.title} { !category.active && <span className="text-xs font-normal opacity-80">(Coming Soon)</span> }</CardTitle>
+            <CardHeader className="p-4 lg:p-6">
+              <div className={`flex items-center gap-3 p-3 lg:p-4 rounded-md mb-3 ${category.color}`}>
+                <category.icon className="h-5 w-5 lg:h-6 lg:w-6 text-white flex-shrink-0" />
+                <CardTitle className="text-lg lg:text-xl font-bold text-white leading-tight">{category.title} { !category.active && <span className="text-xs font-normal opacity-80">(Coming Soon)</span> }</CardTitle>
               </div>
-              <CardDescription className="text-xs text-yellow-400/80 pt-0">{category.description}</CardDescription>
+              <CardDescription className="text-xs lg:text-sm text-yellow-400/80 pt-0">{category.description}</CardDescription>
             </CardHeader>
           </Card>
         </motion.div>
@@ -143,22 +143,22 @@ import React from "react";
               <div className="absolute inset-0 bg-black/60 fixed"></div>
             </div>
 
-            <div className="relative z-10 p-4 sm:p-8 flex flex-col min-h-screen pb-24">
-              <header className="w-full max-w-6xl mx-auto flex justify-between items-center mb-8">
+            <div className="relative z-10 p-4 sm:p-8 lg:px-10 xl:px-16 flex flex-col min-h-screen pb-24">
+              <header className="w-full max-w-6xl lg:max-w-7xl xl:max-w-[1400px] mx-auto flex justify-between items-center mb-8 lg:mb-12">
                 <Button
                   onClick={() => navigate('/resources')}
                   variant="outline"
                   size="sm"
-                  className="bg-black text-yellow-400 hover:bg-zinc-800 border-yellow-400"
+                  className="bg-black text-yellow-400 hover:bg-zinc-800 border-yellow-400 lg:h-10 lg:px-4 lg:text-base"
                   aria-label="Navigate to resources and support page"
                 >
-                  <BookOpen className="h-4 w-4 mr-1" aria-hidden="true" /> More Resources
+                  <BookOpen className="h-4 w-4 lg:h-5 lg:w-5 mr-1" aria-hidden="true" /> More Resources
                 </Button>
                 <AuthActionButtons onLogout={onLogout} />
               </header>
 
               <main className="flex-grow flex flex-col items-center mt-[15vh] sm:mt-[18vh]">
-                <div className="w-full max-w-5xl grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 mb-10">
+                <div className="w-full max-w-5xl lg:max-w-6xl xl:max-w-7xl grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 lg:gap-8 xl:gap-10 mb-10">
                   {categories.map((category, index) =>
                     renderCategoryCard(category, index)
                   )}
@@ -168,7 +168,7 @@ import React from "react";
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: 0.5 }}
-                  className="w-full max-w-md"
+                  className="w-full max-w-md lg:max-w-lg xl:max-w-xl"
                 >
                   <SubscriptionStatus
                     isSubscribed={isSubscribed}

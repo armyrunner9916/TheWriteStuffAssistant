@@ -44,7 +44,7 @@ function SignIn() {
           </a>
         </div>
 
-        <main className="relative z-10 flex flex-col items-center justify-center text-center text-white flex-grow p-4 py-12 sm:py-16">
+        <main className="relative z-10 flex flex-col items-center justify-center text-center text-white flex-grow p-4 py-12 sm:py-16 lg:px-10 xl:px-16">
           <style>
             {`
               @keyframes hero-fade-up {
@@ -145,47 +145,47 @@ function SignIn() {
             `}
           </style>
 
-          <div className="liquid-glass-spotlight border border-yellow-400/25 p-6 sm:p-8 max-w-3xl shadow-[0_2px_12px_rgba(255,212,0,0.2),inset_0_1px_0_rgba(255,255,255,0.08)]" role="main">
-            <h1 className="hero-heading text-2xl sm:text-3xl md:text-4xl font-extrabold text-yellow-400 drop-shadow-lg" style={{ fontFamily: 'system-ui, -apple-system, sans-serif' }}>
+          <div className="liquid-glass-spotlight border border-yellow-400/25 p-6 sm:p-8 lg:p-10 xl:p-12 max-w-3xl lg:max-w-5xl xl:max-w-6xl shadow-[0_2px_12px_rgba(255,212,0,0.2),inset_0_1px_0_rgba(255,255,255,0.08)]" role="main">
+            <h1 className="hero-heading text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-extrabold text-yellow-400 drop-shadow-lg lg:leading-tight" style={{ fontFamily: 'system-ui, -apple-system, sans-serif' }}>
               Your AI-powered writing companion for every creative need.
             </h1>
-            <p className="hero-subheading mt-6 max-w-2xl text-sm sm:text-base text-yellow-400/90">
+            <p className="hero-subheading mt-6 lg:mt-8 xl:mt-10 max-w-2xl lg:max-w-4xl text-sm sm:text-base lg:text-lg xl:text-xl text-yellow-400/90 mx-auto">
               Pick a task, fill in a few details, and get focused results — worlds, characters, poems, scripts, outlines and more. Start a 10-day full-access trial; then just $5/month.
             </p>
 
-            <p className="hero-subheading mt-6 max-w-2xl text-sm sm:text-md text-yellow-400/80 italic">
+            <p className="hero-subheading mt-6 lg:mt-8 max-w-2xl lg:max-w-4xl text-sm sm:text-md lg:text-base xl:text-lg text-yellow-400/80 italic mx-auto">
               Six specialized modules: Fiction, Poetry, Stage & Screen, Nonfiction, Online Content Creation, and Songwriting.
             </p>
           </div>
 
-          <div className="hero-buttons mt-8 flex flex-col items-center gap-6">
-            <div className="flex flex-col sm:flex-row gap-4 items-center">
+          <div className="hero-buttons mt-8 lg:mt-12 flex flex-col items-center gap-6 lg:gap-8">
+            <div className="flex flex-col sm:flex-row gap-4 lg:gap-6 items-center">
               <Button
                 onClick={() => navigate('/auth')}
-                className="hero-button hero-button-primary bg-yellow-400 text-black font-bold hover:bg-yellow-300 transition-colors duration-300 px-6 py-3 text-lg"
+                className="hero-button hero-button-primary bg-yellow-400 text-black font-bold hover:bg-yellow-300 transition-colors duration-300 px-6 py-3 lg:px-8 lg:py-4 text-lg lg:text-xl"
                 size="lg"
               >
                 Sign Up/Sign In
               </Button>
               <Button
                 onClick={() => navigate('/demo')}
-                className="hero-button hero-button-primary bg-yellow-400 text-black font-bold hover:bg-yellow-300 transition-colors duration-300 px-6 py-3 text-lg"
+                className="hero-button hero-button-primary bg-yellow-400 text-black font-bold hover:bg-yellow-300 transition-colors duration-300 px-6 py-3 lg:px-8 lg:py-4 text-lg lg:text-xl"
                 size="lg"
               >
                 Try a Test Run
               </Button>
             </div>
-            <div className="flex flex-col sm:flex-row gap-4 items-center">
+            <div className="flex flex-col sm:flex-row gap-4 lg:gap-6 items-center">
               <Button
                 onClick={() => navigate('/resources')}
-                className="hero-button hero-button-primary bg-yellow-400 text-black font-bold hover:bg-yellow-300 transition-colors duration-300 px-6 py-3 text-lg"
+                className="hero-button hero-button-primary bg-yellow-400 text-black font-bold hover:bg-yellow-300 transition-colors duration-300 px-6 py-3 lg:px-8 lg:py-4 text-lg lg:text-xl"
                 size="lg"
               >
                 Resources
               </Button>
               <Button
                 onClick={() => navigate('/blog')}
-                className="hero-button hero-button-primary bg-yellow-400 text-black font-bold hover:bg-yellow-300 transition-colors duration-300 px-6 py-3 text-lg"
+                className="hero-button hero-button-primary bg-yellow-400 text-black font-bold hover:bg-yellow-300 transition-colors duration-300 px-6 py-3 lg:px-8 lg:py-4 text-lg lg:text-xl"
                 size="lg"
               >
                 Blog

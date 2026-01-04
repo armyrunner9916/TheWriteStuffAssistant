@@ -207,9 +207,9 @@ function AuthPage() {
           <div className="absolute inset-0 bg-black/70 fixed"></div>
         </div>
 
-        <main className="relative z-10 flex-grow container mx-auto px-4 py-8 sm:py-12">
-          <div className="max-w-6xl mx-auto">
-            <header className="w-full mb-8">
+        <main className="relative z-10 flex-grow container mx-auto px-4 py-8 sm:py-12 lg:px-10 xl:px-16">
+          <div className="max-w-6xl lg:max-w-7xl xl:max-w-[1400px] mx-auto">
+            <header className="w-full mb-8 lg:mb-10">
               <nav className="flex gap-1.5 items-center" role="navigation" aria-label="Secondary navigation">
                 <Button
                   onClick={() => navigate('/')}
@@ -241,27 +241,27 @@ function AuthPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
-              className="text-center mb-8"
+              className="text-center mb-8 lg:mb-12"
             >
-              <h1 className="text-4xl sm:text-5xl font-bold text-yellow-400 mb-4" style={{ fontFamily: 'system-ui, -apple-system, sans-serif' }}>
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold text-yellow-400 mb-4 lg:mb-6" style={{ fontFamily: 'system-ui, -apple-system, sans-serif' }}>
                 Welcome to The Write Stuff
               </h1>
-              <p className="text-xl text-yellow-400/90 max-w-2xl mx-auto" style={{ fontFamily: 'system-ui, -apple-system, sans-serif' }}>
+              <p className="text-xl lg:text-2xl xl:text-3xl text-yellow-400/90 max-w-2xl lg:max-w-4xl mx-auto" style={{ fontFamily: 'system-ui, -apple-system, sans-serif' }}>
                 Your AI-powered writing companion for every creative need
               </p>
             </motion.div>
 
-            <div className="grid lg:grid-cols-2 gap-8 items-stretch">
+            <div className="grid lg:grid-cols-2 gap-8 lg:gap-10 xl:gap-12 items-stretch">
               <motion.div
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.5, delay: 0.2 }}
               >
                 <Card className="bg-zinc-900/90 border-yellow-400/30 backdrop-blur-sm h-full flex flex-col">
-                  <CardHeader>
-                    <CardTitle className="text-yellow-400 text-2xl text-center" style={{ fontFamily: 'system-ui, -apple-system, sans-serif' }}>Get Started Today</CardTitle>
+                  <CardHeader className="lg:p-8">
+                    <CardTitle className="text-yellow-400 text-2xl lg:text-3xl xl:text-4xl text-center" style={{ fontFamily: 'system-ui, -apple-system, sans-serif' }}>Get Started Today</CardTitle>
                   </CardHeader>
-                  <CardContent className="flex-grow">
+                  <CardContent className="flex-grow lg:px-8 lg:pb-8">
                     <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
                       <TabsList className="grid w-full grid-cols-2 bg-zinc-800 border border-yellow-400/50">
                         <TabsTrigger
@@ -279,36 +279,36 @@ function AuthPage() {
                       </TabsList>
 
                       <TabsContent value="signin" className="mt-6">
-                        <form onSubmit={handleSignIn} className="space-y-4">
+                        <form onSubmit={handleSignIn} className="space-y-4 lg:space-y-6">
                           <div className="space-y-2">
-                            <Label htmlFor="signin-email" className="text-yellow-400" style={{ fontFamily: 'system-ui, -apple-system, sans-serif' }}>Email</Label>
+                            <Label htmlFor="signin-email" className="text-yellow-400 lg:text-lg" style={{ fontFamily: 'system-ui, -apple-system, sans-serif' }}>Email</Label>
                             <Input
                               id="signin-email"
                               type="email"
                               value={signInEmail}
                               onChange={(e) => setSignInEmail(e.target.value)}
                               required
-                              className="bg-zinc-800 border-yellow-400/50 text-white"
+                              className="bg-zinc-800 border-yellow-400/50 text-white lg:h-12 lg:text-lg"
                               placeholder="you@example.com"
                               autoComplete="email"
                             />
                           </div>
                           <div className="space-y-2">
-                            <Label htmlFor="signin-password" className="text-yellow-400" style={{ fontFamily: 'system-ui, -apple-system, sans-serif' }}>Password</Label>
+                            <Label htmlFor="signin-password" className="text-yellow-400 lg:text-lg" style={{ fontFamily: 'system-ui, -apple-system, sans-serif' }}>Password</Label>
                             <Input
                               id="signin-password"
                               type="password"
                               value={signInPassword}
                               onChange={(e) => setSignInPassword(e.target.value)}
                               required
-                              className="bg-zinc-800 border-yellow-400/50 text-white"
+                              className="bg-zinc-800 border-yellow-400/50 text-white lg:h-12 lg:text-lg"
                               placeholder="••••••••"
                               autoComplete="current-password"
                             />
                           </div>
                           <Button
                             type="submit"
-                            className="w-full bg-yellow-400 text-black hover:bg-yellow-300 font-bold rounded-lg"
+                            className="w-full bg-yellow-400 text-black hover:bg-yellow-300 font-bold rounded-lg lg:h-12 lg:text-lg"
                             disabled={loading}
                           >
                             {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : 'Sign In'}
@@ -317,54 +317,54 @@ function AuthPage() {
                       </TabsContent>
 
                       <TabsContent value="signup" className="mt-6">
-                        <form onSubmit={handleSignUp} className="space-y-4">
+                        <form onSubmit={handleSignUp} className="space-y-4 lg:space-y-6">
                           <div className="space-y-2">
-                            <Label htmlFor="signup-email" className="text-yellow-400" style={{ fontFamily: 'system-ui, -apple-system, sans-serif' }}>Email</Label>
+                            <Label htmlFor="signup-email" className="text-yellow-400 lg:text-lg" style={{ fontFamily: 'system-ui, -apple-system, sans-serif' }}>Email</Label>
                             <Input
                               id="signup-email"
                               type="email"
                               value={signUpEmail}
                               onChange={(e) => setSignUpEmail(e.target.value)}
                               required
-                              className="bg-zinc-800 border-yellow-400/50 text-white"
+                              className="bg-zinc-800 border-yellow-400/50 text-white lg:h-12 lg:text-lg"
                               placeholder="you@example.com"
                               autoComplete="email"
                             />
                           </div>
                           <div className="space-y-2">
-                            <Label htmlFor="signup-password" className="text-yellow-400" style={{ fontFamily: 'system-ui, -apple-system, sans-serif' }}>Password</Label>
+                            <Label htmlFor="signup-password" className="text-yellow-400 lg:text-lg" style={{ fontFamily: 'system-ui, -apple-system, sans-serif' }}>Password</Label>
                             <Input
                               id="signup-password"
                               type="password"
                               value={signUpPassword}
                               onChange={(e) => setSignUpPassword(e.target.value)}
                               required
-                              className="bg-zinc-800 border-yellow-400/50 text-white"
+                              className="bg-zinc-800 border-yellow-400/50 text-white lg:h-12 lg:text-lg"
                               placeholder="••••••••"
                               autoComplete="new-password"
                             />
                           </div>
                           <div className="space-y-2">
-                            <Label htmlFor="confirm-password" className="text-yellow-400" style={{ fontFamily: 'system-ui, -apple-system, sans-serif' }}>Confirm Password</Label>
+                            <Label htmlFor="confirm-password" className="text-yellow-400 lg:text-lg" style={{ fontFamily: 'system-ui, -apple-system, sans-serif' }}>Confirm Password</Label>
                             <Input
                               id="confirm-password"
                               type="password"
                               value={confirmPassword}
                               onChange={(e) => setConfirmPassword(e.target.value)}
                               required
-                              className="bg-zinc-800 border-yellow-400/50 text-white"
+                              className="bg-zinc-800 border-yellow-400/50 text-white lg:h-12 lg:text-lg"
                               placeholder="••••••••"
                               autoComplete="new-password"
                             />
                           </div>
                           <Button
                             type="submit"
-                            className="w-full bg-yellow-400 text-black hover:bg-yellow-300 font-bold rounded-lg"
+                            className="w-full bg-yellow-400 text-black hover:bg-yellow-300 font-bold rounded-lg lg:h-12 lg:text-lg"
                             disabled={loading}
                           >
                             {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : 'Create Account'}
                           </Button>
-                          <p className="text-xs text-yellow-400/70 text-center">
+                          <p className="text-xs lg:text-sm text-yellow-400/70 text-center">
                             By signing up, you start your 10-day full-featured trial. No credit card required.
                           </p>
                         </form>
@@ -381,23 +381,23 @@ function AuthPage() {
                 className="space-y-6"
               >
                 <Card className="bg-zinc-900/90 border-yellow-400/30 backdrop-blur-sm h-full flex flex-col">
-                  <CardHeader>
-                    <CardTitle className="text-yellow-400 text-xl flex items-center gap-2" style={{ fontFamily: 'system-ui, -apple-system, sans-serif' }}>
-                      <Sparkles className="h-5 w-5" />
+                  <CardHeader className="lg:p-8">
+                    <CardTitle className="text-yellow-400 text-xl lg:text-2xl xl:text-3xl flex items-center gap-2" style={{ fontFamily: 'system-ui, -apple-system, sans-serif' }}>
+                      <Sparkles className="h-5 w-5 lg:h-6 lg:w-6" />
                       What You Get
                     </CardTitle>
                   </CardHeader>
-                  <CardContent className="space-y-4 flex-grow flex flex-col">
-                    <ul className="space-y-3 flex-grow">
+                  <CardContent className="space-y-4 flex-grow flex flex-col lg:px-8 lg:pb-8">
+                    <ul className="space-y-3 lg:space-y-4 flex-grow">
                       {features.map((feature, index) => (
                         <motion.li
                           key={index}
                           initial={{ opacity: 0, x: -10 }}
                           animate={{ opacity: 1, x: 0 }}
                           transition={{ delay: 0.5 + index * 0.1 }}
-                          className="flex items-start gap-3 text-yellow-400/90"
+                          className="flex items-start gap-3 text-yellow-400/90 lg:text-lg"
                         >
-                          <CheckCircle className="h-5 w-5 mt-0.5 flex-shrink-0 text-yellow-400" />
+                          <CheckCircle className="h-5 w-5 lg:h-6 lg:w-6 mt-0.5 flex-shrink-0 text-yellow-400" />
                           <span style={{ fontFamily: 'system-ui, -apple-system, sans-serif' }}>{feature}</span>
                         </motion.li>
                       ))}
@@ -405,7 +405,7 @@ function AuthPage() {
                     <div className="pt-4 border-t border-yellow-400/20 mt-auto">
                       <Button
                         onClick={() => navigate('/demo')}
-                        className="w-full bg-yellow-400 text-black hover:bg-yellow-300 rounded-lg font-bold"
+                        className="w-full bg-yellow-400 text-black hover:bg-yellow-300 rounded-lg font-bold lg:h-12 lg:text-lg"
                       >
                         Try the Demo First
                       </Button>

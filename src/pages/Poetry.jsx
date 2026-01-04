@@ -364,29 +364,39 @@ function Poetry({ onLogout }) {
         <meta name="robots" content="noindex,nofollow" />
         <link rel="canonical" href="https://writestuffassistant.com/poetry" />
       </Helmet>
-      <div className="min-h-screen bg-black text-yellow-400 p-4 sm:p-6 flex flex-col items-center">
-        <div className="w-full max-w-5xl lg:assistant-desktop-container">
-          <header className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-6">
+      <div className="min-h-screen relative">
+        <div className="absolute inset-0 z-0">
+          <img
+            className="object-cover w-full h-full fixed"
+            alt=""
+            role="presentation"
+            src="https://images.unsplash.com/photo-1630320778004-ffd02f18f93f"
+          />
+          <div className="absolute inset-0 bg-black/60 fixed"></div>
+        </div>
+        <div className="relative z-10 text-yellow-400 p-4 sm:p-6 lg:px-10 xl:px-16 flex flex-col items-center min-h-screen">
+        <div className="w-full max-w-5xl lg:max-w-6xl xl:max-w-7xl">
+          <header className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-6 lg:mb-8">
             <div className="flex gap-2 flex-wrap justify-center sm:justify-start">
-               <Button onClick={() => navigate("/dashboard")} variant="outline" size="sm" className="bg-black text-yellow-400 hover:bg-zinc-800 border-yellow-400" aria-label="Back to categories dashboard">
-                  <ArrowLeft className="h-4 w-4 mr-1" aria-hidden="true" /> Back to Categories
+               <Button onClick={() => navigate("/dashboard")} variant="outline" size="sm" className="bg-black text-yellow-400 hover:bg-zinc-800 border-yellow-400 lg:h-10 lg:px-4 lg:text-base" aria-label="Back to categories dashboard">
+                  <ArrowLeft className="h-4 w-4 lg:h-5 lg:w-5 mr-1" aria-hidden="true" /> Back to Categories
                </Button>
-               <Button onClick={() => navigate(`/poetry/history`)} variant="outline" size="sm" className="bg-black text-yellow-400 hover:bg-zinc-800 border-yellow-400" aria-label="View poetry writing history">
-                  <History className="h-4 w-4 mr-1" aria-hidden="true" /> View History
+               <Button onClick={() => navigate(`/poetry/history`)} variant="outline" size="sm" className="bg-black text-yellow-400 hover:bg-zinc-800 border-yellow-400 lg:h-10 lg:px-4 lg:text-base" aria-label="View poetry writing history">
+                  <History className="h-4 w-4 lg:h-5 lg:w-5 mr-1" aria-hidden="true" /> View History
                 </Button>
             </div>
             <AuthActionButtons onLogout={onLogout} />
           </header>
-          
-          <h1 className="text-center text-3xl sm:text-4xl font-bold mb-2 text-yellow-400">{SECTION_TITLE}</h1>
-          <p className="text-center text-yellow-400/80 mb-8">Your modular tool for crafting powerful poetry.</p>
-          
-          <div className="grid grid-cols-1 lg:assistant-desktop-grid gap-8">
-            <Card className="bg-zinc-900/50 border-yellow-400/30 lg:assistant-control-panel">
-              <CardHeader>
-                <CardTitle className="text-yellow-400 text-2xl">Create Your Poem</CardTitle>
+
+          <h1 className="text-center text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold mb-2 lg:mb-4 text-yellow-400">{SECTION_TITLE}</h1>
+          <p className="text-center text-yellow-400/80 mb-8 lg:mb-10 lg:text-lg xl:text-xl">Your modular tool for crafting powerful poetry.</p>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-10">
+            <Card className="bg-zinc-900/50 border-yellow-400/30">
+              <CardHeader className="lg:p-8">
+                <CardTitle className="text-yellow-400 text-2xl lg:text-3xl xl:text-4xl">Create Your Poem</CardTitle>
               </CardHeader>
-              <CardContent>
+              <CardContent className="lg:px-8 lg:pb-8">
                 <form onSubmit={handleSubmit} className="space-y-6">
                   <div>
                     <Label className="text-yellow-400 font-bold text-base">Step 1: What would you like to generate?</Label>
@@ -423,13 +433,13 @@ function Poetry({ onLogout }) {
               </CardContent>
             </Card>
 
-            <div className="flex flex-col lg:assistant-content-panel">
+            <div className="flex flex-col">
               <Card className="flex-grow bg-zinc-900/50 border-yellow-400/30 flex flex-col">
-                <CardHeader>
-                  <CardTitle className="text-yellow-400 text-2xl">Generated Content</CardTitle>
+                <CardHeader className="lg:p-8">
+                  <CardTitle className="text-yellow-400 text-2xl lg:text-3xl xl:text-4xl">Generated Content</CardTitle>
                 </CardHeader>
-                <CardContent className="flex-grow flex flex-col h-[500px]">
-                   <div className="flex-grow overflow-y-auto pr-4 space-y-4 lg:assistant-content-text">
+                <CardContent className="flex-grow flex flex-col h-[500px] lg:h-[600px] lg:px-8 lg:pb-8">
+                   <div className="flex-grow overflow-y-auto pr-4 space-y-4 lg:text-lg">
                      {conversation.length > 0 ? (
                         conversation.map((turn, index) => {
                           if (turn.role === 'user') return null;
@@ -488,6 +498,7 @@ function Poetry({ onLogout }) {
           </div>
         </div>
         <Footer showSubscription={false} />
+        </div>
       </div>
     </>
   );
