@@ -9,6 +9,7 @@ import ScrollToTop from "@/components/ScrollToTop";
 
 import SignUp from "@/pages/SignUp";
 import SignIn from "@/pages/SignIn";
+import AuthPage from "@/pages/AuthPage";
 import PasswordResetForm from "@/components/PasswordResetForm";
 import Dashboard from "@/pages/Dashboard";
 import UnifiedHistory from "@/pages/UnifiedHistory";
@@ -59,8 +60,9 @@ const AppContent = () => {
       <ScrollToTop />
       <Routes>
         <Route path="/" element={<PublicRoute element={SignIn} />} />
-        <Route path="/signup" element={<PublicRoute element={SignUp} />} />
-        <Route path="/signin" element={<Navigate to="/" />} />
+        <Route path="/auth" element={<PublicRoute element={AuthPage} />} />
+        <Route path="/signup" element={<Navigate to="/auth?tab=signup" />} />
+        <Route path="/signin" element={<Navigate to="/auth?tab=signin" />} />
         <Route path="/password-reset" element={<PasswordResetForm />} />
         <Route path="/resources" element={<Resources />} />
         <Route path="/blog" element={<Blog />} />

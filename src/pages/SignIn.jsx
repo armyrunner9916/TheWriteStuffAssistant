@@ -1,12 +1,14 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Helmet } from 'react-helmet-async';
 import { Button } from '@/components/ui/button';
-import AuthDialog from '@/components/AuthDialog';
 import { ExternalLink } from 'lucide-react';
 import Footer from '@/components/ui/Footer';
 
 function SignIn() {
+  const navigate = useNavigate();
+
   return (
     <>
       <Helmet>
@@ -158,9 +160,15 @@ function SignIn() {
 
           <div className="hero-buttons mt-8 flex flex-col items-center gap-6">
             <div className="flex flex-col sm:flex-row gap-4 items-center">
-              <AuthDialog />
               <Button
-                onClick={() => window.location.href = '/demo'}
+                onClick={() => navigate('/auth')}
+                className="hero-button hero-button-primary bg-yellow-400 text-black font-bold hover:bg-yellow-300 transition-colors duration-300 px-6 py-3 text-lg"
+                size="lg"
+              >
+                Sign Up / Sign In
+              </Button>
+              <Button
+                onClick={() => navigate('/demo')}
                 className="hero-button hero-button-primary text-black font-bold px-6 py-3 text-lg"
                 size="lg"
               >

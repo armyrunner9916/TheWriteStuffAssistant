@@ -5,7 +5,6 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { motion } from 'framer-motion';
 import { ArrowLeft, Home, BookOpen, Globe, FileText, HelpCircle } from 'lucide-react';
 import { Helmet } from 'react-helmet-async';
-import AuthDialog from '@/components/AuthDialog';
 import Footer from '@/components/ui/Footer';
 import { useAuth } from '@/lib/hooks/useAuth';
 
@@ -248,7 +247,13 @@ function Resources() {
               className="text-center mb-8"
             >
               <div className="flex flex-col sm:flex-row gap-4 items-center justify-center">
-                <AuthDialog />
+                <Button
+                  onClick={() => navigate('/auth')}
+                  className="bg-yellow-400 text-black hover:bg-yellow-500 font-bold px-8 py-3 text-lg"
+                  size="lg"
+                >
+                  Sign Up / Sign In
+                </Button>
                 <Button
                   onClick={() => navigate('/demo')}
                   className="bg-yellow-400 text-black hover:bg-yellow-500 font-bold px-8 py-3 text-lg"
