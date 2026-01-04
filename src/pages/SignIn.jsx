@@ -149,7 +149,7 @@ function SignIn() {
             <h1 className="hero-heading text-4xl sm:text-5xl md:text-6xl font-extrabold text-yellow-400 drop-shadow-lg" style={{ fontFamily: 'system-ui, -apple-system, sans-serif' }}>
               Your AI-powered writing companion for every creative need.
             </h1>
-            <p className="hero-subheading mt-6 max-w-2xl text-md sm:text-lg text-yellow-400/90">
+            <p className="hero-subheading mt-6 max-w-2xl text-sm sm:text-base text-yellow-400/90">
               Pick a task, fill in a few details, and get focused results — worlds, characters, poems, scripts, outlines and more. Start a 10-day full-access trial; then just $5/month.
             </p>
 

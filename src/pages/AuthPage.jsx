@@ -10,7 +10,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useToast } from '@/components/ui/use-toast';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { supabase } from '@/lib/supabase';
-import { Loader2, CheckCircle, Sparkles } from 'lucide-react';
+import { Loader2, CheckCircle, Sparkles, ArrowLeft, BookOpen, FileText } from 'lucide-react';
 import Footer from '@/components/ui/Footer';
 
 const features = [
@@ -209,6 +209,37 @@ function AuthPage() {
 
         <main className="relative z-10 flex-grow container mx-auto px-4 py-8 sm:py-12">
           <div className="max-w-6xl mx-auto">
+            <header className="w-full flex justify-between items-center mb-8">
+              <Button
+                onClick={() => navigate('/')}
+                variant="outline"
+                size="sm"
+                className="bg-black text-yellow-400 hover:bg-zinc-800 border-yellow-400"
+                aria-label="Back to home page"
+              >
+                <ArrowLeft className="h-4 w-4 mr-1" aria-hidden="true" /> Back
+              </Button>
+              <div className="flex gap-2">
+                <Button
+                  onClick={() => navigate('/resources')}
+                  variant="outline"
+                  size="sm"
+                  className="bg-black text-yellow-400 hover:bg-zinc-800 border-yellow-400"
+                  aria-label="Go to resources page"
+                >
+                  <BookOpen className="h-4 w-4 mr-1" aria-hidden="true" /> Resources
+                </Button>
+                <Button
+                  onClick={() => navigate('/blog')}
+                  variant="outline"
+                  size="sm"
+                  className="bg-black text-yellow-400 hover:bg-zinc-800 border-yellow-400"
+                  aria-label="Go to blog page"
+                >
+                  <FileText className="h-4 w-4 mr-1" aria-hidden="true" /> Blog
+                </Button>
+              </div>
+            </header>
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
