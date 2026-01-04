@@ -6,6 +6,8 @@ import { HelmetProvider } from "react-helmet-async";
 import Layout from "@/components/Layout";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import ScrollToTop from "@/components/ScrollToTop";
+import OnboardingWizard from "@/components/OnboardingWizard";
+import { useOnboarding } from "@/lib/hooks/useOnboarding";
 
 import SignUp from "@/pages/SignUp";
 import SignIn from "@/pages/SignIn";
@@ -49,15 +51,31 @@ const PublicRoute = ({ element: Element, ...rest }) => {
 };
 
 const AppContent = () => {
-  const { signOut: authSignOut } = useAuth();
+  const { signOut: authSignOut, user, isAuthenticated } = useAuth();
+  const { shouldShowOnboarding, markOnboardingComplete } = useOnboarding(user?.id);
 
   const handleSignOut = async () => {
     await authSignOut();
   };
 
+  const handleOnboardingComplete = () => {
+    markOnboardingComplete();
+  };
+
+  const handleOnboardingSkip = () => {
+    markOnboardingComplete();
+  };
+
   return (
     <Layout>
       <ScrollToTop />
+      {isAuthenticated && shouldShowOnboarding && (
+        <OnboardingWizard
+          isOpen={shouldShowOnboarding}
+          onComplete={handleOnboardingComplete}
+          onSkip={handleOnboardingSkip}
+        />
+      )}
       <Routes>
         <Route path="/" element={<PublicRoute element={SignIn} />} />
         <Route path="/auth" element={<PublicRoute element={AuthPage} />} />
