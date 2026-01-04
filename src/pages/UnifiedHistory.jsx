@@ -228,9 +228,10 @@ function UnifiedHistory() {
 
         const { data, error } = await supabase
           .from('query_history')
-          .select('id, user_id, query_type, query_text, response_text, created_at, conversation_id')
+          .select('id, user_id, query_type, query_text, response_text, created_at, conversation_id, conversation_history, updated_at')
           .eq('user_id', user.id)
           .in('query_type', allowedTypes)
+          .or('is_thread_root.eq.true,is_thread_root.is.null')
           .order('created_at', { ascending: false });
 
         if (error) throw error;
@@ -242,6 +243,8 @@ function UnifiedHistory() {
           // If your renderer expects prompt_md/response_md, map here:
           prompt_md: cleanHistoryText(r.query_text),
           response_md: cleanHistoryText(r.response_text),
+          // Store the full conversation history for display
+          fullConversation: r.conversation_history || null,
         }));
 
         setHistory(rows);
@@ -285,8 +288,22 @@ function UnifiedHistory() {
   };
 
   const handleDownload = (entry) => {
-    const content = `**Prompt:**\n${entry.prompt_md}\n\n**Response:**\n${entry.response_md}`;
-    
+    let content = '';
+
+    // If conversation_history exists, use it for the full conversation
+    if (entry.fullConversation && entry.fullConversation.length > 0) {
+      entry.fullConversation.forEach((turn, index) => {
+        if (turn.role === 'user') {
+          content += `**User Query ${Math.floor(index / 2) + 1}:**\n${turn.content}\n\n`;
+        } else {
+          content += `**Assistant Response:**\n${turn.content}\n\n---\n\n`;
+        }
+      });
+    } else {
+      // Fallback to old format if conversation_history doesn't exist
+      content = `**Prompt:**\n${entry.prompt_md}\n\n**Response:**\n${entry.response_md}`;
+    }
+
     const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
@@ -296,7 +313,7 @@ function UnifiedHistory() {
     link.click();
     document.body.removeChild(link);
     URL.revokeObjectURL(url);
-    
+
     toast({ title: "Downloaded", description: "History entry downloaded successfully." });
   };
 
@@ -321,10 +338,20 @@ function UnifiedHistory() {
         <div className="container mx-auto max-w-6xl">
           <header className="flex flex-col sm:flex-row justify-between items-center mb-6 sm:mb-8 gap-4">
             <div className="flex flex-col sm:flex-row gap-2 sm:gap-4">
-              <Button onClick={handleBack} className="bg-zinc-800 text-yellow-400 hover:bg-zinc-700 border-2 border-yellow-400/50">
+              <Button
+                onClick={handleBack}
+                variant="outline"
+                size="sm"
+                className="bg-zinc-800 text-yellow-400 hover:bg-zinc-700 hover:text-yellow-400 border-yellow-400/50 font-medium"
+              >
                 <ArrowLeft className="h-4 w-4 mr-2" /> Back
               </Button>
-              <Button onClick={handleHome} className="bg-zinc-800 text-yellow-400 hover:bg-zinc-700 border-2 border-yellow-400/50">
+              <Button
+                onClick={handleHome}
+                variant="outline"
+                size="sm"
+                className="bg-zinc-800 text-yellow-400 hover:bg-zinc-700 hover:text-yellow-400 border-yellow-400/50 font-medium"
+              >
                 <Home className="h-4 w-4 mr-2" /> Dashboard
               </Button>
             </div>
@@ -403,14 +430,44 @@ function UnifiedHistory() {
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <div className="max-h-[60vh] overflow-y-auto pr-4">
-                <h4 className="font-bold mt-4 mb-2 text-yellow-300">Prompt:</h4>
-                <div className="text-sm p-3 bg-zinc-900 rounded-md border border-yellow-400/20">
-                  <MarkdownRenderer markdownText={selectedEntry.prompt_md} />
-                </div>
-                <h4 className="font-bold mt-4 mb-2 text-yellow-300">Response:</h4>
-                <div className="prose prose-sm prose-invert prose-p:text-yellow-400/90 prose-headings:text-yellow-400 prose-strong:text-yellow-300 prose-ul:text-yellow-400/90 prose-ol:text-yellow-400/90 max-w-none p-3 bg-zinc-900 rounded-md border border-yellow-400/20">
-                  <MarkdownRenderer markdownText={selectedEntry.response_md} />
-                </div>
+                {selectedEntry.fullConversation && selectedEntry.fullConversation.length > 0 ? (
+                  // Display full conversation history
+                  <div className="space-y-4">
+                    {selectedEntry.fullConversation.map((turn, index) => (
+                      <div key={index}>
+                        {turn.role === 'user' ? (
+                          <>
+                            <h4 className="font-bold mt-4 mb-2 text-yellow-300">
+                              {index === 0 ? 'Initial Prompt:' : `Follow-up ${Math.floor(index / 2)}:`}
+                            </h4>
+                            <div className="text-sm p-3 bg-zinc-900 rounded-md border border-yellow-400/20">
+                              <MarkdownRenderer markdownText={cleanHistoryText(turn.content)} />
+                            </div>
+                          </>
+                        ) : (
+                          <>
+                            <h4 className="font-bold mt-4 mb-2 text-yellow-300">Response:</h4>
+                            <div className="prose prose-sm prose-invert prose-p:text-yellow-400/90 prose-headings:text-yellow-400 prose-strong:text-yellow-300 prose-ul:text-yellow-400/90 prose-ol:text-yellow-400/90 max-w-none p-3 bg-zinc-900 rounded-md border border-yellow-400/20">
+                              <MarkdownRenderer markdownText={cleanHistoryText(turn.content)} />
+                            </div>
+                          </>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  // Fallback to old format if no conversation_history
+                  <>
+                    <h4 className="font-bold mt-4 mb-2 text-yellow-300">Prompt:</h4>
+                    <div className="text-sm p-3 bg-zinc-900 rounded-md border border-yellow-400/20">
+                      <MarkdownRenderer markdownText={selectedEntry.prompt_md} />
+                    </div>
+                    <h4 className="font-bold mt-4 mb-2 text-yellow-300">Response:</h4>
+                    <div className="prose prose-sm prose-invert prose-p:text-yellow-400/90 prose-headings:text-yellow-400 prose-strong:text-yellow-300 prose-ul:text-yellow-400/90 prose-ol:text-yellow-400/90 max-w-none p-3 bg-zinc-900 rounded-md border border-yellow-400/20">
+                      <MarkdownRenderer markdownText={selectedEntry.response_md} />
+                    </div>
+                  </>
+                )}
               </div>
               <AlertDialogFooter>
                 <AlertDialogCancel>Close</AlertDialogCancel>

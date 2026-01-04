@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/components/ui/use-toast";
-import { ArrowLeft, History, Loader2, Sparkles, Send } from "lucide-react";
+import { ArrowLeft, History, Loader2, Sparkles, Send, Download } from "lucide-react";
 import AuthActionButtons from "@/components/AuthActionButtons";
 import { Helmet } from "react-helmet-async";
 import { makeClaudeRequest } from "@/lib/api";
@@ -133,25 +133,72 @@ function Nonfiction({ onLogout }) {
     return prompt;
   };
 
-  const saveToHistory = async (promptMd, responseMd, subcategory, sessionId = null) => {
+  const saveToHistory = async (promptMd, responseMd, subcategory, sessionId = null, isFollowUp = false) => {
     try {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return null;
 
-      const { data, error } = await supabase
-        .from('query_history')
-        .insert({
-          user_id: user.id,
-          query_type: QUERY_TYPE,
-          query_text: promptMd,
-          response_text: responseMd,
-          conversation_id: sessionId || crypto.randomUUID(),
-        })
-        .select()
-        .single();
+      const timestamp = new Date().toISOString();
 
-      if (error) throw error;
-      return data;
+      if (isFollowUp && sessionId) {
+        // Update existing row with new conversation turn
+        const { data: existing, error: fetchError } = await supabase
+          .from('query_history')
+          .select('conversation_history, query_text, response_text')
+          .eq('conversation_id', sessionId)
+          .eq('user_id', user.id)
+          .eq('is_thread_root', true)
+          .single();
+
+        if (fetchError) throw fetchError;
+
+        const conversationHistory = existing.conversation_history || [
+          { role: 'user', content: existing.query_text, timestamp: existing.created_at },
+          { role: 'assistant', content: existing.response_text, timestamp: existing.created_at }
+        ];
+
+        conversationHistory.push(
+          { role: 'user', content: promptMd, timestamp },
+          { role: 'assistant', content: responseMd, timestamp }
+        );
+
+        const { data, error } = await supabase
+          .from('query_history')
+          .update({
+            conversation_history: conversationHistory,
+            updated_at: timestamp
+          })
+          .eq('conversation_id', sessionId)
+          .eq('user_id', user.id)
+          .eq('is_thread_root', true)
+          .select()
+          .single();
+
+        if (error) throw error;
+        return data;
+      } else {
+        // Create new thread
+        const newSessionId = sessionId || crypto.randomUUID();
+        const { data, error } = await supabase
+          .from('query_history')
+          .insert({
+            user_id: user.id,
+            query_type: QUERY_TYPE,
+            query_text: promptMd,
+            response_text: responseMd,
+            conversation_id: newSessionId,
+            is_thread_root: true,
+            conversation_history: [
+              { role: 'user', content: promptMd, timestamp },
+              { role: 'assistant', content: responseMd, timestamp }
+            ]
+          })
+          .select()
+          .single();
+
+        if (error) throw error;
+        return data;
+      }
     } catch (error) {
       console.error('Error saving to history:', error);
       return null;
@@ -253,9 +300,9 @@ function Nonfiction({ onLogout }) {
       const responseText = await makeClaudeRequest(messagesForApi);
       const newConversation = [...currentConversation, { role: "assistant", content: responseText }];
       setConversation(newConversation);
-      
-      await saveToHistory(followUp, responseText, "Follow-up", sessionId);
-      
+
+      await saveToHistory(followUp, responseText, "Follow-up", sessionId, true);
+
       toast({ title: "Success!", description: "Follow-up response generated." });
     } catch (error) {
       console.error("Error generating follow-up:", error);
@@ -284,6 +331,31 @@ function Nonfiction({ onLogout }) {
         )}
       </AnimatePresence>
     );
+  };
+
+  const handleDownload = () => {
+    if (conversation.length === 0) return;
+
+    let content = '';
+    conversation.forEach((turn, index) => {
+      if (turn.role === 'user') {
+        content += `**User Query ${Math.floor(index / 2) + 1}:**\n${turn.content}\n\n`;
+      } else {
+        content += `**Assistant Response:**\n${turn.content}\n\n---\n\n`;
+      }
+    });
+
+    const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `nonfiction-conversation-${new Date().toISOString().split('T')[0]}.txt`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+
+    toast({ title: "Downloaded", description: "Conversation downloaded successfully." });
   };
 
   return (
@@ -379,10 +451,22 @@ function Nonfiction({ onLogout }) {
                    </div>
 
                   {conversation.length > 0 && (
-                    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mt-4 pt-4 border-t border-yellow-400/20">
-                      <Label htmlFor="followUp" className="font-bold text-yellow-400">Refine or ask a follow-up</Label>
-                      <form onSubmit={handleFollowUp} className="flex items-start gap-2 mt-2">
-                        <Textarea 
+                    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mt-4 pt-4 border-t border-yellow-400/20 space-y-3">
+                      <div className="flex justify-between items-center">
+                        <Label htmlFor="followUp" className="font-bold text-yellow-400">Refine or ask a follow-up</Label>
+                        <Button
+                          type="button"
+                          onClick={handleDownload}
+                          variant="outline"
+                          size="sm"
+                          className="bg-zinc-800 text-yellow-400 hover:bg-zinc-700 border-yellow-400/50"
+                        >
+                          <Download className="h-4 w-4 mr-2" />
+                          Download
+                        </Button>
+                      </div>
+                      <form onSubmit={handleFollowUp} className="flex items-start gap-2">
+                        <Textarea
                           id="followUp"
                           value={followUp}
                           onChange={(e) => setFollowUp(e.target.value)}
