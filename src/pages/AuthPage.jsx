@@ -14,12 +14,12 @@ import { Loader2, CheckCircle, Sparkles } from 'lucide-react';
 import Footer from '@/components/ui/Footer';
 
 const features = [
-  "Task-based assistants for prose, poetry, songwriting, and more",
+  "Task-based assistants for fiction, poetry, scripts, nonfiction, online content and songwriting",
   "Conversational follow-ups to refine your work",
-  "10-day full-featured trial, then just $5/month",
+  "10-day full-access trial, then just $5/month",
   "Full access to all features during trial",
   "Export your work anytime",
-  "No commitment - cancel anytime"
+  "No commitment — cancel anytime"
 ];
 
 function AuthPage() {
@@ -280,7 +280,7 @@ function AuthPage() {
                           </div>
                           <Button
                             type="submit"
-                            className="w-full bg-yellow-400 text-black hover:bg-yellow-300 font-bold"
+                            className="w-full bg-yellow-400 text-black hover:bg-yellow-300 font-bold rounded-lg"
                             disabled={loading}
                           >
                             {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : 'Sign In'}
@@ -331,13 +331,13 @@ function AuthPage() {
                           </div>
                           <Button
                             type="submit"
-                            className="w-full bg-yellow-400 text-black hover:bg-yellow-300 font-bold"
+                            className="w-full bg-yellow-400 text-black hover:bg-yellow-300 font-bold rounded-lg"
                             disabled={loading}
                           >
                             {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : 'Create Account'}
                           </Button>
                           <p className="text-xs text-yellow-400/70 text-center">
-                            By signing up, you agree to our terms and conditions. No credit card required for the free trial.
+                            By signing up, you start your 10-day full-featured trial. No credit card required.
                           </p>
                         </form>
                       </TabsContent>
@@ -359,7 +359,7 @@ function AuthPage() {
                       What You Get
                     </CardTitle>
                   </CardHeader>
-                  <CardContent>
+                  <CardContent className="space-y-4">
                     <ul className="space-y-3">
                       {features.map((feature, index) => (
                         <motion.li
@@ -374,18 +374,16 @@ function AuthPage() {
                         </motion.li>
                       ))}
                     </ul>
+                    <div className="pt-4 border-t border-yellow-400/20">
+                      <Button
+                        onClick={() => navigate('/demo')}
+                        className="w-full bg-transparent border-2 border-yellow-400 text-yellow-400 hover:bg-yellow-400 hover:text-black rounded-lg font-semibold"
+                      >
+                        Try the Demo First
+                      </Button>
+                    </div>
                   </CardContent>
                 </Card>
-
-                <div className="text-center">
-                  <Button
-                    onClick={() => navigate('/demo')}
-                    variant="outline"
-                    className="bg-transparent border-yellow-400 text-yellow-400 hover:bg-yellow-400 hover:text-black"
-                  >
-                    Try the Demo First
-                  </Button>
-                </div>
               </motion.div>
             </div>
           </div>

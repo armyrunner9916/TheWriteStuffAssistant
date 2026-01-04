@@ -30,11 +30,11 @@ export const stripePromise = stripePublishableKey ? loadStripe(stripePublishable
           return;
         }
 
-        // Calculate trial end date (30 days from now)
+        // Calculate trial end date (10 days from now)
         const trialEndDate = new Date();
-        trialEndDate.setDate(trialEndDate.getDate() + 30);
+        trialEndDate.setDate(trialEndDate.getDate() + 10);
 
-        // Create subscription with 30-day trial
+        // Create subscription with 10-day trial
         const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/create-subscription`, {
           method: 'POST',
           headers: {
@@ -44,7 +44,7 @@ export const stripePromise = stripePublishableKey ? loadStripe(stripePublishable
           body: JSON.stringify({
             user_id: user.id,
             email: user.email,
-            trial_days: 30,
+            trial_days: 10,
             has_trial_ended: hasTrialEnded
           }),
         });

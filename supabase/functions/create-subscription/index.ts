@@ -18,7 +18,7 @@ Deno.serve(async (req) => {
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
     )
 
-    const { user_id, email, trial_days = 30, has_trial_ended = false } = await req.json()
+    const { user_id, email, trial_days = 10, has_trial_ended = false } = await req.json()
 
     if (!user_id || !email) {
       throw new Error('Missing required fields: user_id and email')
