@@ -146,6 +146,9 @@ function SignIn() {
           </style>
 
           <div className="liquid-glass-spotlight border border-yellow-400/25 p-6 sm:p-8 lg:p-10 xl:p-12 max-w-3xl lg:max-w-5xl xl:max-w-6xl shadow-[0_2px_12px_rgba(255,212,0,0.2),inset_0_1px_0_rgba(255,255,255,0.08)]" role="main">
+            <p className="hero-heading text-sm lg:text-base font-medium text-yellow-400/75 tracking-wide mb-3 lg:mb-4">
+              The Write Stuff
+            </p>
             <h1 className="hero-heading text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-extrabold text-yellow-400 drop-shadow-lg lg:leading-tight" style={{ fontFamily: 'system-ui, -apple-system, sans-serif' }}>
               Your AI-powered writing companion for every creative need.
             </h1>
