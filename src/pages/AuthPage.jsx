@@ -10,34 +10,14 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useToast } from '@/components/ui/use-toast';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { supabase } from '@/lib/supabase';
-import { Loader2, CheckCircle, Star, Sparkles } from 'lucide-react';
+import { Loader2, CheckCircle, Sparkles } from 'lucide-react';
 import Footer from '@/components/ui/Footer';
-
-const testimonials = [
-  {
-    name: "Sarah Mitchell",
-    role: "Fiction Writer",
-    quote: "This tool has transformed my creative process. I can brainstorm characters and plot points in minutes instead of hours.",
-    rating: 5
-  },
-  {
-    name: "James Chen",
-    role: "Content Creator",
-    quote: "The Write Stuff helps me generate fresh content ideas for my blog and social media. It's like having a creative partner available 24/7.",
-    rating: 5
-  },
-  {
-    name: "Maria Rodriguez",
-    role: "Poet",
-    quote: "I was skeptical about AI for poetry, but this assistant helps me explore new forms and refine my voice. Absolutely worth it.",
-    rating: 5
-  }
-];
 
 const features = [
   "Task-based assistants for prose, poetry, songwriting, and more",
   "Conversational follow-ups to refine your work",
-  "30-day free trial, then just $5/month",
+  "10-day full-featured trial, then just $5/month",
+  "Full access to all features during trial",
   "Export your work anytime",
   "No commitment - cancel anytime"
 ];
@@ -188,7 +168,7 @@ function AuthPage() {
 
       toast({
         title: "Success!",
-        description: "Welcome to The Write Stuff! Your 30-day free trial has started.",
+        description: "Welcome to The Write Stuff! Your 10-day full-featured trial has started.",
       });
       navigate('/dashboard');
 
@@ -208,12 +188,12 @@ function AuthPage() {
     <>
       <Helmet>
         <title>Sign Up / Sign In - The Write Stuff Assistant</title>
-        <meta name="description" content="Join The Write Stuff Assistant today. Get AI-powered writing tools for prose, poetry, songwriting, and more. Start your 30-day free trial now." />
+        <meta name="description" content="Join The Write Stuff Assistant today. Get AI-powered writing tools for prose, poetry, songwriting, and more. Start your 10-day full-featured trial now." />
         <meta name="robots" content="index,follow" />
         <link rel="canonical" href="https://writestuffassistant.com/auth" />
         <meta property="og:type" content="website" />
         <meta property="og:title" content="Sign Up - The Write Stuff Assistant" />
-        <meta property="og:description" content="Join The Write Stuff Assistant today. Get AI-powered writing tools for prose, poetry, songwriting, and more. Start your 30-day free trial now." />
+        <meta property="og:description" content="Join The Write Stuff Assistant today. Get AI-powered writing tools for prose, poetry, songwriting, and more. Start your 10-day full-featured trial now." />
         <meta property="og:url" content="https://writestuffassistant.com/auth" />
       </Helmet>
 
@@ -394,37 +374,6 @@ function AuthPage() {
                         </motion.li>
                       ))}
                     </ul>
-                  </CardContent>
-                </Card>
-
-                <Card className="bg-zinc-900/90 border-yellow-400/30 backdrop-blur-sm">
-                  <CardHeader>
-                    <CardTitle className="text-yellow-400 text-xl flex items-center gap-2">
-                      <Star className="h-5 w-5" />
-                      What Writers Are Saying
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    {testimonials.map((testimonial, index) => (
-                      <motion.div
-                        key={index}
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.6 + index * 0.15 }}
-                        className="p-4 bg-zinc-800/50 rounded-lg border border-yellow-400/20"
-                      >
-                        <div className="flex gap-1 mb-2">
-                          {[...Array(testimonial.rating)].map((_, i) => (
-                            <Star key={i} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                          ))}
-                        </div>
-                        <p className="text-yellow-400/90 text-sm mb-2 italic">"{testimonial.quote}"</p>
-                        <div className="text-xs">
-                          <p className="text-yellow-400 font-semibold">{testimonial.name}</p>
-                          <p className="text-yellow-400/70">{testimonial.role}</p>
-                        </div>
-                      </motion.div>
-                    ))}
                   </CardContent>
                 </Card>
 

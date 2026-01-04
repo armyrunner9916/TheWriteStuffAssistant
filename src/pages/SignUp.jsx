@@ -71,7 +71,7 @@ function SignUp({ onLogin }) {
       onLogin();
       toast({
         title: "Success",
-        description: "Welcome to The Write Stuff! Your 30-day free trial has started.",
+        description: "Welcome to The Write Stuff! Your 10-day full-featured trial has started.",
       });
       navigate('/dashboard');
 

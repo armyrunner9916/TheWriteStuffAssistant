@@ -13,12 +13,12 @@ function SignIn() {
     <>
       <Helmet>
         <title>The Write Stuff Assistant – AI‑Powered Writing Tools</title>
-        <meta name="description" content="Pick a task, fill a few details, and get tailored writing results—worlds, characters, poems, outlines, and more—free for 30 days." />
+        <meta name="description" content="Pick a task, fill a few details, and get tailored writing results—worlds, characters, poems, outlines, and more. Start your 10-day full-featured trial today." />
         <meta name="robots" content="index,follow" />
         <link rel="canonical" href="https://writestuffassistant.com/" />
         <meta property="og:type" content="website" />
         <meta property="og:title" content="The Write Stuff Assistant – AI‑Powered Writing Tools" />
-        <meta property="og:description" content="Pick a task, fill a few details, and get tailored writing results—worlds, characters, poems, outlines, and more—free for 30 days." />
+        <meta property="og:description" content="Pick a task, fill a few details, and get tailored writing results—worlds, characters, poems, outlines, and more. Start your 10-day full-featured trial today." />
         <meta property="og:url" content="https://writestuffassistant.com/" />
         <meta property="og:image" content="https://images.unsplash.com/photo-1630320778004-ffd02f18f93f" />
         <meta property="og:image:alt" content="Background image of a bookshelf filled with books under warm lighting" />
@@ -154,7 +154,7 @@ function SignIn() {
             </p>
 
             <p className="hero-subheading mt-6 max-w-2xl text-md sm:text-lg text-yellow-400/90">
-              Try it free for 30 days. Then just $5/month. Click below to get started today!
+              Start your 10-day full-featured trial free. Then just $5/month. Click below to get started today!
             </p>
           </div>
 

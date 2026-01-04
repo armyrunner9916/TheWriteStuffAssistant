@@ -103,7 +103,7 @@ function SubscriptionStatus({ isSubscribed, subscriptionEndDate, className }) {
           ) : trialEndDate ? (
             <>
               <p className="text-xs">
-                30-Day Trial: {getDaysRemaining(trialEndDate)} days remaining
+                10-Day Trial: {getDaysRemaining(trialEndDate)} days remaining
               </p>
               <Button
                 onClick={createSubscription}

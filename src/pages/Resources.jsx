@@ -54,7 +54,7 @@ function Resources() {
       icon: HelpCircle,
       content: [
         'Q: Is my content private? A: Yes, your content is stored securely and never shared.',
-        'Q: How does the free trial work? A: Get 30 days of full access, then just $5/month. Cancel anytime, no penalties.',
+        'Q: How does the free trial work? A: Get 10 days of full-featured access to all tools, then just $5/month. Cancel anytime, no penalties.',
         'Q: What payment methods do you accept? A: We accept all major credit cards via Stripe.',
       ],
     },
