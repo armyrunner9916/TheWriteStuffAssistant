@@ -209,7 +209,7 @@ function AuthPage() {
 
         <main className="relative z-10 flex-grow container mx-auto px-4 py-8 sm:py-12">
           <div className="max-w-6xl mx-auto">
-            <header className="w-full flex justify-between items-center mb-8">
+            <header className="w-full flex gap-2 items-center mb-8">
               <Button
                 onClick={() => navigate('/')}
                 variant="outline"
@@ -219,26 +219,24 @@ function AuthPage() {
               >
                 <ArrowLeft className="h-4 w-4 mr-1" aria-hidden="true" /> Back
               </Button>
-              <div className="flex gap-2">
-                <Button
-                  onClick={() => navigate('/resources')}
-                  variant="outline"
-                  size="sm"
-                  className="bg-black text-yellow-400 hover:bg-zinc-800 border-yellow-400"
-                  aria-label="Go to resources page"
-                >
-                  <BookOpen className="h-4 w-4 mr-1" aria-hidden="true" /> Resources
-                </Button>
-                <Button
-                  onClick={() => navigate('/blog')}
-                  variant="outline"
-                  size="sm"
-                  className="bg-black text-yellow-400 hover:bg-zinc-800 border-yellow-400"
-                  aria-label="Go to blog page"
-                >
-                  <FileText className="h-4 w-4 mr-1" aria-hidden="true" /> Blog
-                </Button>
-              </div>
+              <Button
+                onClick={() => navigate('/resources')}
+                variant="outline"
+                size="sm"
+                className="bg-black text-yellow-400 hover:bg-zinc-800 border-yellow-400"
+                aria-label="Go to resources page"
+              >
+                <BookOpen className="h-4 w-4 mr-1" aria-hidden="true" /> Resources
+              </Button>
+              <Button
+                onClick={() => navigate('/blog')}
+                variant="outline"
+                size="sm"
+                className="bg-black text-yellow-400 hover:bg-zinc-800 border-yellow-400"
+                aria-label="Go to blog page"
+              >
+                <FileText className="h-4 w-4 mr-1" aria-hidden="true" /> Blog
+              </Button>
             </header>
             <motion.div
               initial={{ opacity: 0, y: 20 }}

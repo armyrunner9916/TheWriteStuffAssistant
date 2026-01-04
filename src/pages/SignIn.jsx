@@ -146,7 +146,7 @@ function SignIn() {
           </style>
 
           <div className="liquid-glass-spotlight border border-yellow-400/25 p-6 sm:p-8 max-w-3xl shadow-[0_2px_12px_rgba(255,212,0,0.2),inset_0_1px_0_rgba(255,255,255,0.08)]" role="main">
-            <h1 className="hero-heading text-4xl sm:text-5xl md:text-6xl font-extrabold text-yellow-400 drop-shadow-lg" style={{ fontFamily: 'system-ui, -apple-system, sans-serif' }}>
+            <h1 className="hero-heading text-2xl sm:text-3xl md:text-4xl font-extrabold text-yellow-400 drop-shadow-lg" style={{ fontFamily: 'system-ui, -apple-system, sans-serif' }}>
               Your AI-powered writing companion for every creative need.
             </h1>
             <p className="hero-subheading mt-6 max-w-2xl text-sm sm:text-base text-yellow-400/90">
