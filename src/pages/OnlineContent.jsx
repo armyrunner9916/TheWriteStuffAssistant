@@ -401,8 +401,8 @@ function OnlineContent({ onLogout }) {
           <img className="object-cover w-full h-full fixed" alt="" role="presentation" src="https://images.unsplash.com/photo-1630320778004-ffd02f18f93f" />
           <div className="absolute inset-0 bg-black/60 fixed"></div>
         </div>
-        <div className="relative z-10 text-yellow-400 p-4 sm:p-6 lg:px-10 xl:px-16 flex flex-col items-center min-h-screen">
-        <div className="w-full max-w-5xl lg:max-w-6xl xl:max-w-7xl">
+        <div className="relative z-10 text-yellow-400 p-4 sm:p-6 lg:px-10 xl:px-16 2xl:px-20 flex flex-col items-center min-h-screen">
+        <div className="w-full max-w-5xl lg:max-w-7xl xl:max-w-[1600px]">
           <header className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-6 lg:mb-8">
             <div className="flex gap-2 flex-wrap justify-center sm:justify-start">
                <Button onClick={() => navigate("/dashboard")} variant="outline" size="sm" className="bg-black text-yellow-400 hover:bg-zinc-800 border-yellow-400 lg:h-10 lg:px-4 lg:text-base">
@@ -418,7 +418,7 @@ function OnlineContent({ onLogout }) {
           <h1 className="text-center text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold mb-2 lg:mb-4 text-yellow-400">{SECTION_TITLE}</h1>
           <p className="text-center text-yellow-400/80 mb-8 lg:mb-10 lg:text-lg xl:text-xl">Your modular tool for building a successful content strategy.</p>
 
-          <div className="grid grid-cols-1 lg:grid-cols-[2fr_3fr] gap-8 lg:gap-10">
+          <div className="grid grid-cols-1 lg:grid-cols-[1.5fr_3.5fr] gap-8 lg:gap-10">
             <Card className="bg-zinc-900/50 border-yellow-400/30">
               <CardHeader className="lg:p-8">
                 <CardTitle className="text-yellow-400 text-2xl lg:text-3xl xl:text-4xl">Create Your Content Plan</CardTitle>
