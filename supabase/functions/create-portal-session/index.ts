@@ -106,7 +106,7 @@ Deno.serve(async (req) => {
         body: new URLSearchParams({
           'customer_email': user.email || '',
           'mode': 'subscription',
-          'line_items[0][price]': 'price_1RHtBRC8j5ZYmSqnvXQJYGzH',
+          'line_items[0][price]': 'price_1RURHFC8j5ZYmSqnZJtTHKFY',
           'line_items[0][quantity]': '1',
           'subscription_data[trial_period_days]': '0',
           'success_url': `${finalReturnUrl}?session_id={CHECKOUT_SESSION_ID}`,

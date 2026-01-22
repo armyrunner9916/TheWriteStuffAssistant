@@ -34,7 +34,7 @@ Deno.serve(async (req) => {
       body: new URLSearchParams({
         'customer_email': email,
         'mode': 'subscription',
-        'line_items[0][price]': 'price_1RHtBRC8j5ZYmSqnvXQJYGzH', // Your monthly price ID
+        'line_items[0][price]': 'price_1RURHFC8j5ZYmSqnZJtTHKFY', // Your monthly price ID
         'line_items[0][quantity]': '1',
         'subscription_data[trial_period_days]': has_trial_ended ? '0' : trial_days.toString(),
         'success_url': `${req.headers.get('origin')}/dashboard?session_id={CHECKOUT_SESSION_ID}`,
