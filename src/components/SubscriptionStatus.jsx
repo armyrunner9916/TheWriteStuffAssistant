@@ -3,12 +3,15 @@ import { Card, CardHeader, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { supabase } from "@/lib/supabase";
-import { createSubscription } from "@/lib/stripe";
-import { CreditCard } from "lucide-react";
+import { createPortalSession } from "@/lib/stripe";
+import { CreditCard, Loader2 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 function SubscriptionStatus({ isSubscribed, subscriptionEndDate, className }) {
   const { toast } = useToast();
+  const navigate = useNavigate();
   const [loading, setLoading] = React.useState(false);
+  const [subscribeLoading, setSubscribeLoading] = React.useState(false);
   const [trialEndDate, setTrialEndDate] = React.useState(null);
 
   React.useEffect(() => {
@@ -72,6 +75,34 @@ function SubscriptionStatus({ isSubscribed, subscriptionEndDate, className }) {
     return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
   };
 
+  const handleSubscribeClick = async () => {
+    setSubscribeLoading(true);
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+
+      if (!user) {
+        toast({
+          title: "Authentication Required",
+          description: "Please sign in to subscribe.",
+          variant: "destructive",
+        });
+        navigate('/signin');
+        return;
+      }
+
+      const url = await createPortalSession();
+      window.location.href = url;
+    } catch (error) {
+      console.error('Subscription error:', error);
+      toast({
+        title: "Error",
+        description: error.message || "Failed to open subscription portal. Please try again.",
+        variant: "destructive",
+      });
+      setSubscribeLoading(false);
+    }
+  };
+
   return (
     <Card className={`h-full cursor-pointer hover:shadow-lg transition-shadow bg-opacity-25 backdrop-blur-sm ${className}`}>
       <CardHeader>
@@ -106,10 +137,18 @@ function SubscriptionStatus({ isSubscribed, subscriptionEndDate, className }) {
                 10-Day Trial: {getDaysRemaining(trialEndDate)} days remaining
               </p>
               <Button
-                onClick={createSubscription}
+                onClick={handleSubscribeClick}
+                disabled={subscribeLoading}
                 className="w-full bg-yellow-400 text-black hover:bg-yellow-500 text-xs"
               >
-                Subscribe Now
+                {subscribeLoading ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Loading...
+                  </>
+                ) : (
+                  'Subscribe Now'
+                )}
               </Button>
               <p className="text-xs text-muted-foreground">
                 Subscribe to continue using all features after your trial ends.
@@ -119,10 +158,18 @@ function SubscriptionStatus({ isSubscribed, subscriptionEndDate, className }) {
             <>
               <p className="text-xs text-yellow-400">No active subscription</p>
               <Button
-                onClick={createSubscription}
+                onClick={handleSubscribeClick}
+                disabled={subscribeLoading}
                 className="w-full bg-yellow-400 text-black hover:bg-yellow-500 text-xs"
               >
-                Subscribe Now
+                {subscribeLoading ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Loading...
+                  </>
+                ) : (
+                  'Subscribe Now'
+                )}
               </Button>
               <p className="text-xs text-muted-foreground">
                 Get unlimited access to all features

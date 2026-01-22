@@ -9,6 +9,47 @@ if (!stripePublishableKey) {
 
 export const stripePromise = stripePublishableKey ? loadStripe(stripePublishableKey) : null;
 
+export const createPortalSession = async (returnUrl) => {
+  try {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) {
+      throw new Error('User must be logged in');
+    }
+
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) {
+      throw new Error('No active session');
+    }
+
+    const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/create-portal-session`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${session.access_token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        returnUrl: returnUrl || `${window.location.origin}/dashboard`
+      }),
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.error || 'Failed to create portal session');
+    }
+
+    const result = await response.json();
+
+    if (result.url) {
+      return result.url;
+    } else {
+      throw new Error('No URL returned from portal session');
+    }
+  } catch (error) {
+    console.error('Error creating portal session:', error);
+    throw error;
+  }
+};
+
     export const createSubscription = async (hasTrialEnded = false) => {
       try {
         const { data: { user } } = await supabase.auth.getUser();
@@ -50,7 +91,7 @@ export const stripePromise = stripePublishableKey ? loadStripe(stripePublishable
         });
 
         const result = await response.json();
-        
+
         if (result.checkout_url) {
           window.location.href = result.checkout_url;
         } else {
