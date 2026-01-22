@@ -108,7 +108,6 @@ Deno.serve(async (req) => {
           'mode': 'subscription',
           'line_items[0][price]': 'price_1RURHFC8j5ZYmSqnZJtTHKFY',
           'line_items[0][quantity]': '1',
-          'subscription_data[trial_period_days]': '0',
           'success_url': `${finalReturnUrl}?session_id={CHECKOUT_SESSION_ID}`,
           'cancel_url': finalReturnUrl,
           'metadata[user_id]': user.id,
