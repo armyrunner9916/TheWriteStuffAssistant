@@ -1,17 +1,21 @@
 import React from "react";
 import HeaderCTA from "@/components/HeaderCTA";
+import TrialStatusHeader from "@/components/TrialStatusHeader";
     import { useLocation } from "react-router-dom";
+    import { useAuth } from "@/lib/hooks/useAuth";
     import Footer from "@/components/ui/Footer";
 
     function Layout({ children }) {
       const location = useLocation();
+      const { isAuthenticated } = useAuth();
 
       const isLandingPage = location.pathname === "/" || location.pathname === "/signin";
       const isDemoPage = location.pathname.startsWith("/demo");
+      const isAuthPage = location.pathname === "/auth" || location.pathname === "/signup" || location.pathname === "/signin";
 
       return (
         <div className="min-h-screen relative">
-          {!isLandingPage && !isDemoPage && (
+          {!isLandingPage && !isDemoPage && !isAuthPage && (
             <>
               <div className="absolute inset-0 z-0">
                 <img
@@ -23,7 +27,7 @@ import HeaderCTA from "@/components/HeaderCTA";
                 <div className="absolute inset-0 bg-black/60 fixed"></div>
               </div>
               <div className="relative z-10">
-                <HeaderCTA />
+                {isAuthenticated ? <TrialStatusHeader /> : <HeaderCTA />}
               </div>
             </>
           )}

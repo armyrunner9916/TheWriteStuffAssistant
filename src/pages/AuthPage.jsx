@@ -144,6 +144,9 @@ function AuthPage() {
         throw new Error("No user data received after sign up");
       }
 
+      const trialEndDate = new Date();
+      trialEndDate.setDate(trialEndDate.getDate() + 10);
+
       const { error: subscriptionError } = await supabase
         .from('user_subscriptions')
         .insert([
@@ -151,6 +154,7 @@ function AuthPage() {
             user_id: authData.user.id,
             is_admin: signUpEmail.toLowerCase() === 'steven.j.reitz@gmail.com',
             is_subscribed: false,
+            trial_end_date: trialEndDate.toISOString(),
             queries_remaining: 5,
             queries_used: 0
           }

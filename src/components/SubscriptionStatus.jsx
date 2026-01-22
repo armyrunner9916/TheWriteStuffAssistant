@@ -4,75 +4,38 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { supabase } from "@/lib/supabase";
 import { createPortalSession } from "@/lib/stripe";
-import { CreditCard, Loader2 } from "lucide-react";
+import { useSubscription } from "@/lib/hooks/useSubscription";
+import { CreditCard, Loader2, Clock } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
-function SubscriptionStatus({ isSubscribed, subscriptionEndDate, className }) {
+function SubscriptionStatus({ className }) {
   const { toast } = useToast();
   const navigate = useNavigate();
   const [loading, setLoading] = React.useState(false);
   const [subscribeLoading, setSubscribeLoading] = React.useState(false);
-  const [trialEndDate, setTrialEndDate] = React.useState(null);
+  const {
+    is_subscribed,
+    trial_end_date,
+    days_remaining,
+    isTrialActive,
+    isTrialExpired,
+    refreshSubscription
+  } = useSubscription();
 
-  React.useEffect(() => {
-    const fetchTrialStatus = async () => {
-      try {
-        const { data: { user } } = await supabase.auth.getUser();
-        if (!user) return;
-
-        const { data, error } = await supabase
-          .from('user_subscriptions')
-          .select('trial_end_date')
-          .eq('user_id', user.id)
-          .single();
-
-        if (error) throw error;
-        if (data) setTrialEndDate(data.trial_end_date);
-      } catch (error) {
-        console.error('Error fetching trial status:', error);
-      }
-    };
-
-    fetchTrialStatus();
-  }, []);
-
-  const handleUnsubscribe = async () => {
+  const handleManageBilling = async () => {
     setLoading(true);
     try {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) throw new Error('No user found');
-
-      const { error } = await supabase
-        .from('user_subscriptions')
-        .update({ 
-          is_subscribed: false,
-        })
-        .eq('user_id', user.id);
-
-      if (error) throw error;
-
-      toast({
-        title: "Unsubscribed Successfully",
-        description: "Your subscription will remain active until the end of your current billing period.",
-      });
+      const url = await createPortalSession();
+      window.location.href = url;
     } catch (error) {
       console.error('Error:', error);
       toast({
         title: "Error",
-        description: "Failed to process unsubscription. Please try again.",
+        description: "Failed to open billing portal. Please try again.",
         variant: "destructive",
       });
-    } finally {
       setLoading(false);
     }
-  };
-
-  const getDaysRemaining = (endDate) => {
-    if (!endDate) return 0;
-    const end = new Date(endDate);
-    const now = new Date();
-    const diffTime = end - now;
-    return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
   };
 
   const handleSubscribeClick = async () => {
@@ -113,33 +76,39 @@ function SubscriptionStatus({ isSubscribed, subscriptionEndDate, className }) {
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
-          {isSubscribed ? (
+          {is_subscribed ? (
             <>
-              <p className="text-xs text-green-500">Your subscription is active</p>
-              {subscriptionEndDate && (
-                <p className="text-xs">Next billing date: {new Date(subscriptionEndDate).toLocaleDateString()}</p>
-              )}
+              <p className="text-xs text-green-500 font-semibold">Your subscription is active</p>
               <Button
-                onClick={handleUnsubscribe}
+                onClick={handleManageBilling}
                 disabled={loading}
-                variant="destructive"
-                className="w-full text-xs"
+                className="w-full text-xs bg-yellow-400 text-black hover:bg-yellow-500"
               >
-                {loading ? "Processing..." : "Cancel Subscription"}
+                {loading ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Loading...
+                  </>
+                ) : (
+                  'Manage Billing'
+                )}
               </Button>
               <p className="text-xs text-muted-foreground">
-                Your subscription will remain active until the end of your current billing period.
+                Manage your subscription and payment methods
               </p>
             </>
-          ) : trialEndDate ? (
+          ) : isTrialActive() ? (
             <>
-              <p className="text-xs">
-                10-Day Trial: {getDaysRemaining(trialEndDate)} days remaining
-              </p>
+              <div className="flex items-center gap-2 text-yellow-400">
+                <Clock className="h-4 w-4" />
+                <p className="text-xs font-semibold">
+                  10-Day Trial: {days_remaining} {days_remaining === 1 ? 'day' : 'days'} remaining
+                </p>
+              </div>
               <Button
                 onClick={handleSubscribeClick}
                 disabled={subscribeLoading}
-                className="w-full bg-yellow-400 text-black hover:bg-yellow-500 text-xs"
+                className="w-full bg-yellow-400 text-black hover:bg-yellow-500 text-xs font-bold"
               >
                 {subscribeLoading ? (
                   <>
@@ -147,11 +116,32 @@ function SubscriptionStatus({ isSubscribed, subscriptionEndDate, className }) {
                     Loading...
                   </>
                 ) : (
-                  'Subscribe Now'
+                  'Subscribe Early - Only $5/month'
                 )}
               </Button>
               <p className="text-xs text-muted-foreground">
-                Subscribe to continue using all features after your trial ends.
+                Subscribe now to continue using all features after your trial ends
+              </p>
+            </>
+          ) : isTrialExpired() ? (
+            <>
+              <p className="text-xs text-red-400 font-semibold">Your trial has ended</p>
+              <Button
+                onClick={handleSubscribeClick}
+                disabled={subscribeLoading}
+                className="w-full bg-yellow-400 text-black hover:bg-yellow-500 text-xs font-bold"
+              >
+                {subscribeLoading ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Loading...
+                  </>
+                ) : (
+                  'Subscribe Now - Only $5/month'
+                )}
+              </Button>
+              <p className="text-xs text-muted-foreground">
+                Subscribe to continue using all features
               </p>
             </>
           ) : (
@@ -168,7 +158,7 @@ function SubscriptionStatus({ isSubscribed, subscriptionEndDate, className }) {
                     Loading...
                   </>
                 ) : (
-                  'Subscribe Now'
+                  'Subscribe Now - Only $5/month'
                 )}
               </Button>
               <p className="text-xs text-muted-foreground">

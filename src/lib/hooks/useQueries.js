@@ -1,41 +1,12 @@
-import { useCallback, useState, useEffect } from 'react';
+import { useCallback } from 'react';
 import { supabase } from '@/lib/supabase';
 import { useAuth } from '@/lib/hooks/useAuth';
+import { useSubscription } from '@/lib/hooks/useSubscription';
 import { toast } from '@/components/ui/use-toast';
 
 export const useQueries = () => {
     const { user } = useAuth();
-    const [subscriptionData, setSubscriptionData] = useState(null);
-    const [loading, setLoading] = useState(true);
-
-    useEffect(() => {
-        const fetchSubscriptionData = async () => {
-            if (!user) {
-                setLoading(false);
-                return;
-            }
-
-            try {
-                const { data, error } = await supabase
-                    .from('user_subscriptions')
-                    .select('*')
-                    .eq('user_id', user.id)
-                    .single();
-
-                if (error && error.code !== 'PGRST116') {
-                    console.error('Error fetching subscription:', error);
-                } else {
-                    setSubscriptionData(data);
-                }
-            } catch (error) {
-                console.error('Error in subscription fetch:', error);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchSubscriptionData();
-    }, [user]);
+    const subscription = useSubscription();
 
     const handleQuery = useCallback(async (queryType, queryText, responseText, shouldSave = false, conversationIdToUpdate = null) => {
         if (!user) {
@@ -58,21 +29,26 @@ export const useQueries = () => {
                 userId: user.id 
             });
             
-            const { data: subscription, error: subscriptionError } = await supabase
+            const { data: subscriptionData, error: subscriptionError } = await supabase
                 .from('user_subscriptions')
                 .select('*')
                 .eq('user_id', user.id)
                 .single();
 
-            if (subscriptionError && subscriptionError.code !== 'PGRST116') { // Ignore 'exact one row' error
+            if (subscriptionError && subscriptionError.code !== 'PGRST116') {
                 console.error('Subscription error:', subscriptionError);
                 throw new Error('Could not verify subscription status.');
             }
 
-            const canQuery = subscription?.is_admin || subscription?.is_subscribed || (subscription?.queries_remaining > 0);
+            const isAdmin = subscriptionData?.is_admin || false;
+            const isSubscribed = subscriptionData?.is_subscribed || false;
+            const trialEndDate = subscriptionData?.trial_end_date;
+            const isTrialActive = trialEndDate && new Date(trialEndDate) > new Date();
+
+            const canQuery = isAdmin || isSubscribed || isTrialActive;
 
             if (!canQuery) {
-                return { success: false, reason: 'Please subscribe or renew to continue.' };
+                return { success: false, reason: 'Your trial has ended. Please subscribe to continue.' };
             }
 
             if (shouldSave) {
@@ -96,14 +72,7 @@ export const useQueries = () => {
                         throw error;
                     }
                     console.log('Updated conversation:', data);
-                    
-                    // Refresh subscription data
-                    setSubscriptionData(prev => ({
-                        ...prev,
-                        queries_used: (prev?.queries_used || 0) + 1,
-                        queries_remaining: Math.max(0, (prev?.queries_remaining || 0) - 1)
-                    }));
-                    
+
                     return { success: true, data };
                 } else {
                     console.log('Creating new history entry...');
@@ -131,29 +100,6 @@ export const useQueries = () => {
                         throw error;
                     }
                     console.log('Created new history entry:', data);
-                    
-                     if (subscription && !subscription.is_admin && !subscription.is_subscribed) {
-                         console.log('Updating query count...');
-                        const { error: updateError } = await supabase
-                            .from('user_subscriptions')
-                            .update({ 
-                                queries_used: (subscription.queries_used || 0) + 1,
-                                queries_remaining: Math.max(0, (subscription.queries_remaining || 0) - 1)
-                            })
-                            .eq('user_id', user.id);
-                        
-                        if (updateError) {
-                            console.error('Error updating subscription:', updateError);
-                        } else {
-                            console.log('Successfully updated query count');
-                            // Update local state
-                            setSubscriptionData(prev => ({
-                                ...prev,
-                                queries_used: (prev?.queries_used || 0) + 1,
-                                queries_remaining: Math.max(0, (prev?.queries_remaining || 0) - 1)
-                            }));
-                        }
-                    }
 
                     return { success: true, data };
                 }
@@ -169,12 +115,13 @@ export const useQueries = () => {
         }
     }, [user]);
 
-    return { 
+    return {
         handleQuery,
-        isSubscribed: subscriptionData?.is_subscribed || false,
-        isAdmin: subscriptionData?.is_admin || false,
-        isTrialExpired: subscriptionData ? (subscriptionData.queries_remaining <= 0 && !subscriptionData.is_subscribed && !subscriptionData.is_admin) : false,
-        subscriptionEndDate: subscriptionData?.subscription_end_date,
-        queriesRemaining: subscriptionData?.queries_remaining || 0
+        isSubscribed: subscription.is_subscribed || false,
+        isAdmin: false,
+        isTrialExpired: subscription.isTrialExpired() || false,
+        isTrialActive: subscription.isTrialActive() || false,
+        daysRemaining: subscription.days_remaining || 0,
+        hasActiveAccess: subscription.hasActiveAccess() || false
     };
 };

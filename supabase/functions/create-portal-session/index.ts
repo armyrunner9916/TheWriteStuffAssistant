@@ -49,7 +49,7 @@ Deno.serve(async (req) => {
 
     const { data: subscription, error: subError } = await adminClient
       .from('user_subscriptions')
-      .select('stripe_customer_id')
+      .select('stripe_customer_id, trial_end_date, is_subscribed')
       .eq('user_id', user.id)
       .single();
 
@@ -97,22 +97,33 @@ Deno.serve(async (req) => {
     } else {
       console.log(`[create-portal-session] No customer found, creating checkout session`);
 
+      const isTrialActive = subscription?.trial_end_date &&
+        new Date(subscription.trial_end_date) > new Date() &&
+        !subscription?.is_subscribed;
+
+      const checkoutParams: Record<string, string> = {
+        'customer_email': user.email || '',
+        'mode': 'subscription',
+        'line_items[0][price]': 'price_1RURHFC8j5ZYmSqnZJtTHKFY',
+        'line_items[0][quantity]': '1',
+        'success_url': `${finalReturnUrl}?session_id={CHECKOUT_SESSION_ID}`,
+        'cancel_url': finalReturnUrl,
+        'metadata[user_id]': user.id,
+        'subscription_data[metadata][user_id]': user.id,
+      };
+
+      if (isTrialActive) {
+        console.log(`[create-portal-session] User subscribing during trial`);
+        checkoutParams['subscription_data[metadata][subscribed_during_trial]'] = 'true';
+      }
+
       const checkoutResponse = await fetch('https://api.stripe.com/v1/checkout/sessions', {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${stripeSecretKey}`,
           'Content-Type': 'application/x-www-form-urlencoded',
         },
-        body: new URLSearchParams({
-          'customer_email': user.email || '',
-          'mode': 'subscription',
-          'line_items[0][price]': 'price_1RURHFC8j5ZYmSqnZJtTHKFY',
-          'line_items[0][quantity]': '1',
-          'success_url': `${finalReturnUrl}?session_id={CHECKOUT_SESSION_ID}`,
-          'cancel_url': finalReturnUrl,
-          'metadata[user_id]': user.id,
-          'subscription_data[metadata][user_id]': user.id,
-        }),
+        body: new URLSearchParams(checkoutParams),
       });
 
       if (!checkoutResponse.ok) {

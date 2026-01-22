@@ -14,7 +14,6 @@ import React from "react";
     function Dashboard({ onLogout }) {
       const navigate = useNavigate();
       const { toast } = useToast();
-      const { isSubscribed, subscriptionEndDate } = useQueries();
 
       const categories = [
         {
@@ -171,8 +170,6 @@ import React from "react";
                   className="w-full max-w-md lg:max-w-lg xl:max-w-xl"
                 >
                   <SubscriptionStatus
-                    isSubscribed={isSubscribed}
-                    subscriptionEndDate={subscriptionEndDate}
                     className="bg-black border-yellow-400 text-yellow-400"
                   />
                 </motion.div>

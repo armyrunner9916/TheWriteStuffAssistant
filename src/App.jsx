@@ -2,6 +2,7 @@ import React from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import { Toaster } from "@/components/ui/toaster";
 import { AuthProvider, useAuth } from "@/lib/hooks/useAuth";
+import { SubscriptionProvider } from "@/lib/hooks/useSubscription";
 import { HelmetProvider } from "react-helmet-async";
 import Layout from "@/components/Layout";
 import ErrorBoundary from "@/components/ErrorBoundary";
@@ -152,10 +153,12 @@ function App() {
       <HelmetProvider>
         <Router>
           <AuthProvider>
-            <ErrorBoundary>
-              <AppContent />
-            </ErrorBoundary>
-            <Toaster />
+            <SubscriptionProvider>
+              <ErrorBoundary>
+                <AppContent />
+              </ErrorBoundary>
+              <Toaster />
+            </SubscriptionProvider>
           </AuthProvider>
         </Router>
       </HelmetProvider>
