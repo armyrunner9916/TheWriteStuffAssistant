@@ -173,7 +173,7 @@ function SignIn() {
           <div className="auth-button absolute top-4 right-4 sm:top-6 sm:right-6 lg:top-8 lg:right-8 z-20">
             <Button
               onClick={() => navigate('/auth')}
-              className="auth-button-top bg-yellow-400 text-black font-semibold hover:bg-yellow-300 transition-colors duration-200 px-3 py-1.5 text-xs sm:text-sm rounded-full shadow-sm"
+              className="auth-button-top bg-yellow-400/90 text-black font-semibold hover:bg-yellow-300/90 transition-colors duration-200 px-3 py-1.5 text-xs sm:text-sm rounded-full shadow-sm"
               size="sm"
             >
               Sign Up/Sign In
@@ -187,11 +187,11 @@ function SignIn() {
             <h1 className="hero-heading text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-extrabold text-yellow-400 drop-shadow-lg lg:leading-tight" style={{ fontFamily: 'system-ui, -apple-system, sans-serif' }}>
               Your AI-powered writing companion for every creative need.
             </h1>
-            <p className="hero-subheading mt-6 lg:mt-8 xl:mt-10 max-w-2xl lg:max-w-4xl text-sm sm:text-base lg:text-lg xl:text-xl text-yellow-400/90 mx-auto">
+            <p className="hero-subheading mt-6 lg:mt-8 xl:mt-10 max-w-2xl lg:max-w-4xl text-sm sm:text-base lg:text-lg xl:text-xl text-yellow-400/95 mx-auto">
               Pick a task, fill in a few details, and get focused results — worlds, characters, poems, scripts, outlines and more. Start a 10-day full-access trial; then just $5/month.
             </p>
 
-            <p className="hero-subheading mt-6 lg:mt-8 max-w-2xl lg:max-w-4xl text-sm sm:text-md lg:text-base xl:text-lg text-yellow-400/80 italic mx-auto">
+            <p className="hero-subheading mt-6 lg:mt-8 max-w-2xl lg:max-w-4xl text-sm sm:text-md lg:text-base xl:text-lg text-yellow-400/85 italic mx-auto">
               Six specialized modules: Fiction, Poetry, Stage & Screen, Nonfiction, Online Content Creation, and Songwriting.
             </p>
           </div>
