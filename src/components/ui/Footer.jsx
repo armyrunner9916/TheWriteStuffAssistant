@@ -12,7 +12,7 @@ import React from "react";
       return (
         <div className="fixed bottom-0 left-0 right-0 p-4 text-center bg-black bg-opacity-50 backdrop-blur-sm z-50">
           <div className="flex flex-col sm:flex-row items-center justify-center space-y-1 sm:space-y-0 sm:space-x-4">
-            <span className="text-yellow-400 text-sm">
+            <span className="text-yellow-400 text-sm sm:text-base">
               © {displayYear} <a
                 href="https://armyrunner-studios.com"
                 target="_blank"
@@ -24,7 +24,7 @@ import React from "react";
             </span>
             <a
               href="mailto:support@armyrunner-studios.com"
-              className="text-yellow-400 text-sm hover:underline"
+              className="text-yellow-400 text-sm sm:text-base hover:underline"
             >
               Contact Us
             </a>

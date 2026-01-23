@@ -113,8 +113,8 @@ function SignIn() {
 
               .liquid-glass-spotlight {
                 position: relative;
-                background: rgba(255, 255, 255, 0.07);
-                backdrop-filter: blur(18px) saturate(180%);
+                background: rgba(255, 255, 255, 0.08);
+                backdrop-filter: blur(12px) saturate(180%);
                 border-radius: 28px;
                 box-shadow: 0 8px 40px rgba(0, 0, 0, 0.35);
               }
@@ -155,7 +155,7 @@ function SignIn() {
 
               .hero-button-secondary:hover {
                 background: linear-gradient(225deg, rgba(251, 191, 36, 0.95), rgba(245, 158, 11, 0.95));
-                box-shadow: 0 0 14px rgba(255, 255, 255, 0.12);
+                box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
                 animation: gradient-shift 3s ease infinite;
               }
 
@@ -173,7 +173,7 @@ function SignIn() {
           <div className="auth-button absolute top-4 right-4 sm:top-6 sm:right-6 lg:top-8 lg:right-8 z-20">
             <Button
               onClick={() => navigate('/auth')}
-              className="auth-button-top bg-yellow-400 text-black font-semibold hover:bg-yellow-300 transition-colors duration-200 px-4 py-2 text-sm sm:text-base rounded-full shadow-md"
+              className="auth-button-top bg-yellow-400 text-black font-semibold hover:bg-yellow-300 transition-colors duration-200 px-3 py-1.5 text-xs sm:text-sm rounded-full shadow-sm"
               size="sm"
             >
               Sign Up/Sign In
@@ -196,24 +196,24 @@ function SignIn() {
             </p>
           </div>
 
-          <div className="hero-buttons mt-6 sm:mt-8 lg:mt-10 flex flex-col sm:flex-row gap-3 sm:gap-4 lg:gap-5 items-center justify-center w-full max-w-2xl">
+          <div className="hero-buttons mt-6 sm:mt-8 lg:mt-10 flex flex-col sm:flex-row gap-2 sm:gap-3 lg:gap-4 items-center justify-center w-full max-w-2xl">
             <Button
               onClick={() => navigate('/demo')}
-              className="hero-button hero-button-secondary text-black font-semibold hover:bg-yellow-300 transition-colors duration-300 px-5 py-2.5 lg:px-6 lg:py-3 text-base lg:text-lg w-full sm:w-auto"
+              className="hero-button hero-button-secondary text-black font-semibold hover:bg-yellow-300 transition-colors duration-300 px-4 py-2 lg:px-5 lg:py-2.5 text-base lg:text-lg w-full sm:w-auto"
               size="default"
             >
               Try a Test Run
             </Button>
             <Button
               onClick={() => navigate('/resources')}
-              className="hero-button hero-button-secondary text-black font-semibold hover:bg-yellow-300 transition-colors duration-300 px-5 py-2.5 lg:px-6 lg:py-3 text-base lg:text-lg w-full sm:w-auto"
+              className="hero-button hero-button-secondary text-black font-semibold hover:bg-yellow-300 transition-colors duration-300 px-4 py-2 lg:px-5 lg:py-2.5 text-base lg:text-lg w-full sm:w-auto"
               size="default"
             >
               Resources
             </Button>
             <Button
               onClick={() => navigate('/blog')}
-              className="hero-button hero-button-secondary text-black font-semibold hover:bg-yellow-300 transition-colors duration-300 px-5 py-2.5 lg:px-6 lg:py-3 text-base lg:text-lg w-full sm:w-auto"
+              className="hero-button hero-button-secondary text-black font-semibold hover:bg-yellow-300 transition-colors duration-300 px-4 py-2 lg:px-5 lg:py-2.5 text-base lg:text-lg w-full sm:w-auto"
               size="default"
             >
               Blog
