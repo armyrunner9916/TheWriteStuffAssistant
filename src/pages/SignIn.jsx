@@ -44,7 +44,7 @@ function SignIn() {
           </a>
         </div>
 
-        <main className="relative z-10 flex flex-col items-center justify-center text-center text-white flex-grow p-4 py-12 sm:py-16 lg:px-10 xl:px-16">
+        <main className="relative z-10 flex flex-col items-center justify-center text-center text-white flex-grow p-4 py-8 sm:py-12 lg:px-10 xl:px-16">
           <style>
             {`
               @keyframes hero-fade-up {
@@ -106,6 +106,11 @@ function SignIn() {
                 opacity: 0;
               }
 
+              .auth-button {
+                animation: hero-fade-scale 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) 0.3s forwards;
+                opacity: 0;
+              }
+
               .liquid-glass-spotlight {
                 position: relative;
                 background: rgba(255, 255, 255, 0.07);
@@ -142,8 +147,38 @@ function SignIn() {
                 background: linear-gradient(225deg, #fbbf24, #f59e0b);
                 animation: gradient-shift 3s ease infinite;
               }
+
+              .hero-button-secondary {
+                background: linear-gradient(135deg, rgba(251, 191, 36, 0.85), rgba(245, 158, 11, 0.85));
+                border: 1px solid rgba(251, 191, 36, 0.3);
+              }
+
+              .hero-button-secondary:hover {
+                background: linear-gradient(225deg, rgba(251, 191, 36, 0.95), rgba(245, 158, 11, 0.95));
+                box-shadow: 0 0 14px rgba(255, 255, 255, 0.12);
+                animation: gradient-shift 3s ease infinite;
+              }
+
+              .auth-button-top {
+                transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+              }
+
+              .auth-button-top:hover {
+                transform: scale(1.03);
+                box-shadow: 0 0 12px rgba(255, 255, 255, 0.12);
+              }
             `}
           </style>
+
+          <div className="auth-button absolute top-4 right-4 sm:top-6 sm:right-6 lg:top-8 lg:right-8 z-20">
+            <Button
+              onClick={() => navigate('/auth')}
+              className="auth-button-top bg-yellow-400 text-black font-semibold hover:bg-yellow-300 transition-colors duration-200 px-4 py-2 text-sm sm:text-base rounded-full shadow-md"
+              size="sm"
+            >
+              Sign Up/Sign In
+            </Button>
+          </div>
 
           <div className="liquid-glass-spotlight border border-yellow-400/25 p-6 sm:p-8 lg:p-10 xl:p-12 max-w-3xl lg:max-w-5xl xl:max-w-6xl shadow-[0_2px_12px_rgba(255,212,0,0.2),inset_0_1px_0_rgba(255,255,255,0.08)]" role="main">
             <p className="hero-heading text-sm lg:text-base font-medium text-yellow-400/75 tracking-wide mb-3 lg:mb-4">
@@ -161,39 +196,28 @@ function SignIn() {
             </p>
           </div>
 
-          <div className="hero-buttons mt-8 lg:mt-12 flex flex-col items-center gap-6 lg:gap-8">
-            <div className="flex flex-col sm:flex-row gap-4 lg:gap-6 items-center">
-              <Button
-                onClick={() => navigate('/auth')}
-                className="hero-button hero-button-primary bg-yellow-400 text-black font-bold hover:bg-yellow-300 transition-colors duration-300 px-6 py-3 lg:px-8 lg:py-4 text-lg lg:text-xl"
-                size="lg"
-              >
-                Sign Up/Sign In
-              </Button>
-              <Button
-                onClick={() => navigate('/demo')}
-                className="hero-button hero-button-primary bg-yellow-400 text-black font-bold hover:bg-yellow-300 transition-colors duration-300 px-6 py-3 lg:px-8 lg:py-4 text-lg lg:text-xl"
-                size="lg"
-              >
-                Try a Test Run
-              </Button>
-            </div>
-            <div className="flex flex-col sm:flex-row gap-4 lg:gap-6 items-center">
-              <Button
-                onClick={() => navigate('/resources')}
-                className="hero-button hero-button-primary bg-yellow-400 text-black font-bold hover:bg-yellow-300 transition-colors duration-300 px-6 py-3 lg:px-8 lg:py-4 text-lg lg:text-xl"
-                size="lg"
-              >
-                Resources
-              </Button>
-              <Button
-                onClick={() => navigate('/blog')}
-                className="hero-button hero-button-primary bg-yellow-400 text-black font-bold hover:bg-yellow-300 transition-colors duration-300 px-6 py-3 lg:px-8 lg:py-4 text-lg lg:text-xl"
-                size="lg"
-              >
-                Blog
-              </Button>
-            </div>
+          <div className="hero-buttons mt-6 sm:mt-8 lg:mt-10 flex flex-col sm:flex-row gap-3 sm:gap-4 lg:gap-5 items-center justify-center w-full max-w-2xl">
+            <Button
+              onClick={() => navigate('/demo')}
+              className="hero-button hero-button-secondary text-black font-semibold hover:bg-yellow-300 transition-colors duration-300 px-5 py-2.5 lg:px-6 lg:py-3 text-base lg:text-lg w-full sm:w-auto"
+              size="default"
+            >
+              Try a Test Run
+            </Button>
+            <Button
+              onClick={() => navigate('/resources')}
+              className="hero-button hero-button-secondary text-black font-semibold hover:bg-yellow-300 transition-colors duration-300 px-5 py-2.5 lg:px-6 lg:py-3 text-base lg:text-lg w-full sm:w-auto"
+              size="default"
+            >
+              Resources
+            </Button>
+            <Button
+              onClick={() => navigate('/blog')}
+              className="hero-button hero-button-secondary text-black font-semibold hover:bg-yellow-300 transition-colors duration-300 px-5 py-2.5 lg:px-6 lg:py-3 text-base lg:text-lg w-full sm:w-auto"
+              size="default"
+            >
+              Blog
+            </Button>
           </div>
         </main>
         <Footer showSubscription={false} />
